@@ -1,0 +1,3 @@
+[submodule "soft-ui-dashboard"]
+	path = static/themes
+	url = https://github.com/BFP-Echague/soft-ui-dashboard

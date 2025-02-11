@@ -2,11 +2,31 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
+
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<style>
+			@font-face {
+				font-family: 'OpenSans';
+				font-style: normal;
+				font-weight: 400;
+				src: url('%sveltekit.assets%/opensans.ttf') format('truetype');
+			}
+		</style>
+
+		<link href="/themes/assets/css/nucleo-icons.css" rel="stylesheet" />
+		<link href="/themes/assets/css/nucleo-svg.css" rel="stylesheet" />
+		<!-- Font Awesome Icons -->
+		<script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+		<link href="/themes/assets/css/nucleo-svg.css" rel="stylesheet" />
+
+		<link id="pagestyle" href="/themes/assets/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
+
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
+			<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>
