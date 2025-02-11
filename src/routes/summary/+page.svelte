@@ -153,7 +153,7 @@
             
             <!-- Map Section -->
             <div class="map-container">
-                <img src="mapp.png" alt="Fire Incident Map">
+                <img src="map.png" alt="Fire Incident Map">
             </div>
 
             <!-- Buttons on the Right (Edge of Interface) -->
