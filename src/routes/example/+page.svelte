@@ -1,3 +1,7 @@
-<h1>LMAO</h1>
+<script lang="ts">
+    import { Container, Button } from "@sveltestrap/sveltestrap";
+</script>
 
-<h2>hello ulit world!</h2>
+<Container fluid>
+    <Button color="primary">Beans</Button>
+</Container>
