@@ -154,7 +154,7 @@
   <header>
     <div class="header-content">
       <img src="bfp_logo.jpg" alt="Bureau of Fire Protection Logo" class="bfp-logo-header" />
-      <button>🏠 Dashboard</button>
+      <button>🏠 Search Fire Incident</button>
     </div>
     <div>
       <input type="text" placeholder="Search..." />
