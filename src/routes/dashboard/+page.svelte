@@ -1,8 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<svelte:head>
   <title>BFP Fire Map System - Echague</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -156,161 +152,159 @@
       color: #666;
     }
   </style>
-</head>
-<body>
-  <header>
-    <div class="header-content">
-      <img src="bfp_logo.jpg" alt="Bureau of Fire Protection Logo" class="bfp-logo-header" />
-      <button>🏠 Dashboard</button>
-    </div>
-    <div>
-      <input type="text" placeholder="Search..." />
-      <i class="fas fa-user-circle profile-icon"></i>
-    </div>
-  </header>
+</svelte:head>
 
-  <div class="container">
-    <section class="map-section">
-      <h3>BFP Fire Map System - Echague</h3>
-      <img id="map" class="map" src="echague_map.jpg" alt="Map of Echague showing fire incident locations" />
-      <div class="results-section">
-        <h3>Results</h3>
-        <div id="resultsContent" class="results-content">
-          <img id="resultImage" src="placeholder.jpg" alt="Uploaded image of the reported fire incident" />
-          <div id="resultDetails" class="results-details">
-            Incident details here...
-          </div>
-        </div>
-        <div class="chart-section">
-          <div class="chart-camaple">
-            Chart Placeholder (Chart Camaple)
-          </div>
+<header>
+  <div class="header-content">
+    <img src="bfp_logo.jpg" alt="Bureau of Fire Protection Logo" class="bfp-logo-header" />
+    <button>🏠 Dashboard</button>
+  </div>
+  <div>
+    <input type="text" placeholder="Search..." />
+    <i class="fas fa-user-circle profile-icon"></i>
+  </div>
+</header>
+
+<div class="container">
+  <section class="map-section">
+    <h3>BFP Fire Map System - Echague</h3>
+    <img id="map" class="map" src="echague_map.jpg" alt="Map of Echague showing fire incident locations" />
+    <div class="results-section">
+      <h3>Results</h3>
+      <div id="resultsContent" class="results-content">
+        <img id="resultImage" src="placeholder.jpg" alt="Reported fire incident" />
+        <div id="resultDetails" class="results-details">
+          Incident details here...
         </div>
       </div>
-    </section>
-
-    <aside class="sidebar">
-      <h3>🔥 Incident Report</h3>
-      <form id="incidentForm">
-        <div class="form-group">
-          <label for="reportTime">Time Reported:</label>
-          <input type="datetime-local" id="reportTime" required />
+      <div class="chart-section">
+        <div class="chart-camaple">
+          Chart Placeholder (Chart Camaple)
         </div>
+      </div>
+    </div>
+  </section>
 
-        <div class="form-group">
-          <label for="barangay">Location (Barangay):</label>
-          <input type="text" id="barangay" required />
-        </div>
+  <aside class="sidebar">
+    <h3>🔥 Incident Report</h3>
+    <form id="incidentForm">
+      <div class="form-group">
+        <label for="reportTime">Time Reported:</label>
+        <input type="datetime-local" id="reportTime" required />
+      </div>
 
-        <div class="form-group">
-          <label for="category">Incident Category:</label>
-          <input type="text" id="category" required />
-        </div>
+      <div class="form-group">
+        <label for="barangay">Location (Barangay):</label>
+        <input type="text" id="barangay" required />
+      </div>
 
-        <div class="form-group">
-          <label for="cause">Probable Cause:</label>
-          <input type="text" id="cause" required 
-                 placeholder="e.g., LPG Leak, Electrical Fault" />
-          <span class="input-hint">Separate multiple causes with commas</span>
-        </div>
+      <div class="form-group">
+        <label for="category">Incident Category:</label>
+        <input type="text" id="category" required />
+      </div>
 
-        <div class="form-group">
-          <label for="responseTime">Time of Arrival:</label>
-          <input type="datetime-local" id="responseTime" required />
-        </div>
+      <div class="form-group">
+        <label for="cause">Probable Cause:</label>
+        <input type="text" id="cause" required 
+                placeholder="e.g., LPG Leak, Electrical Fault" />
+        <span class="input-hint">Separate multiple causes with commas</span>
+      </div>
 
-        <div class="form-group">
-          <label for="fireOutTime">Time Fire Out:</label>
-          <input type="datetime-local" id="fireOutTime" required />
-        </div>
+      <div class="form-group">
+        <label for="responseTime">Time of Arrival:</label>
+        <input type="datetime-local" id="responseTime" required />
+      </div>
 
-        <div class="form-group">
-          <label for="structuresInvolved">Affected Structures:</label>
-          <input type="text" id="structuresInvolved" required
-                 placeholder="e.g., Residential, Commercial" />
-          <span class="input-hint">Separate multiple structures with commas</span>
-        </div>
+      <div class="form-group">
+        <label for="fireOutTime">Time Fire Out:</label>
+        <input type="datetime-local" id="fireOutTime" required />
+      </div>
 
-        <div class="form-group">
-          <label for="notes">Additional Details:</label>
-          <textarea id="notes" rows="3"></textarea>
-        </div>
+      <div class="form-group">
+        <label for="structuresInvolved">Affected Structures:</label>
+        <input type="text" id="structuresInvolved" required
+                placeholder="e.g., Residential, Commercial" />
+        <span class="input-hint">Separate multiple structures with commas</span>
+      </div>
 
-        <div class="form-group">
-          <label for="incidentImage">Upload Image:</label>
-          <input type="file" id="incidentImage" accept="image/*" />
-        </div>
+      <div class="form-group">
+        <label for="notes">Additional Details:</label>
+        <textarea id="notes" rows="3"></textarea>
+      </div>
 
-        <button type="submit">Submit Report</button>
-      </form>
-    </aside>
-  </div>
+      <div class="form-group">
+        <label for="incidentImage">Upload Image:</label>
+        <input type="file" id="incidentImage" accept="image/*" />
+      </div>
 
-  <script>
-    // Array to store markers and their associated data
-    let markers = [];
-    let currentMarker = null;
+      <button type="submit">Submit Report</button>
+    </form>
+  </aside>
+</div>
 
-    // Handle form submission
-    const form = document.getElementById('incidentForm');
-    form.addEventListener('submit', function (e) {
-      e.preventDefault(); // Prevent the default form submission behavior
+<script>
+  // // Array to store markers and their associated data
+  // let markers = [];
+  // let currentMarker = null;
 
-      // Get form data
-      const reportTime = document.getElementById('reportTime').value;
-      const barangay = document.getElementById('barangay').value;
-      const cause = document.getElementById('cause').value.split(',').map(item => item.trim());
-      const responseTime = document.getElementById('responseTime').value;
-      const fireOutTime = document.getElementById('fireOutTime').value;
-      const structuresInvolved = document.getElementById('structuresInvolved').value.split(',').map(item => item.trim());
-      const notes = document.getElementById('notes').value;
-      const category = document.getElementById('category').value;
-      const incidentImage = document.getElementById('incidentImage').files[0];
+  // // Handle form submission
+  // const form = document.getElementById('incidentForm');
+  // form.addEventListener('submit', function (e) {
+  //   e.preventDefault(); // Prevent the default form submission behavior
 
-      // Store marker data including the image
-      const markerData = {
-        barangay,
-        reportTime,
-        cause,
-        responseTime,
-        fireOutTime,
-        structuresInvolved,
-        notes,
-        category,
-        image: incidentImage ? URL.createObjectURL(incidentImage) : null,
-      };
+  //   // Get form data
+  //   const reportTime = document.getElementById('reportTime').value;
+  //   const barangay = document.getElementById('barangay').value;
+  //   const cause = document.getElementById('cause').value.split(',').map(item => item.trim());
+  //   const responseTime = document.getElementById('responseTime').value;
+  //   const fireOutTime = document.getElementById('fireOutTime').value;
+  //   const structuresInvolved = document.getElementById('structuresInvolved').value.split(',').map(item => item.trim());
+  //   const notes = document.getElementById('notes').value;
+  //   const category = document.getElementById('category').value;
+  //   const incidentImage = document.getElementById('incidentImage').files[0];
 
-      // Add marker data to the markers array
-      markers.push(markerData);
+  //   // Store marker data including the image
+  //   const markerData = {
+  //     barangay,
+  //     reportTime,
+  //     cause,
+  //     responseTime,
+  //     fireOutTime,
+  //     structuresInvolved,
+  //     notes,
+  //     category,
+  //     image: incidentImage ? URL.createObjectURL(incidentImage) : null,
+  //   };
 
-      // Reset form
-      form.reset();
-      currentMarker = null; // Reset current marker
+  //   // Add marker data to the markers array
+  //   markers.push(markerData);
 
-      // Display the results
-      const resultImage = document.getElementById('resultImage');
-      const resultDetails = document.getElementById('resultDetails');
+  //   // Reset form
+  //   form.reset();
+  //   currentMarker = null; // Reset current marker
 
-      if (markerData.image) {
-        resultImage.src = markerData.image;
-        resultImage.style.display = 'block';
-      } else {
-        resultImage.src = 'placeholder.jpg'; // Fallback image
-        resultImage.style.display = 'block';
-      }
+  //   // Display the results
+  //   const resultImage = document.getElementById('resultImage');
+  //   const resultDetails = document.getElementById('resultDetails');
 
-      resultDetails.innerHTML = `
-        <b>Location:</b> ${markerData.barangay}<br>
-        <b>Report Time:</b> ${markerData.reportTime}<br>
-        <b>Barangay:</b> ${markerData.barangay}<br>
-        <b>Cause:</b> ${markerData.cause.join(', ')}<br>
-        <b>Response Time:</b> ${markerData.responseTime}<br>
-        <b>Fire Out Time:</b> ${markerData.fireOutTime}<br>
-        <b>Structures Involved:</b> ${markerData.structuresInvolved.join(', ')}<br>
-        <b>Notes:</b> ${markerData.notes}<br>
-        <b>Category:</b> ${markerData.category}
-      `;
-    });
-  </script>
-</body>
-</html>
+  //   if (markerData.image) {
+  //     resultImage.src = markerData.image;
+  //     resultImage.style.display = 'block';
+  //   } else {
+  //     resultImage.src = 'placeholder.jpg'; // Fallback image
+  //     resultImage.style.display = 'block';
+  //   }
+
+  //   resultDetails.innerHTML = `
+  //     <b>Location:</b> ${markerData.barangay}<br>
+  //     <b>Report Time:</b> ${markerData.reportTime}<br>
+  //     <b>Barangay:</b> ${markerData.barangay}<br>
+  //     <b>Cause:</b> ${markerData.cause.join(', ')}<br>
+  //     <b>Response Time:</b> ${markerData.responseTime}<br>
+  //     <b>Fire Out Time:</b> ${markerData.fireOutTime}<br>
+  //     <b>Structures Involved:</b> ${markerData.structuresInvolved.join(', ')}<br>
+  //     <b>Notes:</b> ${markerData.notes}<br>
+  //     <b>Category:</b> ${markerData.category}
+  //   `;
+  // });
+</script>
