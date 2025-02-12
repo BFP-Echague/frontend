@@ -1,9 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fire Incident Report</title>
     <style>
         body, html {
             margin: 0;
@@ -113,8 +107,7 @@
         }
 
     </style>
-</head>
-<body>
+
 
     <div class="header">
         <div class="menu">☰ FIRE INCIDENT REPORT</div>
@@ -143,6 +136,3 @@
             <div class="button delete">🗑️ Delete</div>
         </div>
     </div>
-
-</body>
-</html>

@@ -1,98 +1,30 @@
-<script>
-    let showModal = false;
+<script lang="ts">
+    import { Button, Modal } from "@sveltestrap/sveltestrap";
+
+    let open = false;
+    function toggle() {
+        open = !open;
+    }
 </script>
 
-<!-- Navbar -->
-<nav class="navbar">
-    <span>https://bfpechague.com.ph</span>
-    <button type="button" class="login-btn" on:click={() => showModal = true}>LOG IN</button>
-</nav>
-
-<!-- Main Content -->
-<div class="content">
-    <div class="left-panel">
-        <h1>WELCOME TO BFP ECHAGUE!</h1>
-        <hr/>
-        <p>FIRE MAPPING SYSTEM</p>
-        <hr/>
-        <div class="contact">
-            <p>CONTACT DEVELOPERS</p>
-            <div>
-                <img src="icon.png" alt="Phone Icon" />
-                <span>09679031671</span>
-            </div>
-            <div>
-                <img src="icon.png" alt="Phone Icon" />
-                <span>09285908046</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="right-panel"></div>
-</div>
-
-<!-- Login Modal -->
-{#if showModal}
-<div 
-    class="modal" 
-    role="dialog" 
-    aria-modal="true" 
-    on:click={() => showModal = false} 
-    on:keydown={(e) => e.key === "Escape" && (showModal = false)}
-    tabindex="0"
->
-    <div class="modal-content" on:click|stopPropagation>
-        <button class="close" on:click={() => showModal = false}>&times;</button>
-        <h2>Login</h2>
-
-        <div class="input-box">
-            <input type="text" id="username" required class="name-input" />
-            <label for="username" class="name-label">USERNAME</label>
-        </div>
-
-        <div class="input-box">
-            <input type="password" id="password" required class="name-input" />
-            <label for="password" class="name-label">PASSWORD</label>
-        </div>
-
-        <button type="button" class="login-btn">Log In</button>
-
-        <div class="modal-footer">
-            <button class="forgot-password-btn" type="button">Forgot Password?</button>
-        </div>
-    </div>
-</div>
-{/if}
-
-<!-- Styles -->
-<style>
-    * {
-        box-sizing: border-box;
+<svelte:head>
+    <style>
+      body {
         margin: 0;
-        padding: 0;
-    }
-
-    body {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        font-family: "Poppins", sans-serif;
-        letter-spacing: 0.1rem;
-        gap: 2rem;
-    }
-
-    /* Navbar */
-    .navbar {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f5f5;
+      }
+  
+      .navbar {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 10px 20px;
         background-color: #444;
         color: #fff;
-    }
-    .navbar a {
+      }
+  
+      .navbar a {
         color: #fff;
         text-decoration: none;
         padding: 5px 15px;
@@ -100,125 +32,172 @@
         border-radius: 5px;
         background-color: #666;
         cursor: pointer;
-    }
-    .navbar a:hover {
+      }
+  
+      .navbar a:hover {
         background-color: #888;
-    }
-
-    /* Main Content */
-    .content {
+      }
+  
+      .content {
         display: flex;
         flex-direction: row;
         height: calc(100vh - 50px);
-    }
-
-    /* Left Panel */
-    .left-panel {
-        height: 110%;
+      }
+  
+      .left-panel {
+        height: 100%;
         width: 35%;
         padding: 20px;
         background-color: #ce1717;
         box-shadow: 2px 0 5px rgba(255, 255, 255, 0.1);
-    }
-    .left-panel h1 {
+      }
+  
+      .left-panel h1 {
         font-size: 4.3rem;
         font-weight: bold;
         text-align: center;
         color: #ffee06;
         text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
         letter-spacing: 2px;
-    }
-    .left-panel p {
+      }
+  
+      .left-panel p {
         font-size: 1.5rem;
         color: #ffee06;
-    }
-
-    /* Right Panel */
-    .right-panel {
+      }
+  
+      .right-panel {
         flex-grow: 2;
-        height: 100vh;
+        height: 107%;
         background-image: url('background.png');
         background-size: cover;
         background-position: center;
         position: relative;
-    }
+      }
+  
 
-    /* Modal */
-    .modal {
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .modal-content {
-        background: #fff;
-        width: 350px;
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-        position: relative;
-    }
-    .close {
+      
+  
+      .close {
         position: absolute;
         top: 10px;
         right: 15px;
         font-size: 22px;
         cursor: pointer;
-    }
-    .modal-footer {
-        margin-top: 10px;
-    }
-
-    /* New Styles */
-    .input-box {
+      }
+  
+      .input-box {
         position: relative;
-        width: 300px;
-    }
-
-    .name-input {
-        width: 100%;
-        padding: 5px;
-        border: none;
-        border-bottom: 2px solid #ccc;
+        margin: 20px 0;
+      }
+  
+      .input-box input {
+        width: 90%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
         outline: none;
-        background: transparent;
-        color: #333;
-        font-size: 1.8rem;
-    }
-
-    .name-label {
-        position: absolute;
-        left: 0;
-        padding: 10px 5px;
-        color: rgba(0, 0, 0, 0.5);
-        font-size: 1.4rem;
-        pointer-events: none;
-        transition: 0.5s;
-    }
-
-    .name-input:valid ~ .name-label,
-    .name-input:focus ~ .name-label {
-        transform: translateY(-1.5rem);
-        color: rgb(162, 162, 198);
-        font-size: 0.75rem;
-    }
-
-    .login-btn {
-        background: none;
-        border: none;
-        color: #333;
         font-size: 1rem;
+      }
+  
+      .input-box label {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
+        font-size: 1rem;
+        color: #aaa;
+        transition: 0.3s ease-in-out;
+      }
+  
+      .input-box input:focus + label,
+      .input-box input:valid + label {
+        top: 0;
+        font-size: 0.8rem;
+        color: #ce1717;
+      }
+  
+      .modal button {
+        background-color: #ce1717;
+        color: white;
+        border: none;
+        padding: 10px;
+        width: 100%;
+        border-radius: 5px;
         cursor: pointer;
-        text-decoration: underline;
-    }
-
-    .login-btn:hover {
+        margin-top: 10px;
+      }
+  
+      .modal button:hover {
+        background-color: #a11212;
+      }
+  
+      .modal-footer {
+        margin-top: 15px;
+      }
+  
+      .modal-footer a {
         text-decoration: none;
-    }
-</style>
+        color: #ce1717;
+        font-size: 0.9rem;
+        display: block;
+        margin: 5px 0;
+      }
+  
+      .contact div img {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+      }
+    </style>
+  </svelte:head>
+  
+    <div class="navbar">
+      <span>https://bfpechague.com.ph</span>
+      <Button color="success" on:click={toggle}>LOG IN</Button>
+    </div>
+  
+    <div class="content">
+      <div class="left-panel">
+        <h1>WELCOME TO BFP ECHAGUE!</h1>
+        <hr>
+        <p>FIRE MAPPING SYSTEM</p>
+        <hr>
+        <div class="contact">
+          <p>CONTACT DEVELOPERS</p>
+          <div>
+            <img src="icon.png" alt="Phone Icon">
+            <span>09679031671</span>
+          </div>
+          <div>
+            <img src="icon.png" alt="Phone Icon">
+            <span>09285908046</span>
+          </div>
+        </div>
+      </div>
+      <div class="right-panel"></div>
+    </div>
+  
+    <!-- Login Modal -->
+    <Modal isOpen={open} {toggle}>
+      <div class="modal-content">
+        <span class="close" id="closeBtn">&times;</span>
+        <h2>Login</h2>
+  
+        <div class="input-box">
+          <input type="text" required />
+          <label>USERNAME</label>
+        </div>
+  
+        <div class="input-box">
+          <input type="password" required />
+          <label>PASSWORD</label>
+        </div>
+  
+        <button>Log In</button>
+  
+        <div class="modal-footer">
+          <a>Forgot Password?</a>
+        </div>
+      </div>
+    </Modal>

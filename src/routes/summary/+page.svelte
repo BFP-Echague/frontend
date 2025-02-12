@@ -1,8 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<svelte:head>
     <title>Analytics of Fire Incidents</title>
     <style>
         /* Layout and General Styles */
@@ -115,8 +111,8 @@
             transform: scale(1.05);
         }
     </style>
-</head>
-<body>
+</svelte:head>
+
 
     <!-- Header -->
     <div class="header">
@@ -154,25 +150,23 @@
     <div class="charts">
         <div class="chart-container">
             <h3>Heatmap of Fire Incidents</h3>
-            <img src="heatmap.png" alt="Heatmap" class="heatmap" onclick="generateReport('Heatmap')">
+            <img src="heatmap.png" alt="Heatmap" class="heatmap" on:click={generateReport('Heatmap')}>
         </div>
 
         <div class="chart-container">
             <h3>Fire Causes Distribution</h3>
-            <img src="pie.jpg" alt="Pie Chart" class="pie" onclick="generateReport('Pie Chart')">
+            <img src="pie.jpg" alt="Pie Chart" class="pie" on:click={generateReport('Pie Chart')}>
         </div>
 
         <div class="chart-container">
             <h3>Yearly Fire Incidents</h3>
-            <img src="bar.png" alt="Bar Chart" class="bar" onclick="generateReport('Bar Chart')">
+            <img src="bar.png" alt="Bar Chart" class="bar" on:click={generateReport('Bar Chart')}>
         </div>
     </div>
 
-    <script>
-        function generateReport(chartType) {
+    <script lang="ts">
+        function generateReport(chartType: string) {
             alert("Generating report for " + chartType);
+            return undefined;
         }
     </script>
-
-</body>
-</html>
