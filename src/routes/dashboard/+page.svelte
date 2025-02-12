@@ -160,7 +160,7 @@
 <body>
   <header>
     <div class="header-content">
-      <img src="bfp_logo.jpg" alt="BFP Logo" class="bfp-logo-header" />
+      <img src="bfp_logo.jpg" alt="Bureau of Fire Protection Logo" class="bfp-logo-header" />
       <button>🏠 Dashboard</button>
     </div>
     <div>
@@ -172,11 +172,11 @@
   <div class="container">
     <section class="map-section">
       <h3>BFP Fire Map System - Echague</h3>
-      <img id="map" class="map" src="echague_map.jpg" alt="Echague Map" />
+      <img id="map" class="map" src="echague_map.jpg" alt="Map of Echague showing fire incident locations" />
       <div class="results-section">
         <h3>Results</h3>
         <div id="resultsContent" class="results-content">
-          <img id="resultImage" src="placeholder.jpg" alt="Incident Image" />
+          <img id="resultImage" src="placeholder.jpg" alt="Uploaded image of the reported fire incident" />
           <div id="resultDetails" class="results-details">
             Incident details here...
           </div>
@@ -254,7 +254,7 @@
     // Handle form submission
     const form = document.getElementById('incidentForm');
     form.addEventListener('submit', function (e) {
-      e.preventDefault();
+      e.preventDefault(); // Prevent the default form submission behavior
 
       // Get form data
       const reportTime = document.getElementById('reportTime').value;
@@ -266,19 +266,6 @@
       const notes = document.getElementById('notes').value;
       const category = document.getElementById('category').value;
       const incidentImage = document.getElementById('incidentImage').files[0];
-
-      // Create popup content
-      const popupContent = `
-        <b>Location:</b> ${barangay}<br>
-        <b>Report Time:</b> ${reportTime}<br>
-        <b>Barangay:</b> ${barangay}<br>
-        <b>Cause:</b> ${cause.join(', ')}<br>
-        <b>Response Time:</b> ${responseTime}<br>
-        <b>Fire Out Time:</b> ${fireOutTime}<br>
-        <b>Structures Involved:</b> ${structuresInvolved.join(', ')}<br>
-        <b>Notes:</b> ${notes}<br>
-        <b>Category:</b> ${category}
-      `;
 
       // Store marker data including the image
       const markerData = {
