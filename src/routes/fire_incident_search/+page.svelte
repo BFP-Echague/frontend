@@ -39,8 +39,6 @@
         The incidents occurred across <strong>${barangays.length} different barangays</strong>, with the majority 
         concentrated in <strong>${mostCommonBarangay.barangay}</strong> (${mostCommonBarangay.count} incidents). 
         <br><br>
-        <strong>Trends:</strong> The data shows a consistent distribution of incidents across multiple barangays. 
-        Authorities are advised to focus on fire safety awareness campaigns in <strong>${mostCommonBarangay.barangay}</strong>.
       `;
     }
   </script>
