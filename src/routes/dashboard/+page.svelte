@@ -274,7 +274,7 @@
 <p><strong>Selected Causes:</strong> {selectedCauses.join(", ")}</p>
 
       <!-- Alert Section -->
-      <Alert color="warning" class="mt-4 shadow">
+       <Alert color="danger" class="mt-4 shadow text-light">
         <Icon name="exclamation-circle" class="me-2" /> Ensure all fields are filled accurately before submitting.
       </Alert>
     </Col>
