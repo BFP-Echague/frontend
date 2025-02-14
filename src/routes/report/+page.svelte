@@ -1,18 +1,32 @@
 <script lang="ts">
-    import "bootstrap/dist/css/bootstrap.min.css"; // Bootstrap Import
-    import { Button, Container, Row, Col, Card, CardBody } from "sveltestrap"; // Sveltestrap Components
+    import { Button, Container, Row, Col, Card, CardBody } from "@sveltestrap/sveltestrap"; // Sveltestrap Components
 
-    function editReport() {
-        alert("Edit Fire Incident Report");
+    let isEditing = false; // Toggles Edit Mode
+    let showProfile = false; // Toggles Profile Visibility
+    let showMenu = false; // Toggles Menu Visibility
+
+    let incident = {
+        location: "Sample Street, City",
+        reportTime: "2025-02-12T10:30",
+        barangay: "Barangay 123",
+        cause: "Electrical Fault",
+        responseTime: "2025-02-12T10:45",
+        fireOutTime: "2025-02-12T11:00",
+        casualties: "None"
+    };
+
+    function toggleEdit() {
+        isEditing = !isEditing;
     }
 
-    function printReport() {
-        alert("Generating report...");
+    function saveReport() {
+        alert("Incident Report has been updated.");
+        isEditing = false;
     }
 
     function deleteReport() {
         if (confirm("Are you sure you want to delete this report?")) {
-            alert("Report deleted.");
+            incident = null; // Hides the Incident Report
         }
     }
 </script>
@@ -22,12 +36,16 @@
 </svelte:head>
 
 <style>
+    /* Header */
     .header {
         background-color: #b71c1c;
         color: white;
         padding: 15px 20px;
         font-size: 18px;
         font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
 
     .menu {
@@ -37,6 +55,66 @@
         color: #333;
         cursor: pointer;
         font-weight: bold;
+        position: relative;
+    }
+
+    .menu-dropdown {
+        position: absolute;
+        top: 40px;
+        left: 0;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        width: 200px;
+        display: none;
+        flex-direction: column;
+    }
+
+    .menu:hover .menu-dropdown {
+        display: flex;
+    }
+
+    .menu-item {
+        padding: 10px;
+        color: #333;
+        text-decoration: none;
+        display: block;
+        cursor: pointer;
+    }
+
+    .menu-item:hover {
+        background: #f5f5f5;
+    }
+
+    .profile {
+        width: 35px;
+        height: 35px;
+        background-color: white;
+        color: #b71c1c;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .profile-dropdown {
+        position: absolute;
+        top: 40px;
+        right: 0;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        width: 150px;
+        display: none;
+    }
+
+    .profile:hover .profile-dropdown {
+        display: block;
     }
 
     .map {
@@ -50,13 +128,32 @@
         color: #d32f2f;
         text-align: left;
     }
+
+    .form-input {
+        width: 100%;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
 </style>
 
 <!-- Header -->
-<div class="header d-flex justify-content-between align-items-center">
-    <div class="menu">☰ FIRE INCIDENT REPORT</div>
-    <div class="user-profile bg-white text-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; font-weight: bold; cursor: pointer;">
+<div class="header">
+    <!-- Menu Dropdown -->
+    <div class="menu">
+        ☰ FIRE INCIDENT REPORT
+        <div class="menu-dropdown">
+            <a class="menu-item" href="/report">Fire Incident Report</a>
+            <a class="menu-item" href="/summary">Summary Statistics</a>
+        </div>
+    </div>
+
+    <!-- Profile Button -->
+    <div class="profile">
         👤
+        <div class="profile-dropdown">
+            <div class="menu-item">BFP Admin</div>
+        </div>
     </div>
 </div>
 
@@ -71,25 +168,44 @@
                 </CardBody>
             </Card>
 
-            <Card class="mt-3">
-                <CardBody>
-                    <h5 class="incident-title">Incident Report</h5>
-                    <p><strong>Location:</strong> Sample Street, City</p>
-                    <p><strong>Report Time:</strong> 2025-02-12T10:30</p>
-                    <p><strong>Barangay:</strong> Barangay 123</p>
-                    <p><strong>Cause of Fire:</strong> Electrical Fault</p>
-                    <p><strong>Response Time:</strong> 2025-02-12T10:45</p>
-                    <p><strong>Fire Out Time:</strong> 2025-02-12T11:00</p>
-                    <p><strong>Casualties:</strong> None</p>
-                </CardBody>
-            </Card>
+            {#if incident}
+                <Card class="mt-3">
+                    <CardBody>
+                        <h5 class="incident-title">Incident Report</h5>
+
+                        {#if isEditing}
+                            <p><strong>Location:</strong> <input class="form-input" bind:value={incident.location} /></p>
+                            <p><strong>Report Time:</strong> <input class="form-input" type="datetime-local" bind:value={incident.reportTime} /></p>
+                            <p><strong>Barangay:</strong> <input class="form-input" bind:value={incident.barangay} /></p>
+                            <p><strong>Cause of Fire:</strong> <input class="form-input" bind:value={incident.cause} /></p>
+                            <p><strong>Response Time:</strong> <input class="form-input" type="datetime-local" bind:value={incident.responseTime} /></p>
+                            <p><strong>Fire Out Time:</strong> <input class="form-input" type="datetime-local" bind:value={incident.fireOutTime} /></p>
+                            <p><strong>Casualties:</strong> <input class="form-input" bind:value={incident.casualties} /></p>
+                        {:else}
+                            <p><strong>Location:</strong> {incident.location}</p>
+                            <p><strong>Report Time:</strong> {incident.reportTime}</p>
+                            <p><strong>Barangay:</strong> {incident.barangay}</p>
+                            <p><strong>Cause of Fire:</strong> {incident.cause}</p>
+                            <p><strong>Response Time:</strong> {incident.responseTime}</p>
+                            <p><strong>Fire Out Time:</strong> {incident.fireOutTime}</p>
+                            <p><strong>Casualties:</strong> {incident.casualties}</p>
+                        {/if}
+                    </CardBody>
+                </Card>
+            {/if}
         </Col>
 
         <!-- Buttons Section -->
         <Col md="3" class="d-flex flex-column align-items-end">
-            <Button color="secondary" class="mb-3 w-100" on:click={editReport}>✏️ Edit</Button>
-            <Button color="primary" class="mb-3 w-100" on:click={printReport}>📂 Print</Button>
-            <Button color="danger" class="w-100" on:click={deleteReport}>🗑️ Delete</Button>
+            <Button color="secondary" class="mb-3 w-100" on:click={toggleEdit}>
+                {isEditing ? "Cancel" : "✏️ Edit"}
+            </Button>
+            <Button color="success" class="mb-3 w-100" on:click={saveReport} disabled={!isEditing}>
+                💾 Save
+            </Button>
+            <Button color="danger" class="w-100" on:click={deleteReport}>
+                🗑️ Delete
+            </Button>
         </Col>
     </Row>
 </Container>
