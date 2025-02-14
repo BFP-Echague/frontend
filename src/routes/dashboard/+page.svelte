@@ -173,8 +173,18 @@
               </FormGroup>              
               <FormGroup>
                 <Label for="category">Incident Category:</Label>
-                <Input type="text" id="category" bind:value={category} placeholder="Enter category" />
-              </FormGroup>
+                <Input type="select" id="category" bind:value={category}>
+                  <option value="" disabled selected>Select Incident Category</option>
+                  <option value="Structural Fire">Structural Fire</option>
+                  <option value="Vehicular Fire">Vehicular Fire</option>
+                  <option value="Grass Fire">Grass Fire</option>
+                  <option value="Electrical Fire">Electrical Fire</option>
+                  <option value="Chemical Fire">Chemical Fire</option>
+                  <option value="Rescue Operation">Rescue Operation</option>
+                  <option value="Flood Assistance">Flood Assistance</option>
+                  <option value="Other">Other</option>
+                </Input>
+              </FormGroup>              
               <FormGroup>
                 <Label for="cause">Probable Cause:</Label>
                 <Input type="text" id="cause" bind:value={cause} placeholder="Enter cause" />
