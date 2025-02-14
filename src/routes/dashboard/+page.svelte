@@ -58,7 +58,8 @@
       <Card class="mb-4 shadow">
         <CardBody>
           <CardTitle class="text-danger fs-3">
-            <i class="bi bi-map me-2"></i>Fire Incident Map
+            <i class="bi bi-map me-2"></i>
+            <h3>Fire Incident Map</h3>
           </CardTitle>
           <img src="/map.jpg" alt="Map showing fire incidents in Echague" class="img-fluid rounded" style="height: 300px;" />
         </CardBody>
