@@ -1,5 +1,5 @@
 <script>
-  import { Navbar, Nav, NavItem, NavLink, Container, Row, Col, Card, CardBody, CardTitle, Form, FormGroup, Label, Input, Button, Alert, Progress, Spinner } from "@sveltestrap/sveltestrap";
+  import { Navbar, Nav, NavItem, NavLink, Container, Row, Col, Card, CardBody, CardTitle, Form, FormGroup, Label, Input, Button, Alert, Progress, Spinner, Icon } from "@sveltestrap/sveltestrap";
 
   // Form input values
   let reportTime = "";
@@ -59,9 +59,9 @@
         <CardBody>
           <CardTitle class="text-danger fs-3">
             <h3 class="d-inline">
-              <i class="bi bi-map me-2"></i> Fire Incident Map
+              <Icon name="map" class="me-2" /> Fire Incident Map
             </h3>
-          </CardTitle>          
+          </CardTitle>
           <img src="/map.jpg" alt="Map showing fire incidents in Echague" class="img-fluid rounded" style="height: 300px;" />
         </CardBody>
       </Card>
@@ -69,7 +69,7 @@
       <Card class="shadow">
         <CardBody>
           <h3 class="text-danger">
-            <i class="bi bi-clipboard-data me-2"></i>Incident Results
+            <Icon name="clipboard-data" class="me-2" /> Incident Results
           </h3>
           <div class="d-flex align-items-start gap-3">
             <img src="/incident.jpg" alt="Incident details image" class="rounded" style="width: 200px;" />
@@ -94,56 +94,56 @@
       <Card class="shadow">
         <CardBody>
           <h3 class="text-danger">
-            <i class="bi bi-exclamation-triangle me-2"></i>Incident Report
+            <Icon name="exclamation-triangle" class="me-2" /> Incident Report
           </h3>
           <Form>
-            <FormGroup>
-              <Label for="reportTime">Time Reported:</Label>
-              <Input type="datetime-local" id="reportTime" bind:value={reportTime} />
-            </FormGroup>
-            <FormGroup>
-              <Label for="barangay">Location (Barangay):</Label>
-              <Input type="text" id="barangay" bind:value={barangay} placeholder="Enter barangay" />
-            </FormGroup>
-            <FormGroup>
-              <Label for="category">Incident Category:</Label>
-              <Input type="text" id="category" bind:value={category} placeholder="Enter category" />
-            </FormGroup>
-            <FormGroup>
-              <Label for="cause">Probable Cause:</Label>
-              <Input type="text" id="cause" bind:value={cause} placeholder="Enter cause" />
-            </FormGroup>
-            <FormGroup>
-              <Label for="responseTime">Time of Arrival:</Label>
-              <Input type="datetime-local" id="responseTime" bind:value={responseTime} />
-            </FormGroup>
-            <FormGroup>
-              <Label for="fireOutTime">Time Fire Out:</Label>
-              <Input type="datetime-local" id="fireOutTime" bind:value={fireOutTime} />
-            </FormGroup>
-            <FormGroup>
-              <Label for="structuresInvolved">Affected Structures:</Label>
-              <Input type="text" id="structuresInvolved" bind:value={structuresInvolved} placeholder="Enter structures involved" />
-            </FormGroup>
-            <FormGroup>
-              <Label for="notes">Additional Details:</Label>
-              <Input type="textarea" id="notes" bind:value={notes} rows="3" placeholder="Enter additional details" />
-            </FormGroup>
-            <Button color="danger" class="w-100">
-              <i class="bi bi-send me-2"></i>Submit Report
-            </Button>
+              <FormGroup>
+                <Label for="reportTime">Time Reported:</Label>
+                <Input type="datetime-local" id="reportTime" bind:value={reportTime} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="barangay">Location (Barangay):</Label>
+                <Input type="text" id="barangay" bind:value={barangay} placeholder="Enter barangay" />
+              </FormGroup>
+              <FormGroup>
+                <Label for="category">Incident Category:</Label>
+                <Input type="text" id="category" bind:value={category} placeholder="Enter category" />
+              </FormGroup>
+              <FormGroup>
+                <Label for="cause">Probable Cause:</Label>
+                <Input type="text" id="cause" bind:value={cause} placeholder="Enter cause" />
+              </FormGroup>
+              <FormGroup>
+                <Label for="responseTime">Time of Arrival:</Label>
+                <Input type="datetime-local" id="responseTime" bind:value={responseTime} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="fireOutTime">Time Fire Out:</Label>
+                <Input type="datetime-local" id="fireOutTime" bind:value={fireOutTime} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="structuresInvolved">Affected Structures:</Label>
+                <Input type="text" id="structuresInvolved" bind:value={structuresInvolved} placeholder="Enter structures involved" />
+              </FormGroup>
+              <FormGroup>
+                <Label for="notes">Additional Details:</Label>
+                <Input type="textarea" id="notes" bind:value={notes} rows="3" placeholder="Enter additional details" />
+              </FormGroup>
+              <Button color="danger" class="w-100">
+                <i class="bi bi-send me-2"></i>Submit Report
+              </Button>
           </Form>
         </CardBody>
       </Card>
 
       <!-- Alert Section -->
       <Alert color="warning" class="mt-4 shadow">
-        <i class="bi bi-exclamation-circle me-2"></i>
-        Ensure all fields are filled accurately before submitting.
+        <Icon name="exclamation-circle" class="me-2" /> Ensure all fields are filled accurately before submitting.
       </Alert>
     </Col>
   </Row>
 </Container>
+
 
 <!-- Spinner for Loading State -->
 <Spinner type="border" color="danger" class="d-block mx-auto my-4" />
