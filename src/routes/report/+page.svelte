@@ -29,6 +29,14 @@
             incident = null; // Hides the Incident Report
         }
     }
+
+    function toggleMenu() {
+        showMenu = !showMenu;
+    }
+
+    function toggleProfile() {
+        showProfile = !showProfile;
+    }
 </script>
 
 <svelte:head>
@@ -58,22 +66,20 @@
         position: relative;
     }
 
+    /* Ensure the menu appears above the map */
     .menu-dropdown {
-        position: absolute;
-        top: 40px;
-        left: 0;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        width: 200px;
-        display: none;
-        flex-direction: column;
-    }
-
-    .menu:hover .menu-dropdown {
-        display: flex;
-    }
+    position: absolute;
+    top: 60px;  /* Move the dropdown lower */
+    left: 20px; /* Move it slightly to the right */
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 230px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+}
 
     .menu-item {
         padding: 10px;
@@ -102,24 +108,28 @@
     }
 
     .profile-dropdown {
-        position: absolute;
-        top: 40px;
-        right: 0;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        width: 150px;
-        display: none;
-    }
-
-    .profile:hover .profile-dropdown {
-        display: block;
-    }
+    position: absolute;
+    top: 55px;   /* Move it lower */
+    right: 10px; /* Move slightly to the right */
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 160px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+}
 
     .map {
         width: 100%;
         border-radius: 8px;
+    }
+
+        /* Ensure the map does not overlap */
+        .map-container {
+        position: relative;
+        z-index: 1;
     }
 
     .incident-title {
@@ -139,22 +149,28 @@
 
 <!-- Header -->
 <div class="header">
-    <!-- Menu Dropdown -->
-    <div class="menu">
+    <!-- Menu Button -->
+    <div class="menu" on:click={toggleMenu}>
         ☰ FIRE INCIDENT REPORT
-        <div class="menu-dropdown">
-            <a class="menu-item" href="/report">Fire Incident Report</a>
-            <a class="menu-item" href="/summary">Summary Statistics</a>
-        </div>
     </div>
 
-    <!-- Profile Button -->
-    <div class="profile">
-        👤
-        <div class="profile-dropdown">
-            <div class="menu-item">BFP Admin</div>
+    {#if showMenu}
+        <div class="menu-dropdown">
+            <a class="menu-item" href="/report">📄 Fire Incident Report</a>
+            <a class="menu-item" href="/summary">📊 Summary Statistics</a>
         </div>
+    {/if}
+
+ <!-- Profile Button -->
+ <div class="profile" on:click={toggleProfile}>
+    👤
+</div>
+
+{#if showProfile}
+    <div class="profile-dropdown">
+        <div class="menu-item">👮 BFP Admin</div>
     </div>
+{/if}
 </div>
 
 <!-- Main Content -->
