@@ -1,6 +1,6 @@
 <script lang="ts">
   import { 
-    Navbar, NavbarBrand, Button, Form, FormGroup, Label, Input, InputGroup, 
+    Navbar, NavbarBrand, Button, Form, FormGroup, Label, Input, 
     Modal, ModalHeader, ModalBody, ModalFooter 
   } from '@sveltestrap/sveltestrap';
 
@@ -15,6 +15,7 @@
 </script>
 
 <style>
+  /* Password visibility button */
   .password-container {
     position: relative;
     width: 100%;
@@ -34,6 +35,55 @@
 
   .toggle-password:hover {
     color: orange;
+  }
+
+  /* Custom Modal Styling */
+  :global(.modal-content) {
+    background-color: red !important;
+    color: yellow !important;
+    border: 2px solid red;
+  }
+
+  :global(.modal-header),
+  :global(.modal-footer) {
+    background-color: red !important;
+    color: yellow !important;
+    border-bottom: 2px solid red;
+  }
+
+  :global(.modal-body) {
+    background-color: red !important;
+    color: yellow !important;
+  }
+
+  /* Forgot Password Styling */
+  .forgot-password {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+  }
+
+  .forgot-password a {
+    text-decoration: none;
+    color: yellow;
+    font-weight: bold;
+  }
+
+  .forgot-password a:hover {
+    color: orange;
+  }
+
+  /* Centered Login Button */
+  .button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .login-button {
+    width: 50%; /* Adjust width for better UI */
+    font-size: 1.2rem;
+    padding: 10px 0;
   }
 </style>
 
@@ -58,9 +108,9 @@
   </div>
 </div>
 
-<!-- LOGIN MODAL USING SVELTETRAP -->
-<Modal isOpen={showModal} toggle={() => showModal = false} class="modal-content">
-  <ModalHeader toggle={() => showModal = false} class="text-warning">Login</ModalHeader>
+<!-- LOGIN MODAL -->
+<Modal isOpen={showModal} toggle={() => showModal = false} class="custom-modal">
+  <ModalHeader toggle={() => showModal = false}></ModalHeader>
   <ModalBody>
     <Form>
       <FormGroup>
@@ -92,12 +142,16 @@
         </div>
       </FormGroup>
 
-      <p class="text-end">
-        <a href="javascript:void(0)" class="text-warning">Forgot Password?</a>
-      </p>
+      <!-- Centered Forgot Password -->
+      <div class="forgot-password">
+        <a href="javascript:void(0)">Forgot Password?</a>
+      </div>
+      
     </Form>
   </ModalBody>
   <ModalFooter>
-    <Button color="warning" block on:click={() => showModal = false}>Login</Button>
+    <div class="button-container">
+      <Button color="warning" class="login-button" on:click={() => showModal = false}>Login</Button>
+    </div>
   </ModalFooter>
 </Modal>
