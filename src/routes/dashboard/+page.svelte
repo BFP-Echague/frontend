@@ -86,7 +86,7 @@
               <Icon name="map" class="me-2" /> Fire Incident Map
             </h3>
           </CardTitle>
-          <img src="/map.jpg" alt="Map showing fire incidents in Echague" class="img-fluid rounded" style="height: 300px;" />
+          <img src="/placeholder-map.jpg" alt="Map showing fire incidents in Echague" class="img-fluid rounded" style="height: 600px;" />
         </CardBody>
       </Card>
 
@@ -95,8 +95,8 @@
           <h3 class="text-danger">
             <Icon name="clipboard-data" class="me-2" /> Incident Results
           </h3>
-          <div class="d-flex align-items-start gap-3">
-            <img src="/incident.jpg" alt="Incident details image" class="rounded" style="width: 200px;" />
+          <div class="d-flex align-items-start gap-4">
+            <img src="/placeholder-incident.jpg" alt="Incident details image" class="rounded" style="width: 440px;" />
             <div>
               <h5>Incident Details</h5>
               <p><strong>Location:</strong> {barangay}</p>
@@ -269,9 +269,6 @@
           </Form>
         </CardBody>
       </Card>
-
-      <!-- Display selected causes (optional for debugging or user review) -->
-<p><strong>Selected Causes:</strong> {selectedCauses.join(", ")}</p>
 
       <!-- Alert Section -->
        <Alert color="danger" class="mt-4 shadow text-light">
