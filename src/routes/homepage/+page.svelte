@@ -70,7 +70,7 @@
   }
 
   .forgot-password a:hover {
-    color: orange;
+    color: yellow;
   }
 
   /* Centered Login Button */
@@ -78,12 +78,6 @@
     display: flex;
     justify-content: center;
     width: 100%;
-  }
-
-  .login-button {
-    width: 50%; /* Adjust width for better UI */
-    font-size: 1.2rem;
-    padding: 10px 0;
   }
 </style>
 
