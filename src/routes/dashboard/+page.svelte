@@ -8,11 +8,10 @@
   let cause = "";
   let responseTime = "";
   let fireOutTime = "";
-  let structuresInvolved = "";
   let notes = "";
   let probableCauses = ["Stove", "Electric Fan", "Loose Wire", "Electrical Overload", "Candle"];
-  // User-selected causes
   let selectedCauses = [];
+  let structuresInvolved = [""];
   
   // Function to toggle cause selection
   function toggleCause(cause) {
@@ -25,7 +24,16 @@
     }
   }
 
-    
+  // Function to add a new structure input
+  function addStructure() {
+    structuresInvolved = [...structuresInvolved, " "];
+  }
+
+  // Function to remove a structure
+  function removeStructure(index) {
+    structuresInvolved = structuresInvolved.filter((_, i) => i !== index);
+  }
+
 </script>
 
 <svelte:head>
@@ -224,10 +232,33 @@
                 <Label for="fireOutTime">Time Fire Out:</Label>
                 <Input type="datetime-local" id="fireOutTime" bind:value={fireOutTime} />
               </FormGroup>
-              <FormGroup>
-                <Label for="structuresInvolved">Affected Structures:</Label>
-                <Input type="text" id="structuresInvolved" bind:value={structuresInvolved} placeholder="Enter structures involved" />
-              </FormGroup>
+              <div>
+                <label for="structuresInvolved">Affected Structures:</label>
+                {#each structuresInvolved as structure, index}
+                  <div>
+                    <input
+                      type="text"
+                      id="structuresInvolved"
+                      bind:value={structuresInvolved[index]}
+                      placeholder="Enter structure"
+                    />
+                    <!-- Trash icon for "Remove" -->
+                    <button type="button" on:click={() => removeStructure(index)} aria-label="Remove structure">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                        <path d="M5 7h14v12a2 2 0 01-2 2H7a2 2 0 01-2-2V7zm4 3a1 1 0 00-2 0v8a1 1 0 102 0v-8zm6 0a1 1 0 00-2 0v8a1 1 0 102 0v-8zM19 4h-4V2H9v2H5a1 1 0 100 2h14a1 1 0 100-2z" />
+                      </svg>
+                    </button>
+                  </div>
+                {/each}
+                <!-- Add Button -->
+                <button type="button" on:click={addStructure} class="flex items-center space-x-1 mt-2">
+               <!-- Plus-Square Icon -->
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m-2.25 6.75h12a2.25 2.25 0 002.25-2.25v-12a2.25 2.25 0 00-2.25-2.25h-12a2.25 2.25 0 00-2.25 2.25v12a2.25 2.25 0 002.25 2.25z" />
+                  </svg>
+                  <span>Add Structure</span>
+                </button>
+              </div>
               <FormGroup>
                 <Label for="notes">Additional Details:</Label>
                 <Input type="textarea" id="notes" bind:value={notes} rows="3" placeholder="Enter additional details" />
