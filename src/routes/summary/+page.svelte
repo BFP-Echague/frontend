@@ -5,6 +5,14 @@
     let showProfile = false; // Toggles Profile Visibility
     let showMenu = false; // Toggles Menu Visibility
 
+    function toggleMenu() {
+        showMenu = !showMenu;
+    }
+
+    function toggleProfile() {
+        showProfile = !showProfile;
+    }
+
     function generateReport(chartType: string) {
         alert(`Generating report for ${chartType}`);
     }
@@ -37,10 +45,11 @@
         position: relative;
     }
 
+    /* Ensure the menu appears properly */
     .menu-dropdown {
         position: absolute;
-        top: 40px;
-        left: 0;
+        top: 55px; /* Lowered */
+        left: 10px; /* Shifted slightly right */
         background: white;
         border: 1px solid #ccc;
         border-radius: 5px;
@@ -48,11 +57,14 @@
         width: 200px;
         display: none;
         flex-direction: column;
+        z-index: 1000;
     }
 
-    .menu:hover .menu-dropdown {
-        display: flex;
-    }
+    {#if showMenu}
+        .menu-dropdown {
+            display: flex;
+        }
+    {/if}
 
     .menu-item {
         padding: 10px;
@@ -82,19 +94,23 @@
 
     .profile-dropdown {
         position: absolute;
-        top: 40px;
-        right: 0;
+        top: 55px;
+        right: 10px;
         background: white;
         border: 1px solid #ccc;
         border-radius: 5px;
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         width: 150px;
         display: none;
+        flex-direction: column;
+        z-index: 1000;
     }
 
-    .profile:hover .profile-dropdown {
-        display: block;
-    }
+    {#if showProfile}
+        .profile-dropdown {
+            display: flex;
+        }
+    {/if}
 
     .title {
         text-align: center;
@@ -163,22 +179,28 @@
 
 <!-- Header -->
 <div class="header">
-    <!-- Menu Dropdown -->
-    <div class="menu">
+    <!-- Menu Button -->
+    <div class="menu" on:click={toggleMenu}>
         ☰ ANALYTICS OF FIRE INCIDENTS
-        <div class="menu-dropdown">
-            <a class="menu-item" href="/report">Fire Incident Report</a>
-            <a class="menu-item" href="/summary">Summary Statistics</a>
-        </div>
     </div>
 
-    <!-- Profile Button -->
-    <div class="profile">
-        👤
-        <div class="profile-dropdown">
-            <div class="menu-item">BFP Admin</div>
+    {#if showMenu}
+        <div class="menu-dropdown">
+            <a class="menu-item" href="/report">📄 Fire Incident Report</a>
+            <a class="menu-item" href="/summary">📊 Summary Statistics</a>
         </div>
+    {/if}
+
+    <!-- Profile Button -->
+    <div class="profile" on:click={toggleProfile}>
+        👤
     </div>
+
+    {#if showProfile}
+        <div class="profile-dropdown">
+            <div class="menu-item">👮 BFP Admin</div>
+        </div>
+    {/if}
 </div>
 
 <!-- Title -->
