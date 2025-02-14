@@ -10,6 +10,22 @@
   let fireOutTime = "";
   let structuresInvolved = "";
   let notes = "";
+  let probableCauses = ["Stove", "Electric Fan", "Loose Wire", "Electrical Overload", "Candle"];
+  // User-selected causes
+  let selectedCauses = [];
+  
+  // Function to toggle cause selection
+  function toggleCause(cause) {
+    if (selectedCauses.includes(cause)) {
+      // Remove the cause if it's already selected
+      selectedCauses = selectedCauses.filter(c => c !== cause);
+    } else {
+      // Add the cause if it's not selected
+      selectedCauses = [...selectedCauses, cause];
+    }
+  }
+
+    
 </script>
 
 <svelte:head>
@@ -77,8 +93,7 @@
               <h5>Incident Details</h5>
               <p><strong>Location:</strong> {barangay}</p>
               <p><strong>Category:</strong> {category}</p>
-              <p><strong>Cause:</strong> {cause}</p>
-              <p><strong>Time Reported:</strong> {reportTime}</p>
+              <p><strong>Selected Causes:</strong> {selectedCauses.join(", ")}</p>
               <p><strong>Time of Arrival:</strong> {responseTime}</p>
               <p><strong>Time Fire Out:</strong> {fireOutTime}</p>
               <p><strong>Affected Structures:</strong> {structuresInvolved}</p>
@@ -184,11 +199,23 @@
                   <option value="Flood Assistance">Flood Assistance</option>
                   <option value="Other">Other</option>
                 </Input>
-              </FormGroup>              
+              </FormGroup>  
               <FormGroup>
                 <Label for="cause">Probable Cause:</Label>
-                <Input type="text" id="cause" bind:value={cause} placeholder="Enter cause" />
-              </FormGroup>
+                {#each probableCauses as cause}
+                  <div class="form-check">
+                    <Input
+                      type="checkbox"
+                      class="form-check-input"
+                      id={cause}
+                      value={cause}
+                      checked={selectedCauses.includes(cause)}
+                      on:change={() => toggleCause(cause)}
+                    />
+                    <Label class="form-check-label" for={cause}>{cause}</Label>
+                  </div>
+                {/each}
+              </FormGroup>            
               <FormGroup>
                 <Label for="responseTime">Time of Arrival:</Label>
                 <Input type="datetime-local" id="responseTime" bind:value={responseTime} />
@@ -212,6 +239,9 @@
         </CardBody>
       </Card>
 
+      <!-- Display selected causes (optional for debugging or user review) -->
+<p><strong>Selected Causes:</strong> {selectedCauses.join(", ")}</p>
+
       <!-- Alert Section -->
       <Alert color="warning" class="mt-4 shadow">
         <Icon name="exclamation-circle" class="me-2" /> Ensure all fields are filled accurately before submitting.
@@ -219,7 +249,6 @@
     </Col>
   </Row>
 </Container>
-
 
 <!-- Spinner for Loading State -->
 <Spinner type="border" color="danger" class="d-block mx-auto my-4" />
