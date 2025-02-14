@@ -263,7 +263,7 @@
                 <Label for="notes">Additional Details:</Label>
                 <Input type="textarea" id="notes" bind:value={notes} rows={3} placeholder="Enter additional details" />
               </FormGroup>
-              <Button color="danger" class="w-100">
+              <Button color="primary" class="w-100">
                 <i class="bi bi-send me-2"></i>Submit Report
               </Button>
           </Form>
