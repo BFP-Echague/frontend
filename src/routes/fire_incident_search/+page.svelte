@@ -1,5 +1,36 @@
 <script lang="ts">
-  // Sample data
+  import {
+    Button,
+    Input,
+    Table,
+    Alert,
+    Row,
+    Col,
+    Container,
+    Navbar,
+    NavbarBrand,
+    NavbarToggler,
+    Nav,
+    NavItem,
+    NavLink,
+    Dropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+    Icon,
+    Collapse,
+    Card,
+    CardBody,
+    CardHeader,
+    CardFooter,
+    CardTitle,
+    CardSubtitle,
+    CardText,
+    FormGroup,
+    Form,
+    Styles
+  } from '@sveltestrap/sveltestrap';
+
   interface Data {
     date: string;
     purok: string;
@@ -16,8 +47,8 @@
 
   let searchTerm = "";
   let filteredData = sampleData;
+  let isOpen = false;
 
-  // Function to perform search
   function performSearch() {
     filteredData = sampleData.filter(
       (item) =>
@@ -28,7 +59,6 @@
     );
   }
 
-  // Function to update the results summary
   function getResultsSummary(data: Data[]) {
     if (data.length === 0) {
       return "No results found. Please refine your search.";
@@ -50,158 +80,92 @@
   }
 </script>
 
-<!-- svelte-ignore css_unused_selector -->
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
-    color: #333;
-  }
-  header {
-    background-color: #d32f2f; /* BFP Red */
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  .header-content {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Space between the logo and dashboard button */
-  }
-  .bfp-logo-header {
-    width: 50px; /* Adjust logo size as needed */
-    height: auto;
-  }
-  header button {
-    background-color: #1976d2; /* BFP Blue */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  header input {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    width: 300px;
-  }
-  .profile-icon {
-    margin-left: 10px;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-  }
-  .container {
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 20px;
-  }
-  h1 {
-    color: #d32f2f; /* BFP Red */
-    margin-bottom: 20px;
-  }
-  .search-bar {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  .search-bar input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  .search-bar button {
-    background-color: #1976d2; /* BFP Blue */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  .results-container {
-    display: grid;
-    grid-template-columns: 2fr 1fr; /* Two columns: 2/3 for table, 1/3 for description */
-    gap: 20px; /* Space between the table and description */
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  table th,
-  table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-  table th {
-    background-color: #f8f8f8;
-    font-weight: bold;
-  }
-  .results-description {
-    background-color: #f8f8f8;
-    padding: 15px;
-    border-radius: 5px;
-    height: fit-content; /* Adjust height to fit content */
-  }
-  .results-description h3 {
-    margin-top: 0;
-    color: #d32f2f; /* BFP Red */
-  }
-</style>
+<Styles />
 
-<header>
-  <div class="header-content">
-    <img src="bfp_logo.jpg" alt="Bureau of Fire Protection Logo" class="bfp-logo-header" />
-    <button>🏠 Search Fire Incident</button>
-  </div>
-  <div>
-    <input type="text" placeholder="Search..." />
-    <i class="fas fa-user-circle profile-icon"></i>
-  </div>
-</header>
+<Navbar color="danger" dark expand="md">
+  <NavbarBrand href="/">
+    <img src="bfp_logo.jpg" alt="Bureau of Fire Protection Logo" width="50" height="auto" />
+    Bureau of Fire Protection
+  </NavbarBrand>
+  <NavbarToggler on:click={() => (isOpen = !isOpen)} />
+  <Collapse {isOpen} navbar>
+    <Nav navbar class="ms-auto">
+      <NavItem>
+        <NavLink href="#search">Search Fire Incident</NavLink>
+      </NavItem>
+      <Dropdown nav inNavbar>
+        <DropdownToggle nav caret>Profile</DropdownToggle>
+        <DropdownMenu end>
+          <DropdownItem>Settings</DropdownItem>
+          <DropdownItem>Logout</DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+    </Nav>
+  </Collapse>
+</Navbar>
 
-<div class="container">
-  <h1>Search Fire Incident</h1>
-  <div class="search-bar">
-    <input type="text" bind:value={searchTerm} placeholder="Enter search term..." />
-    <button on:click={performSearch}>Search</button>
-  </div>
+<Container class="mt-4">
+  <Row>
+    <Col>
+      <Card>
+        <CardHeader>
+          <CardTitle class="text-danger">Search Fire Incident</CardTitle>
+          <CardSubtitle>Enter your search criteria below</CardSubtitle>
+        </CardHeader>
+        <CardBody>
+          <Form>
+            <FormGroup>
+              <Input type="text" bind:value={searchTerm} placeholder="Enter search term..." class="border-danger rounded" />
+            </FormGroup>
+            <Button color="primary" on:click={performSearch}>Search</Button>
+          </Form>
+        </CardBody>
+      </Card>
+    </Col>
+  </Row>
 
-  <div class="results-container">
-    <!-- Left Column: Table -->
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Purok</th>
-          <th>Barangay</th>
-          <th>Year</th>
-        </tr>
-      </thead>
-      <tbody>
-        {#each filteredData as item}
-          <tr>
-            <td>{item.date}</td>
-            <td>{item.purok}</td>
-            <td>{item.barangay}</td>
-            <td>{item.year}</td>
-          </tr>
-        {/each}
-      </tbody>
-    </table>
-
-    <!-- Right Column: Short Description -->
-    <div class="results-description">
-      <h3>Short Description of Results</h3>
-      <p>{@html getResultsSummary(filteredData)}</p>
-    </div>
-  </div>
-</div>
+  <Row class="mt-4">
+    <Col md="8">
+      <Card>
+        <CardHeader>
+          <CardTitle class="text-danger">Search Results</CardTitle>
+        </CardHeader>
+        <CardBody>
+          <Table bordered striped hover>
+            <thead>
+              <tr class="table-danger">
+                <th>Date</th>
+                <th>Purok</th>
+                <th>Barangay</th>
+                <th>Year</th>
+              </tr>
+            </thead>
+            <tbody>
+              {#each filteredData as item}
+                <tr>
+                  <td>{item.date}</td>
+                  <td>{item.purok}</td>
+                  <td>{item.barangay}</td>
+                  <td>{item.year}</td>
+                </tr>
+              {/each}
+            </tbody>
+          </Table>
+        </CardBody>
+      </Card>
+    </Col>
+    <Col md="4">
+      <Card>
+        <CardHeader>
+          <CardTitle class="text-danger">Summary</CardTitle>
+        </CardHeader>
+        <CardBody>
+          <Alert color="danger">
+            <h3>Short Description of Results</h3>
+            <p>{@html getResultsSummary(filteredData)}</p>
+          </Alert>
+        </CardBody>
+      </Card>
+    </Col>
+  </Row>
+</Container>
