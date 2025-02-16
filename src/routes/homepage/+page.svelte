@@ -1,7 +1,7 @@
 <script lang="ts">
   import { 
     Navbar, NavbarBrand, Button, Form, FormGroup, Label, Input, 
-    Modal, ModalHeader, ModalBody, ModalFooter, Container, InputGroup, Icon
+    Modal, ModalHeader, ModalBody, ModalFooter, Container, InputGroup, Icon 
   } from '@sveltestrap/sveltestrap';
 
   let showModal = false;
@@ -12,11 +12,27 @@
   const togglePassword = () => {
     showPassword = !showPassword;
   };
+
+  const openModal = (event) => {
+    event.preventDefault(); // Prevent default behavior
+    showModal = true; 
+  };
+
+  const closeModal = () => {
+    showModal = false;
+  };
+
+  const login = (event) => {
+    event.preventDefault(); // Prevent default behavior
+    console.log("Logging in with:", { username, password });
+    closeModal(); // Close modal after login
+  };
 </script>
+
 <!-- NAVIGATION BAR -->
 <Navbar color="light" class="d-flex justify-content-between align-items-center px-3">
   <NavbarBrand href="https://bfpechague.com.ph">https://bfpechague.com.ph</NavbarBrand>
-  <Button color="success" on:click={() => showModal = true}>LOG IN</Button>
+  <Button color="success" on:click={openModal}>LOG IN</Button>
 </Navbar>
 
 <!-- BACKGROUND IMAGE SECTION -->
@@ -35,10 +51,10 @@
 </div>
 
 <!-- LOGIN MODAL -->
-<Modal isOpen={showModal} toggle={() => showModal = false}>
-  <ModalHeader toggle={() => showModal = false}></ModalHeader>
+<Modal isOpen={showModal} toggle={closeModal}>
+  <ModalHeader toggle={closeModal}></ModalHeader>
   <ModalBody>
-    <Form>
+    <Form on:submit={login}>
       <FormGroup>
         <Label for="username" class="text-warning">Username</Label>
         <Input 
@@ -52,24 +68,32 @@
 
       <FormGroup>
         <Label for="password" class="text-warning">Password</Label>
-        <InputGroup class="d-flex align-items-center">
+        <InputGroup class="position-relative">
           <Input 
             type={showPassword ? 'text' : 'password'} 
             id="password" 
             bind:value={password} 
             required 
             placeholder="Enter your password"
+            class="pr-5"
           />
-          <Button color="warning" on:click={togglePassword} class="ms-2">
-            <Icon name={showPassword ? "Show" : "Hide"} />
+          <Button 
+            color="white" 
+            on:click={togglePassword} 
+            type="button" 
+            class="position-absolute end-0 top-50 translate-middle-y me-2 p-1"
+          >
+            <Icon name={showPassword ? "eye-slash" : "eye"} />
           </Button>
         </InputGroup>
       </FormGroup>
+      
+
+      <ModalFooter class="d-flex justify-content-center w-100">
+        <Button color="warning" class="w-50" type="submit">Login</Button>
+      </ModalFooter>
     </Form>
   </ModalBody>
-  <ModalFooter class="d-flex justify-content-center w-100">
-    <Button color="warning" class="w-50" on:click={() => showModal = false}>Login</Button>
-  </ModalFooter>
   <Container class="d-flex justify-content-center w-100">
     <Button color="link" class="text-warning">Forgot Password?</Button>
   </Container>
