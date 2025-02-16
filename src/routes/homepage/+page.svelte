@@ -13,7 +13,6 @@
     showPassword = !showPassword;
   };
 </script>
-
 <!-- NAVIGATION BAR -->
 <Navbar color="light" class="d-flex justify-content-between align-items-center px-3">
   <NavbarBrand href="https://bfpechague.com.ph">https://bfpechague.com.ph</NavbarBrand>
