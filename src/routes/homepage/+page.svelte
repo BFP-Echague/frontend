@@ -14,13 +14,11 @@
     };
   </script>
 
-  <!-- NAVIGATION BAR -->
   <Navbar color="light" class="d-flex justify-content-between align-items-center px-3">
     <NavbarBrand href="https://bfpechague.com.ph">https://bfpechague.com.ph</NavbarBrand>
     <Button color="success" on:click={() => (showModal = true)}>LOG IN</Button>
   </Navbar>
 
-  <!-- BACKGROUND IMAGE SECTION -->
   <div class="bg-dark vh-100 position-relative d-flex align-items-center justify-content-center text-white text-center overflow-hidden">
     <img src="homepage-background.png" alt="Background" class="img-fluid w-100 h-100 object-fit-cover position-absolute top-0 start-0">
     <div class="position-absolute d-flex flex-column align-items-center p-3 bg-dark bg-opacity-75 rounded">
@@ -35,7 +33,6 @@
     </div>
   </div>
 
-  <!-- LOGIN MODAL -->
   <Modal bind:isOpen={showModal}>
     <ModalHeader toggle={() => (showModal = false)}></ModalHeader>
     
@@ -79,12 +76,9 @@
         </ModalFooter>
       </Form>
     </ModalBody>
-  
-    <!-- Fallback Close Button -->
     <Button class="position-absolute top-0 end-0 m-2 p-2" color="link" on:click={() => (showModal = false)}>
       ❌
     </Button>
-  
     <Container class="d-flex justify-content-center w-100">
       <Button color="link" class="text-warning">Forgot Password?</Button>
     </Container>
