@@ -25,9 +25,9 @@
   <img src="homepage-background.png" alt="Background" class="img-fluid w-100 h-100 object-fit-cover position-fixed top-0 start-0">
   <div class="position-absolute top-50 start-50 translate-middle text-white text-center bg-dark bg-opacity-75 p-4 rounded">
     <h1 class="display-4 text-warning">WELCOME TO<br>BFP ECHAGUE!</h1>
-    <hr class="bg-warning w-100">
+    <hr class="border border-warning w-100 my-2" style="height: 3px;">
     <p class="lead text-warning">FIRE MAPPING SYSTEM</p>
-    <hr class="bg-warning w-100">
+    <hr class="border border-warning w-100 my-2" style="height: 3px;">
     <h5 class="text-warning">CONTACT DEVELOPERS</h5>
     <p class="text-warning d-flex align-items-center gap-2 justify-content-center m-0">
       <Icon name="telephone-fill" class="fs-3" /> 09123456789 | <Icon name="telephone-fill" class="fs-3" /> 09246810123
@@ -60,7 +60,7 @@
         </FormGroup>
 
         <FormGroup check class="text-start">
-          <Input type="checkbox" label="Remember Me" />
+            <Input type="checkbox" label="Remember Me" />
         </FormGroup>
 
         <Button color="dark" class="w-50 mt-3">Log In</Button>
