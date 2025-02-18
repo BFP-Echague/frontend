@@ -84,7 +84,7 @@
   
   <Navbar color="danger" dark expand="md">
     <NavbarBrand href="/">
-      <img src="bfp_logo.jpg" alt="Bureau of Fire Protection Logo" width="50" height="auto" />
+      <img src="bfp-logo.jpg" alt="Bureau of Fire Protection Logo" width="50" height="auto" />
       Bureau of Fire Protection
     </NavbarBrand>
     <NavbarToggler on:click={() => (isOpen = !isOpen)} />
@@ -161,8 +161,8 @@
           </CardHeader>
           <CardBody>
             <Alert color="danger">
-              <h3>Short Description of Results</h3>
-              <p>{@html getResultsSummary(filteredData)}</p>
+              <h3 class="text-light">Short Description of Results</h3>
+              <p class="text-light">{@html getResultsSummary(filteredData)}</p>
             </Alert>
           </CardBody>
         </Card>
