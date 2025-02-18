@@ -109,7 +109,7 @@
       <Col>
         <Card>
           <CardHeader>
-            <CardTitle class="text-danger">Search Fire Incident</CardTitle>
+            <CardTitle class="text-primary">Search Fire Incident</CardTitle>
             <CardSubtitle>Enter your search criteria below</CardSubtitle>
           </CardHeader>
           <CardBody>
