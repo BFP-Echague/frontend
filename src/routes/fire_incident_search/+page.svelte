@@ -157,10 +157,10 @@
       <Col md="4">
         <Card>
           <CardHeader>
-            <CardTitle class="text-danger">Summary</CardTitle>
-          </CardHeader>
-          <CardBody>
-            <Alert color="danger">
+            <CardTitle class="text-primary">Summary</CardTitle>
+            </CardHeader>
+              <CardBody>
+              <Alert color="primary">
               <h3 class="text-light">Short Description of Results</h3>
               <p class="text-light">{@html getResultsSummary(filteredData)}</p>
             </Alert>
