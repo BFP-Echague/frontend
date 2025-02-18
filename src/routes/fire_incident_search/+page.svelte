@@ -133,7 +133,7 @@
           <CardBody>
             <Table bordered striped hover>
               <thead>
-                <tr class="table-danger">
+                <tr class="table-primary">
                   <th>Date</th>
                   <th>Purok</th>
                   <th>Barangay</th>
