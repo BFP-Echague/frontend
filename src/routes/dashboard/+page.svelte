@@ -1,5 +1,5 @@
 <script>
-  import { Navbar, Nav, NavItem, NavLink, Container, Row, Col, Card, CardBody, CardTitle, Form, FormGroup, Label, Input, Button, Alert, Progress, Spinner, Icon } from "@sveltestrap/sveltestrap";
+  import { Navbar, Nav, NavItem, NavLink, Container, Row, Col, Card, CardBody, CardTitle, Form, FormGroup, Label, Input, Button, Alert, Progress, Icon } from "@sveltestrap/sveltestrap";
 
   // Form input values
   let reportTime = "";
@@ -81,7 +81,7 @@
     <Col md="8">
       <Card class="mb-4 shadow">
         <CardBody>
-          <CardTitle class="text-danger fs-3">
+          <CardTitle class="text-primary fs-3">
             <h3 class="d-inline">
               <Icon name="map" class="me-2" /> Fire Incident Map
             </h3>
@@ -92,7 +92,7 @@
 
       <Card class="shadow">
         <CardBody>
-          <h3 class="text-danger">
+          <h3 class="text-primary">
             <Icon name="clipboard-data" class="me-2" /> Incident Results
           </h3>
           <div class="d-flex align-items-start gap-4">
@@ -116,7 +116,7 @@
     <Col md="4">
       <Card class="shadow">
         <CardBody>
-          <h3 class="text-danger">
+          <h3 class="text-primary">
             <Icon name="exclamation-triangle" class="me-2" /> Incident Report
           </h3>
           <Form>
@@ -277,6 +277,3 @@
     </Col>
   </Row>
 </Container>
-
-<!-- Spinner for Loading State -->
-<Spinner type="border" color="danger" class="d-block mx-auto my-4" />
