@@ -128,7 +128,7 @@
       <Col md="8">
         <Card>
           <CardHeader>
-            <CardTitle class="text-danger">Search Results</CardTitle>
+            <CardTitle class="text-primary">Search Results</CardTitle>
           </CardHeader>
           <CardBody>
             <Table bordered striped hover>
