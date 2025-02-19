@@ -1,224 +1,72 @@
-<script>
-    let showModal = false;
+<script lang="ts">
+  import { 
+    Navbar, NavbarBrand, Button, Form, FormGroup, Label, Input, 
+    Modal, ModalBody, Container, Icon 
+  } from '@sveltestrap/sveltestrap';
+
+  let showModal = false;
+  let username = '';
+  let password = '';
+  let showPassword = false;
+
+  const togglePassword = () => {
+    showPassword = !showPassword;
+  };
 </script>
 
-<!-- Navbar -->
-<nav class="navbar">
-    <span>https://bfpechague.com.ph</span>
-    <button type="button" class="login-btn" on:click={() => showModal = true}>LOG IN</button>
-</nav>
+<!-- Fixed Navbar -->
+<Navbar color="dark" class="d-flex justify-content-between align-items-center px-3 position-fixed top-0 w-100 shadow" style="z-index: 1050;">
+  <NavbarBrand href="https://bfpechague.com.ph" class="text-warning fw-bold">https://bfpechague.com.ph</NavbarBrand>
+  <Button color="warning" class="m-0" on:click={() => (showModal = true)}>LOG IN</Button>
+</Navbar>
 
-<!-- Main Content -->
-<div class="content">
-    <div class="left-panel">
-        <h1>WELCOME TO BFP ECHAGUE!</h1>
-        <hr/>
-        <p>FIRE MAPPING SYSTEM</p>
-        <hr/>
-        <div class="contact">
-            <p>CONTACT DEVELOPERS</p>
-            <div>
-                <img src="icon.png" alt="Phone Icon" />
-                <span>09679031671</span>
-            </div>
-            <div>
-                <img src="icon.png" alt="Phone Icon" />
-                <span>09285908046</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="right-panel"></div>
+<!-- Fixed Background & Centered Content -->
+<div class="vh-100 w-100 position-fixed top-0 start-0 overflow-hidden">
+  <img src="homepage-background.png" alt="Background" class="img-fluid w-100 h-100 object-fit-cover position-fixed top-0 start-0">
+  <div class="position-absolute top-50 start-50 translate-middle text-white text-center bg-dark bg-opacity-75 p-4 rounded">
+    <h1 class="display-4 text-warning">WELCOME TO<br>BFP ECHAGUE!</h1>
+    <hr class="border border-warning w-100 my-2" style="height: 3px;">
+    <p class="lead text-warning">FIRE MAPPING SYSTEM</p>
+    <hr class="border border-warning w-100 my-2" style="height: 3px;">
+    <h5 class="text-warning">CONTACT DEVELOPERS</h5>
+    <p class="text-warning d-flex align-items-center gap-2 justify-content-center m-0">
+      <Icon name="telephone-fill" class="fs-3" /> 09123456789 | <Icon name="telephone-fill" class="fs-3" /> 09246810123
+    </p>
+  </div>
 </div>
 
 <!-- Login Modal -->
-{#if showModal}
-<div 
-    class="modal" 
-    role="dialog" 
-    aria-modal="true" 
-    on:click={() => showModal = false} 
-    on:keydown={(e) => e.key === "Escape" && (showModal = false)}
-    tabindex="0"
->
-    <div class="modal-content" on:click|stopPropagation>
-        <button class="close" on:click={() => showModal = false}>&times;</button>
-        <h2>Login</h2>
-
-        <div class="input-box">
-            <input type="text" id="username" required class="name-input" />
-            <label for="username" class="name-label">USERNAME</label>
-        </div>
-
-        <div class="input-box">
-            <input type="password" id="password" required class="name-input" />
-            <label for="password" class="name-label">PASSWORD</label>
-        </div>
-
-        <button type="button" class="login-btn">Log In</button>
-
-        <div class="modal-footer">
-            <button class="forgot-password-btn" type="button">Forgot Password?</button>
-        </div>
+<Modal bind:isOpen={showModal}>
+  <ModalBody class="text-center position-relative">
+    <Button color="white" class="position-absolute top-0 end-0 m-2 p-0 border-0" on:click={() => (showModal = false)}>
+      <Icon name="x" class="h1" />
+    </Button>
+    <Icon name="person-circle" class="fs-1" />
+    <div class="mt-2 mb-3">
+      <h3 class="fw-bold">ADMIN</h3>
     </div>
-</div>
-{/if}
+    <Form on:submit={() => (showModal = false)}>
+        <FormGroup>
+            <Input type="text" id="username" bind:value={username} required placeholder="Username" />
+        </FormGroup>
 
-<!-- Styles -->
-<style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+        <FormGroup>
+            <div class="d-flex align-items-center position-relative">
+                <Input type={showPassword ? 'text' : 'password'} id="password" bind:value={password} required placeholder="Password" class="w-100" />
+                <Button color="white" on:click={togglePassword} type="button" class="position-absolute end-0 me-2 top-50 translate-middle-y p-1">
+                    <Icon name={showPassword ? "eye-slash" : "eye"} class="fs-5" />
+                </Button>
+            </div>
+        </FormGroup>
 
-    body {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        font-family: "Poppins", sans-serif;
-        letter-spacing: 0.1rem;
-        gap: 2rem;
-    }
+        <FormGroup check class="text-start">
+            <Input type="checkbox" label="Remember Me" />
+        </FormGroup>
 
-    /* Navbar */
-    .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-        background-color: #444;
-        color: #fff;
-    }
-    .navbar a {
-        color: #fff;
-        text-decoration: none;
-        padding: 5px 15px;
-        border: 1px solid #fff;
-        border-radius: 5px;
-        background-color: #666;
-        cursor: pointer;
-    }
-    .navbar a:hover {
-        background-color: #888;
-    }
-
-    /* Main Content */
-    .content {
-        display: flex;
-        flex-direction: row;
-        height: calc(100vh - 50px);
-    }
-
-    /* Left Panel */
-    .left-panel {
-        height: 110%;
-        width: 35%;
-        padding: 20px;
-        background-color: #ce1717;
-        box-shadow: 2px 0 5px rgba(255, 255, 255, 0.1);
-    }
-    .left-panel h1 {
-        font-size: 4.3rem;
-        font-weight: bold;
-        text-align: center;
-        color: #ffee06;
-        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-        letter-spacing: 2px;
-    }
-    .left-panel p {
-        font-size: 1.5rem;
-        color: #ffee06;
-    }
-
-    /* Right Panel */
-    .right-panel {
-        flex-grow: 2;
-        height: 100vh;
-        background-image: url('background.png');
-        background-size: cover;
-        background-position: center;
-        position: relative;
-    }
-
-    /* Modal */
-    .modal {
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .modal-content {
-        background: #fff;
-        width: 350px;
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-        position: relative;
-    }
-    .close {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 22px;
-        cursor: pointer;
-    }
-    .modal-footer {
-        margin-top: 10px;
-    }
-
-    /* New Styles */
-    .input-box {
-        position: relative;
-        width: 300px;
-    }
-
-    .name-input {
-        width: 100%;
-        padding: 5px;
-        border: none;
-        border-bottom: 2px solid #ccc;
-        outline: none;
-        background: transparent;
-        color: #333;
-        font-size: 1.8rem;
-    }
-
-    .name-label {
-        position: absolute;
-        left: 0;
-        padding: 10px 5px;
-        color: rgba(0, 0, 0, 0.5);
-        font-size: 1.4rem;
-        pointer-events: none;
-        transition: 0.5s;
-    }
-
-    .name-input:valid ~ .name-label,
-    .name-input:focus ~ .name-label {
-        transform: translateY(-1.5rem);
-        color: rgb(162, 162, 198);
-        font-size: 0.75rem;
-    }
-
-    .login-btn {
-        background: none;
-        border: none;
-        color: #333;
-        font-size: 1rem;
-        cursor: pointer;
-        text-decoration: underline;
-    }
-
-    .login-btn:hover {
-        text-decoration: none;
-    }
-</style>
+        <Button color="dark" class="w-50 mt-3">Log In</Button>
+    </Form>
+    <Container class="text-center mt-2">
+        <Button color="link">Forgot password?</Button>
+    </Container>
+  </ModalBody>
+</Modal>
