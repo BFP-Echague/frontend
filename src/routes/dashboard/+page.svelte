@@ -1,5 +1,5 @@
-<script>
-  import { Navbar, Nav, NavItem, NavLink, Container, Row, Col, Card, CardBody, CardTitle, Form, FormGroup, Label, Input, Button, Alert, Progress, Spinner, Icon } from "@sveltestrap/sveltestrap";
+<script lang="ts">
+  import { Navbar, Nav, NavItem, NavLink, Container, Row, Col, Card, CardBody, CardTitle, Form, FormGroup, Label, Input, Button, Alert, Progress, Icon } from "@sveltestrap/sveltestrap";
 
   // Form input values
   let reportTime = "";
@@ -10,11 +10,11 @@
   let fireOutTime = "";
   let notes = "";
   let probableCauses = ["Stove", "Electric Fan", "Loose Wire", "Electrical Overload", "Candle"];
-  let selectedCauses = [];
+  let selectedCauses: string[] = [];
   let structuresInvolved = [""];
   
   // Function to toggle cause selection
-  function toggleCause(cause) {
+  function toggleCause(cause: string) {
     if (selectedCauses.includes(cause)) {
       // Remove the cause if it's already selected
       selectedCauses = selectedCauses.filter(c => c !== cause);
@@ -30,7 +30,7 @@
   }
 
   // Function to remove a structure
-  function removeStructure(index) {
+  function removeStructure(index: number) {
     structuresInvolved = structuresInvolved.filter((_, i) => i !== index);
   }
 
@@ -81,7 +81,7 @@
     <Col md="8">
       <Card class="mb-4 shadow">
         <CardBody>
-          <CardTitle class="text-danger fs-3">
+          <CardTitle class="text-primary fs-3">
             <h3 class="d-inline">
               <Icon name="map" class="me-2" /> Fire Incident Map
             </h3>
@@ -92,11 +92,11 @@
 
       <Card class="shadow">
         <CardBody>
-          <h3 class="text-danger">
+          <h3 class="text-primary">
             <Icon name="clipboard-data" class="me-2" /> Incident Results
           </h3>
           <div class="d-flex align-items-start gap-4">
-            <img src="/placeholder-incident.jpg" alt="Incident details image" class="rounded" style="width: 440px;" />
+            <img src="/placeholder-incident.jpg" alt="Incident details" class="rounded" style="width: 440px;" />
             <div>
               <h5>Incident Details</h5>
               <p><strong>Location:</strong> {barangay}</p>
@@ -116,7 +116,7 @@
     <Col md="4">
       <Card class="shadow">
         <CardBody>
-          <h3 class="text-danger">
+          <h3 class="text-primary">
             <Icon name="exclamation-triangle" class="me-2" /> Incident Report
           </h3>
           <Form>
@@ -277,6 +277,3 @@
     </Col>
   </Row>
 </Container>
-
-<!-- Spinner for Loading State -->
-<Spinner type="border" color="danger" class="d-block mx-auto my-4" />
