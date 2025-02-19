@@ -96,7 +96,7 @@
             <Icon name="clipboard-data" class="me-2" /> Incident Results
           </h3>
           <div class="d-flex align-items-start gap-4">
-            <img src="/placeholder-incident.jpg" alt="Incident details image" class="rounded" style="width: 440px;" />
+            <img src="/placeholder-incident.jpg" alt="Incident details" class="rounded" style="width: 440px;" />
             <div>
               <h5>Incident Details</h5>
               <p><strong>Location:</strong> {barangay}</p>
