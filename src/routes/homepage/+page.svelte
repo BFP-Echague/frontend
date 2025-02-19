@@ -1,72 +1,203 @@
 <script lang="ts">
-  import { 
-    Navbar, NavbarBrand, Button, Form, FormGroup, Label, Input, 
-    Modal, ModalBody, Container, Icon 
-  } from '@sveltestrap/sveltestrap';
+    import { Button, Modal } from "@sveltestrap/sveltestrap";
 
-  let showModal = false;
-  let username = '';
-  let password = '';
-  let showPassword = false;
-
-  const togglePassword = () => {
-    showPassword = !showPassword;
-  };
+    let open = false;
+    function toggle() {
+        open = !open;
+    }
 </script>
 
-<!-- Fixed Navbar -->
-<Navbar color="dark" class="d-flex justify-content-between align-items-center px-3 position-fixed top-0 w-100 shadow" style="z-index: 1050;">
-  <NavbarBrand href="https://bfpechague.com.ph" class="text-warning fw-bold">https://bfpechague.com.ph</NavbarBrand>
-  <Button color="warning" class="m-0" on:click={() => (showModal = true)}>LOG IN</Button>
-</Navbar>
+<svelte:head>
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f5f5;
+      }
+  
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #444;
+        color: #fff;
+      }
+  
+      .navbar a {
+        color: #fff;
+        text-decoration: none;
+        padding: 5px 15px;
+        border: 1px solid #fff;
+        border-radius: 5px;
+        background-color: #666;
+        cursor: pointer;
+      }
+  
+      .navbar a:hover {
+        background-color: #888;
+      }
+  
+      .content {
+        display: flex;
+        flex-direction: row;
+        height: calc(100vh - 50px);
+      }
+  
+      .left-panel {
+        height: 100%;
+        width: 35%;
+        padding: 20px;
+        background-color: #ce1717;
+        box-shadow: 2px 0 5px rgba(255, 255, 255, 0.1);
+      }
+  
+      .left-panel h1 {
+        font-size: 4.3rem;
+        font-weight: bold;
+        text-align: center;
+        color: #ffee06;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        letter-spacing: 2px;
+      }
+  
+      .left-panel p {
+        font-size: 1.5rem;
+        color: #ffee06;
+      }
+  
+      .right-panel {
+        flex-grow: 2;
+        height: 107%;
+        background-image: url('background.png');
+        background-size: cover;
+        background-position: center;
+        position: relative;
+      }
+  
 
-<!-- Fixed Background & Centered Content -->
-<div class="vh-100 w-100 position-fixed top-0 start-0 overflow-hidden">
-  <img src="homepage-background.png" alt="Background" class="img-fluid w-100 h-100 object-fit-cover position-fixed top-0 start-0">
-  <div class="position-absolute top-50 start-50 translate-middle text-white text-center bg-dark bg-opacity-75 p-4 rounded">
-    <h1 class="display-4 text-warning">WELCOME TO<br>BFP ECHAGUE!</h1>
-    <hr class="border border-warning w-100 my-2" style="height: 3px;">
-    <p class="lead text-warning">FIRE MAPPING SYSTEM</p>
-    <hr class="border border-warning w-100 my-2" style="height: 3px;">
-    <h5 class="text-warning">CONTACT DEVELOPERS</h5>
-    <p class="text-warning d-flex align-items-center gap-2 justify-content-center m-0">
-      <Icon name="telephone-fill" class="fs-3" /> 09123456789 | <Icon name="telephone-fill" class="fs-3" /> 09246810123
-    </p>
-  </div>
-</div>
-
-<!-- Login Modal -->
-<Modal bind:isOpen={showModal}>
-  <ModalBody class="text-center position-relative">
-    <Button color="white" class="position-absolute top-0 end-0 m-2 p-0 border-0" on:click={() => (showModal = false)}>
-      <Icon name="x" class="h1" />
-    </Button>
-    <Icon name="person-circle" class="fs-1" />
-    <div class="mt-2 mb-3">
-      <h3 class="fw-bold">ADMIN</h3>
+      
+  
+      .close {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 22px;
+        cursor: pointer;
+      }
+  
+      .input-box {
+        position: relative;
+        margin: 20px 0;
+      }
+  
+      .input-box input {
+        width: 90%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        outline: none;
+        font-size: 1rem;
+      }
+  
+      .input-box label {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
+        font-size: 1rem;
+        color: #aaa;
+        transition: 0.3s ease-in-out;
+      }
+  
+      .input-box input:focus + label,
+      .input-box input:valid + label {
+        top: 0;
+        font-size: 0.8rem;
+        color: #ce1717;
+      }
+  
+      .modal button {
+        background-color: #ce1717;
+        color: white;
+        border: none;
+        padding: 10px;
+        width: 100%;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+  
+      .modal button:hover {
+        background-color: #a11212;
+      }
+  
+      .modal-footer {
+        margin-top: 15px;
+      }
+  
+      .modal-footer a {
+        text-decoration: none;
+        color: #ce1717;
+        font-size: 0.9rem;
+        display: block;
+        margin: 5px 0;
+      }
+  
+      .contact div img {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+      }
+    </style>
+  </svelte:head>
+  
+    <div class="navbar">
+      <span>https://bfpechague.com.ph</span>
+      <Button color="success" on:click={toggle}>LOG IN</Button>
     </div>
-    <Form on:submit={() => (showModal = false)}>
-        <FormGroup>
-            <Input type="text" id="username" bind:value={username} required placeholder="Username" />
-        </FormGroup>
-
-        <FormGroup>
-            <div class="d-flex align-items-center position-relative">
-                <Input type={showPassword ? 'text' : 'password'} id="password" bind:value={password} required placeholder="Password" class="w-100" />
-                <Button color="white" on:click={togglePassword} type="button" class="position-absolute end-0 me-2 top-50 translate-middle-y p-1">
-                    <Icon name={showPassword ? "eye-slash" : "eye"} class="fs-5" />
-                </Button>
-            </div>
-        </FormGroup>
-
-        <FormGroup check class="text-start">
-            <Input type="checkbox" label="Remember Me" />
-        </FormGroup>
-
-        <Button color="dark" class="w-50 mt-3">Log In</Button>
-    </Form>
-    <Container class="text-center mt-2">
-        <Button color="link">Forgot password?</Button>
-    </Container>
-  </ModalBody>
-</Modal>
+  
+    <div class="content">
+      <div class="left-panel">
+        <h1>WELCOME TO BFP ECHAGUE!</h1>
+        <hr>
+        <p>FIRE MAPPING SYSTEM</p>
+        <hr>
+        <div class="contact">
+          <p>CONTACT DEVELOPERS</p>
+          <div>
+            <img src="icon.png" alt="Phone Icon">
+            <span>09679031671</span>
+          </div>
+          <div>
+            <img src="icon.png" alt="Phone Icon">
+            <span>09285908046</span>
+          </div>
+        </div>
+      </div>
+      <div class="right-panel"></div>
+    </div>
+  
+    <!-- Login Modal -->
+    <Modal isOpen={open} {toggle}>
+      <div class="modal-content">
+        <span class="close" id="closeBtn">&times;</span>
+        <h2>Login</h2>
+  
+        <div class="input-box">
+          <input type="text" required />
+          <label>USERNAME</label>
+        </div>
+  
+        <div class="input-box">
+          <input type="password" required />
+          <label>PASSWORD</label>
+        </div>
+  
+        <button>Log In</button>
+  
+        <div class="modal-footer">
+          <a>Forgot Password?</a>
+        </div>
+      </div>
+    </Modal>
