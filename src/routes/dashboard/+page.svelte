@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { Navbar, Nav, NavItem, NavLink, Container, Row, Col, Card, CardBody, CardTitle, Form, FormGroup, Label, Input, Button, Alert, Progress, Icon } from "@sveltestrap/sveltestrap";
 
   // Form input values
@@ -10,11 +10,11 @@
   let fireOutTime = "";
   let notes = "";
   let probableCauses = ["Stove", "Electric Fan", "Loose Wire", "Electrical Overload", "Candle"];
-  let selectedCauses = [];
+  let selectedCauses: string[] = [];
   let structuresInvolved = [""];
   
   // Function to toggle cause selection
-  function toggleCause(cause) {
+  function toggleCause(cause: string) {
     if (selectedCauses.includes(cause)) {
       // Remove the cause if it's already selected
       selectedCauses = selectedCauses.filter(c => c !== cause);
@@ -30,7 +30,7 @@
   }
 
   // Function to remove a structure
-  function removeStructure(index) {
+  function removeStructure(index: number) {
     structuresInvolved = structuresInvolved.filter((_, i) => i !== index);
   }
 
