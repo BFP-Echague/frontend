@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { parseEnvironmentVariables } from "@absxn/process-env-parser";
 
 

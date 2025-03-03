@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Navbar, Nav, NavItem, NavLink, Container, Row, Col, Card, CardBody, CardTitle, Form, FormGroup, Label, Input, Button, Alert, Progress, Icon } from "@sveltestrap/sveltestrap";
+  import { Container, Row, Col, Card, CardBody, CardTitle, Form, FormGroup, Label, Input, Button, Alert, Icon } from "@sveltestrap/sveltestrap";
 
   // Form input values
   let reportTime = "";
@@ -35,44 +35,6 @@
   }
 
 </script>
-
-<svelte:head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" />
-</svelte:head>
-
-<!-- Navbar -->
-<Navbar dark color="danger" expand="md" class="mb-4 shadow justify-content-between">
-  <Container class="d-flex align-items-center justify-content-between">
-    <!-- Left-aligned Dashboard link -->
-    <Nav navbar>
-      <NavItem>
-        <NavLink href="#" class="text-white fs-5 fw-bold">
-          <i class="bi bi-house-door me-1"></i>Dashboard
-        </NavLink>
-      </NavItem>
-    </Nav>
-
-    <!-- Center-aligned Title with Larger and Bolder Font -->
-    <span class="navbar-brand text-white text-center" style="font-size: 1.8rem; font-weight: 700;">
-      <i class="bi bi-fire me-2"></i>BFP Fire Map System - Echague
-    </span>
-
-    <!-- Right-aligned Search and Profile Icon -->
-    <Nav navbar class="d-flex align-items-center">
-      <NavItem>
-        <NavLink href="#" class="text-white fs-5 fw-bold me-3">
-          <i class="bi bi-search me-1"></i>Search
-        </NavLink>
-      </NavItem>
-      <NavItem>
-        <NavLink href="#" class="text-white fs-5 fw-bold">
-          <i class="bi bi-person-circle"></i>
-        </NavLink>
-      </NavItem>
-    </Nav>
-  </Container>
-</Navbar>
 
 <!-- Main Content -->
 <Container fluid>
