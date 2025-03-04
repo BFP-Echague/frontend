@@ -6,7 +6,6 @@ export * from "../../prisma/dbm/auth";
 export * from "../../prisma/dbm/barangay";
 export * from "../../prisma/dbm/base";
 export * from "../../prisma/dbm/category";
-export * from "../../prisma/dbm/cause";
 export * from "../../prisma/dbm/incident";
 export * from "../../prisma/dbm/interfaces";
 export * from "../../prisma/dbm/user";
