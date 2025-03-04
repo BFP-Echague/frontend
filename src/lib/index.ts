@@ -1,6 +1,6 @@
 // place files you want to import through the `$lib` alias in this folder
 export * from "./env";
-export * from "./backend";
+export * from "./api";
 
 export * from "../../prisma/dbm/auth";
 export * from "../../prisma/dbm/barangay";

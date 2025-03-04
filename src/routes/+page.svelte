@@ -11,15 +11,29 @@
 		Container,
 		Icon
 	} from '@sveltestrap/sveltestrap';
+	import { makeLoginRequest } from '$lib';
+	import { goto } from '$app/navigation';
 
 	let showModal = false;
 	let username = '';
 	let password = '';
 	let showPassword = false;
 
-	const togglePassword = () => {
+	function togglePassword() {
 		showPassword = !showPassword;
 	};
+
+
+	async function login() {
+		const result = await makeLoginRequest({
+			username: username,
+			password: password
+		});
+
+		if (result) {
+			goto("./portal/dashboard");
+		}
+	}
 </script>
 
 <svelte:head>
@@ -81,7 +95,7 @@
 		<div class="mt-2 mb-3">
 			<h3 class="fw-bold">ADMIN</h3>
 		</div>
-		<Form on:submit={() => (showModal = false)}>
+		<Form on:submit={login}>
 			<FormGroup>
 				<Input type="text" id="username" bind:value={username} required placeholder="Username" />
 			</FormGroup>
@@ -107,11 +121,7 @@
 				</div>
 			</FormGroup>
 
-			<FormGroup check class="text-start">
-				<Input type="checkbox" label="Remember Me" />
-			</FormGroup>
-
-			<Button color="dark" class="w-50 mt-3">Log In</Button>
+			<Button color="dark" class="w-50 mt-3" type="submit">Log In</Button>
 		</Form>
 		<Container class="text-center mt-2">
 			<Button color="link">Forgot password?</Button>
