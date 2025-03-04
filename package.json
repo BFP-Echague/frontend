@@ -18,7 +18,6 @@
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
 		"@eslint/js": "^9.18.0",
-		"@mainamiru/prisma-types-generator": "^1.1.10",
 		"@sveltejs/adapter-node": "^5.2.11",
 		"@sveltejs/kit": "^2.16.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
@@ -44,6 +43,7 @@
 	},
 	"dependencies": {
 		"@absxn/process-env-parser": "^1.1.1",
+		"@felte/validator-zod": "^1.0.18",
 		"@prisma/client": "^6.4.1",
 		"@sveltestrap/sveltestrap": "^7.1.0",
 		"ajv": "^8.17.1",
@@ -52,6 +52,8 @@
 		"decimal.js": "^10.5.0",
 		"dotenv": "^16.4.7",
 		"express": "^4.21.2",
-		"vite-plugin-node-polyfills": "^0.23.0"
+		"felte": "^1.3.0",
+		"vite-plugin-node-polyfills": "^0.23.0",
+		"zod": "^3.24.2"
 	}
 }

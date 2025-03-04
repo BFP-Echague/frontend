@@ -1,16 +1,24 @@
 <script lang="ts">
 	import { InputGroup, Button, Icon, Input } from "@sveltestrap/sveltestrap";
+    import { z } from "zod";
 
-    export let result: (string | null)[] = [];
+    export let result: (string | undefined)[] = [];
+
+    const validateSchema = z.string().array();
 
     function addResult() {
-        result = [...result, null];
+        result = [...result, undefined];
 
         console.log(result);
     }
 
     function removeResult(idx: number) {
         result = result.filter((x, n_idx) => n_idx !== idx);
+    }
+
+
+    export function getResult() {
+        return validateSchema.parse(result);
     }
 </script>
 

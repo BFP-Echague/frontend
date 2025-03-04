@@ -1,9 +1,12 @@
 <script lang="ts">
-	import { Form, FormGroup, Label, Button, Icon, Input } from "@sveltestrap/sveltestrap";
+	import { Form, FormGroup, Label, Input, Container, Row, Col } from "@sveltestrap/sveltestrap";
 	import StringArrayFormPart from "./formParts/stringArrayFormPart.svelte";
 	import { onMount } from "svelte";
-	import { BarangayAPIRoute, type BarangayGet } from "$lib/api/barangay";
-
+	import { BarangayAPIRoute, type BarangayGet, CategoryAPIRoute, type CategoryGet } from "$lib/api";
+	import { goto } from "$app/navigation";
+	import { z } from "zod";
+	
+	
     export const result = {
         name: undefined,
         reportTime: undefined,
@@ -12,35 +15,84 @@
             latitude: undefined
         },
         barangayId: undefined,
-        causes: [],
         responseTime: undefined,
         fireOutTime: undefined,
-        structuresInvolved: [],
         notes: undefined,
         categoryId: undefined
     };
+
+    const validateSchema = z.object({
+        name: z.string({description: "Name"}),
+        reportTime: z.coerce.date(),
+        location: z.object({
+            longitude: z.string(),
+            latitude: z.string()
+        }),
+        barangayId: z.number().int(),
+        causes: z.string().array(),
+        responseTime: z.coerce.date(),
+        fireOutTime: z.coerce.date(),
+        structuresInvolved: z.string().array(),
+        notes: z.string().optional(),
+        categoryId: z.number().int()
+    });
 
     let structuresFP: StringArrayFormPart;
     let causesFP: StringArrayFormPart;
 
     let barangays: BarangayGet[] = [];
+    let categories: CategoryGet[] = [];
 
 
     onMount(async () => {
-        const result = await BarangayAPIRoute.instance.getMany();
-        if (!result.isOK()) {
-            alert("waaa");
+        const resultBarangay = await BarangayAPIRoute.instance.getMany();
+        if (!resultBarangay.isOK()) {
+            goto("/");
         }
 
-        barangays = await result.getMoreInfo();
+        barangays = await resultBarangay.getMoreInfo();
+
+
+        const resultCategory = await CategoryAPIRoute.instance.getMany();
+        if (!resultCategory.isOK()) {
+            goto("/");
+        }
+
+        categories = await resultCategory.getMoreInfo();
     });
 
+
+    export function getResult() {
+        const final = {
+            ...result,
+            structuresInvolved: structuresFP.getResult(),
+            causes: causesFP.getResult()
+        }
+
+        return validateSchema.parse(final);
+    }
 </script>
 
 
 <Form>
     <FormGroup>
-        <Label for="reportTime">Time Reported:</Label>
+        <Label for="reportTime">Name of Incident:</Label>
+        <Input type="text" id="reportTime" placeholder="Name of incident" bind:value={result.name} />
+    </FormGroup>
+    <div class="d-flex flex-row">
+        <FormGroup class="me-3">
+            <Label for="latitude">Latitude</Label>
+            <Input type="text" id="latitude" placeholder="Latitude" bind:value={result.location.latitude} />
+        </FormGroup>
+        <FormGroup>
+            <Label for="longitude">Longitude</Label>
+            <Input type="text" id="longitude" placeholder="Longitude" bind:value={result.location.longitude} />
+        </FormGroup>
+    </div>
+    
+    
+    <FormGroup>
+        <Label for="reportTime">Report Time:</Label>
         <Input type="datetime-local" id="reportTime" bind:value={result.reportTime} />
     </FormGroup>
     <FormGroup>
@@ -53,17 +105,12 @@
         </Input>
     </FormGroup>
     <FormGroup>
-        <Label for="category">Incident Category:</Label>
+        <Label for="category">Category of Incident:</Label>
         <Input type="select" id="category" bind:value={result.categoryId}>
-            <option value="" disabled selected>Select Incident Category</option>
-            <option value="Structural Fire">Structural Fire</option>
-            <option value="Vehicular Fire">Vehicular Fire</option>
-            <option value="Grass Fire">Grass Fire</option>
-            <option value="Electrical Fire">Electrical Fire</option>
-            <option value="Chemical Fire">Chemical Fire</option>
-            <option value="Rescue Operation">Rescue Operation</option>
-            <option value="Flood Assistance">Flood Assistance</option>
-            <option value="Other">Other</option>
+            <option value={undefined} disabled selected>Select Category</option>
+            {#each categories as category}
+                <option value={category.id}>{ category.name }</option>
+            {/each}
         </Input>
     </FormGroup>
     <FormGroup>
@@ -80,7 +127,6 @@
     </FormGroup>
     <div>
         <label for="structuresInvolved">Structures Involved:</label>
-
         <StringArrayFormPart bind:this={structuresFP}/>
     </div>
     <FormGroup>
@@ -93,7 +139,4 @@
             placeholder="Enter notes"
         />
     </FormGroup>
-    <Button color="primary" class="w-100">
-        <Icon name="send" class="me-2" /> Submit Report
-    </Button>
 </Form>

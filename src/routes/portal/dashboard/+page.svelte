@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { IncidentUpsert } from '$lib';
 	import IncidentForm from '$lib/components/incidentForm.svelte';
 	import {
 		Container,
@@ -7,50 +8,34 @@
 		Card,
 		CardBody,
 		CardTitle,
-		Form,
-		FormGroup,
-		Label,
-		Input,
 		Button,
 		Alert,
-		Icon,
-
-		InputGroup
-
+		Icon
 	} from '@sveltestrap/sveltestrap';
+	import { z } from 'zod';
+	import { getZodErrorMessage } from "$lib";
+	import { IncidentAPIRoute } from '$lib/api/incident';
 
-	// Form input values
-	let reportTime = '';
-	let barangay = '';
-	let category = '';
-	let cause = '';
-	let responseTime = '';
-	let fireOutTime = '';
-	let notes = '';
-	let probableCauses = ['Stove', 'Electric Fan', 'Loose Wire', 'Electrical Overload', 'Candle'];
-	let selectedCauses: string[] = [];
-	let structuresInvolved = [''];
+    let form: IncidentForm;
 
-	// Function to toggle cause selection
-	function toggleCause(cause: string) {
-		if (selectedCauses.includes(cause)) {
-			// Remove the cause if it's already selected
-			selectedCauses = selectedCauses.filter((c) => c !== cause);
-		} else {
-			// Add the cause if it's not selected
-			selectedCauses = [...selectedCauses, cause];
-		}
-	}
+    async function onSubmit() {
+        let upsert: IncidentUpsert;
+        try {
+            upsert = form.getResult();
+        }
+        catch (e) {
+            if (e instanceof z.ZodError) {
+                alert(getZodErrorMessage(e));
+            }
 
-	// Function to add a new structure input
-	function addStructure() {
-		structuresInvolved = [...structuresInvolved, ' '];
-	}
+            return;
+        }
 
-	// Function to remove a structure
-	function removeStructure(index: number) {
-		structuresInvolved = structuresInvolved.filter((_, i) => i !== index);
-	}
+        const result = await IncidentAPIRoute.instance.post(upsert);
+        if (await result.isOK()) {
+            alert("Incident logged!");
+        }
+    }
 </script>
 
 <!-- Main Content -->
@@ -73,32 +58,6 @@
 					/>
 				</CardBody>
 			</Card>
-
-			<Card class="shadow">
-				<CardBody>
-					<h3 class="text-primary">
-						<Icon name="clipboard-data" class="me-2" /> Incident Results
-					</h3>
-					<div class="d-flex align-items-start gap-4">
-						<img
-							src="/placeholder-incident.jpg"
-							alt="Incident details"
-							class="rounded"
-							style="width: 440px;"
-						/>
-						<div>
-							<h5>Incident Details</h5>
-							<p><strong>Location:</strong> {barangay}</p>
-							<p><strong>Category:</strong> {category}</p>
-							<p><strong>Selected Causes:</strong> {selectedCauses.join(', ')}</p>
-							<p><strong>Time of Arrival:</strong> {responseTime}</p>
-							<p><strong>Time Fire Out:</strong> {fireOutTime}</p>
-							<p><strong>Affected Structures:</strong> {structuresInvolved}</p>
-							<p><strong>Notes:</strong> {notes}</p>
-						</div>
-					</div>
-				</CardBody>
-			</Card>
 		</Col>
 
 		<!-- Right Section: Incident Report Form -->
@@ -108,8 +67,12 @@
 					<h3 class="text-primary">
 						<Icon name="exclamation-triangle" class="me-2" /> Incident Report
 					</h3>
-					
-                    <IncidentForm />
+
+                    <IncidentForm bind:this={form}/>
+
+                    <Button color="primary" class="w-100" on:click={onSubmit}>
+                        <Icon name="send" class="me-2" /> Submit Report
+                    </Button>
 				</CardBody>
 			</Card>
 
