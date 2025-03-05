@@ -15,6 +15,7 @@
 	import { z } from 'zod';
 	import { getZodErrorMessage } from "$lib";
 	import { IncidentAPIRoute } from '$lib/api/incident';
+	import { goto } from '$app/navigation';
 
     let form: IncidentForm;
 
@@ -33,7 +34,10 @@
 
         const result = await IncidentAPIRoute.instance.post(upsert);
         if (await result.isOK()) {
-            alert("Incident logged!");
+            if (confirm("Incident logged! Would you like to go to the report page?")) {
+				const moreInfo = await result.getMoreInfo();
+				goto(`./report/${moreInfo.id}/view`);
+			}
         }
     }
 </script>
