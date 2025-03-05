@@ -48,9 +48,32 @@
 
         goto("./view");
     }
+
+
+    async function onDelete() {
+        if (!confirm("Are you sure you want to delete this incident?")) {
+            return;
+        }
+
+        const result = await IncidentAPIRoute.instance.delete(id);
+        if (!(await result.isOK())) {
+            alert("An error occurred while processing your request.");
+            return;
+        }
+
+        goto("../../dashboard");
+    }
 </script>
 
 <div class="d-flex flex-column">
+    <div class="d-flex flex-row justify-content-center">
+        <h1>Editing Incident</h1>
+    </div>
+
+    <div class="d-flex flex-row justify-content-end">
+        <Button color="danger" on:click={onDelete}>Delete</Button>
+    </div>
+
     <IncidentForm bind:this={incidentForm} />
 
     <Button color="success" class="w-100" on:click={onSubmit}>Submit</Button>

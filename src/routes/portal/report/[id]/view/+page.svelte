@@ -25,12 +25,6 @@
 	function edit() {
 		goto("./edit");
 	}
-
-	function deleteReport() {
-		if (confirm('Are you sure you want to delete this report?')) {
-			// Hides the Incident Report
-		}
-	}
 </script>
 
 <!-- Main Content -->
