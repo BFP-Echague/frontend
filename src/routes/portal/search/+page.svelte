@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { IncidentAPIRoute, type IncidentGet } from '$lib';
+	import DataDisplay from '$lib/components/display/dataDisplay.svelte';
 	import {
 		Button,
 		Input,
@@ -14,7 +16,10 @@
 		CardSubtitle,
 		FormGroup,
 		Form,
-		Styles
+		Styles,
+
+		InputGroup
+
 	} from '@sveltestrap/sveltestrap';
 
 	interface Data {
@@ -25,12 +30,27 @@
 	}
 
 	let searchTerm: string = '';
-	let isOpen = false;
 
-	function performSearch() {
+	let incidents: IncidentGet[] = [];
+
+	async function performSearch() {
+		console.log("beans");
 		if (searchTerm.length === 0) return;
 
-		
+		console.log("beans");
+
+		const result = await IncidentAPIRoute.instance.getMany(new URLSearchParams({ search: searchTerm }));
+		if (!await result.isOK()) {
+			alert("Search failed.");
+			return;
+		}
+
+		console.log("beans");
+
+		const moreInfo = await result.getMoreInfo();
+		incidents = moreInfo.data;
+
+		console.log(moreInfo);
 	}
 
 	function getResultsSummary(data: Data[]) {
@@ -68,15 +88,15 @@
 				</CardHeader>
 				<CardBody>
 					<Form on:submit={performSearch}>
-						<FormGroup>
+						<InputGroup>
 							<Input
 								type="text"
 								bind:value={searchTerm}
 								placeholder="Enter search term..."
-								class="border-danger rounded"
+								class="h-100"
 							/>
-						</FormGroup>
-						<Button color="primary" type="submit">Search</Button>
+							<Button color="primary" type="submit">Search</Button>
+						</InputGroup>
 					</Form>
 				</CardBody>
 			</Card>
@@ -93,13 +113,21 @@
 					<Table bordered striped hover>
 						<thead>
 							<tr class="table-primary">
-								<th>Date</th>
-								<th>Purok</th>
+								<th>Name</th>
+								<th>Report Time</th>
 								<th>Barangay</th>
-								<th>Year</th>
+								<th>Category</th>
 							</tr>
 						</thead>
 						<tbody>
+							{#each incidents as incident}
+								<tr>
+									<td><DataDisplay data={incident.name} /></td>
+									<td><DataDisplay data={incident.reportTime} /></td>
+									<td><DataDisplay data={incident.barangay.name} /></td>
+									<td><DataDisplay data={incident.categoryId} /></td>
+								</tr>
+							{/each}
 						</tbody>
 					</Table>
 				</CardBody>

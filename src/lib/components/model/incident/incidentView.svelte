@@ -1,6 +1,6 @@
 <script lang="ts">
     import DisplayItem from "$lib/components/display/displayItem.svelte";
-	import { formatDate, type IncidentGet } from "$lib";
+	import { type IncidentGet } from "$lib";
 
     let { incident }: { incident: IncidentGet } = $props();
 </script>
@@ -17,11 +17,11 @@
         </div>
     </div>
 
-    <DisplayItem name="Report Time" description={incident.reportTime ? formatDate(incident.reportTime) : undefined} />
+    <DisplayItem name="Report Time" description={incident.reportTime} />
     <DisplayItem name="Barangay" description={incident.barangay.name} />
     <DisplayItem name="Causes of Fire" description={incident.causes.join(", ")} />
-    <DisplayItem name="Response Time" description={incident.responseTime ? formatDate(incident.responseTime) : undefined} />
-    <DisplayItem name="Fire Out Time" description={incident.fireOutTime ? formatDate(incident.fireOutTime) : undefined} />
+    <DisplayItem name="Response Time" description={incident.responseTime} />
+    <DisplayItem name="Fire Out Time" description={incident.fireOutTime} />
     <DisplayItem name="Structures Involved" description={incident.structuresInvolved.join(", ")} />
     <DisplayItem name="Notes" description={incident.notes} />
 </div>

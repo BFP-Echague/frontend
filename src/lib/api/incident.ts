@@ -5,7 +5,7 @@ import { APIRoute } from "./base";
 
 export type IncidentGet = Prisma.IncidentGetPayload<{ include: typeof incidentInclude }>;
 
-export class IncidentAPIRoute extends APIRoute<IncidentUpsert, IncidentGet> {
+export class IncidentAPIRoute extends APIRoute<IncidentUpsert, IncidentGet, true> {
     public static instance = new IncidentAPIRoute();
     public override path = "/incident";
 }

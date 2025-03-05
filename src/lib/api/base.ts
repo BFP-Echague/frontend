@@ -1,3 +1,4 @@
+import type { PagedResult } from "@dbm/interfaces";
 import { getBackendURL } from "./url";
 
 
@@ -30,15 +31,19 @@ export class FullResponse<GetPayload extends object> {
 }
 
 
-export abstract class APIRoute<Upsert extends object, GetPayload extends object> {
+export abstract class APIRoute<Upsert extends object, GetPayload extends object, IsPaged extends boolean = false> {
     public abstract path: string;
 
-    public getFullURL() {
-        return new URL(getBackendURL(this.path));
+    public getFullURL(urlSearchParams: URLSearchParams | undefined = undefined) {
+        let urlRaw = getBackendURL(this.path);
+        if (urlSearchParams !== undefined) {
+            urlRaw += "?" + urlSearchParams.toString();
+        }
+        return new URL(urlRaw);
     }
 
-    public getFullURLWithId(id: number) {
-        const url = this.getFullURL();
+    public getFullURLWithId(id: number, urlSearchParams: URLSearchParams | undefined = undefined) {
+        const url = this.getFullURL(urlSearchParams);
         url.pathname += "/" + id.toString();
 
         return url;
@@ -54,13 +59,14 @@ export abstract class APIRoute<Upsert extends object, GetPayload extends object>
         return new FullResponse<GetPayload>(result);
     }
 
-    public async getMany() {
-        const result = await fetch(this.getFullURL(), {
+    public async getMany(urlSearchParams: URLSearchParams | undefined = undefined) {
+        const url = this.getFullURL(urlSearchParams);
+        const result = await fetch(url, {
             method: "GET",
             credentials: "include"
         });
 
-        return new FullResponse<GetPayload[]>(result);
+        return new FullResponse<IsPaged extends true ? PagedResult<GetPayload[]> : GetPayload[]>(result);
     }
 
 

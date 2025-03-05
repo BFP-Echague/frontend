@@ -1,7 +1,7 @@
 import { formatDate as formatDateFns  } from "date-fns";
 
 export function formatDate(date: Date) {
-    return formatDateFns(date, "MMM d, yyyy h:mm:ss aa ");
+    return formatDateFns(date, "MMM d, yyyy h:mm:ss aa");
 }
 
 export function formatFormDate(date: Date) {

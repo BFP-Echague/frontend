@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { Badge } from "@sveltestrap/sveltestrap";
+	import DataDisplay from "./dataDisplay.svelte";
 
     let { name, description } : {
         name: string;
-        description: unknown | null | undefined;
+        description: undefined | null | string | number | boolean | Date;
     } = $props();
 </script>
 
@@ -11,10 +12,6 @@
 <div class="d-flex flex-column">
     <dl>
         <dt>{ name }</dt>
-        {#if description !== null && description !== undefined && description !== ""}
-            <dd>{ description }</dd>
-        {:else}
-            <Badge color="warning">Blank</Badge>
-        {/if}
+        <DataDisplay data={description} />
     </dl>
 </div>
