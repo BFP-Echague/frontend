@@ -20,6 +20,10 @@
     export function getResult() {
         return validateSchema.parse(result);
     }
+
+    export function setResult(input: string[]) {
+        result = input;
+    }
 </script>
 
 

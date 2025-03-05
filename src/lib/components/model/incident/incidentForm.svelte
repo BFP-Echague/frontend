@@ -1,37 +1,39 @@
 <script lang="ts">
 	import { Form, FormGroup, Label, Input, Container, Row, Col } from "@sveltestrap/sveltestrap";
-	import StringArrayFormPart from "./formParts/stringArrayFormPart.svelte";
+	import StringArrayFormPart from "../../formParts/stringArrayFormPart.svelte";
 	import { onMount } from "svelte";
 	import { BarangayAPIRoute, type BarangayGet, CategoryAPIRoute, type CategoryGet } from "$lib/api";
 	import { goto } from "$app/navigation";
 	import { z } from "zod";
+	import type { IncidentUpsert } from "@dbm/incident";
+	import { formatFormDate } from "$lib/formatters";
 	
 	
-    export const result = {
-        name: undefined,
-        reportTime: undefined,
+    let result = {
+        name: undefined as string | undefined,
+        reportTime: undefined as string | undefined,
         location: {
-            longitude: undefined,
-            latitude: undefined
+            longitude: undefined as string | undefined,
+            latitude: undefined as string | undefined
         },
-        barangayId: undefined,
-        responseTime: undefined,
-        fireOutTime: undefined,
-        notes: undefined,
-        categoryId: undefined
+        barangayId: undefined as number | undefined,
+        responseTime: undefined as string | undefined,
+        fireOutTime: undefined as string | undefined,
+        notes: undefined as string | undefined,
+        categoryId: undefined as number | undefined
     };
 
     const validateSchema = z.object({
         name: z.string({description: "Name"}),
-        reportTime: z.coerce.date(),
+        reportTime: z.coerce.date().optional(),
         location: z.object({
             longitude: z.string(),
             latitude: z.string()
         }),
         barangayId: z.number().int(),
         causes: z.string().array(),
-        responseTime: z.coerce.date(),
-        fireOutTime: z.coerce.date(),
+        responseTime: z.coerce.date().optional(),
+        fireOutTime: z.coerce.date().optional(),
         structuresInvolved: z.string().array(),
         notes: z.string().optional(),
         categoryId: z.number().int()
@@ -70,6 +72,26 @@
         }
 
         return validateSchema.parse(final);
+    }
+
+    export function setResult(input: IncidentUpsert) {
+        console.log(input.reportTime);
+        result = {
+            name: input.name,
+            reportTime: input.reportTime ? formatFormDate(input.reportTime) : undefined,
+            location: {
+                latitude: input.location.latitude,
+                longitude: input.location.longitude
+            },
+            barangayId: input.barangayId,
+            responseTime: input.responseTime ? formatFormDate(input.responseTime) : undefined,
+            fireOutTime: input.fireOutTime ? formatFormDate(input.fireOutTime) : undefined,
+            notes: input.notes,
+            categoryId: input.categoryId
+        };
+
+        structuresFP.setResult(input.structuresInvolved);
+        causesFP.setResult(input.causes);
     }
 </script>
 

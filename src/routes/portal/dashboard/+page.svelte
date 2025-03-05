@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { IncidentUpsert } from '$lib';
-	import IncidentForm from '$lib/components/incidentForm.svelte';
+	import IncidentForm from '$lib/components/model/incident/incidentForm.svelte';
 	import {
 		Container,
 		Row,
