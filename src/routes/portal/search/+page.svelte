@@ -24,25 +24,13 @@
 		year: number;
 	}
 
-	let sampleData: Data[] = [
-		{ date: '2023-10-01', purok: 'Purok 1', barangay: 'Barangay A', year: 2023 },
-		{ date: '2023-09-25', purok: 'Purok 2', barangay: 'Barangay B', year: 2023 },
-		{ date: '2023-09-20', purok: 'Purok 3', barangay: 'Barangay C', year: 2023 },
-		{ date: '2023-09-15', purok: 'Purok 4', barangay: 'Barangay D', year: 2023 }
-	];
-
-	let searchTerm = '';
-	let filteredData = sampleData;
+	let searchTerm: string = '';
 	let isOpen = false;
 
 	function performSearch() {
-		filteredData = sampleData.filter(
-			(item) =>
-				item.date.includes(searchTerm) ||
-				item.purok.toLowerCase().includes(searchTerm.toLowerCase()) ||
-				item.barangay.toLowerCase().includes(searchTerm.toLowerCase()) ||
-				item.year.toString().includes(searchTerm)
-		);
+		if (searchTerm.length === 0) return;
+
+		
 	}
 
 	function getResultsSummary(data: Data[]) {
@@ -79,7 +67,7 @@
 					<CardSubtitle>Enter your search criteria below</CardSubtitle>
 				</CardHeader>
 				<CardBody>
-					<Form>
+					<Form on:submit={performSearch}>
 						<FormGroup>
 							<Input
 								type="text"
@@ -88,7 +76,7 @@
 								class="border-danger rounded"
 							/>
 						</FormGroup>
-						<Button color="primary" on:click={performSearch}>Search</Button>
+						<Button color="primary" type="submit">Search</Button>
 					</Form>
 				</CardBody>
 			</Card>
@@ -112,14 +100,6 @@
 							</tr>
 						</thead>
 						<tbody>
-							{#each filteredData as item}
-								<tr>
-									<td>{item.date}</td>
-									<td>{item.purok}</td>
-									<td>{item.barangay}</td>
-									<td>{item.year}</td>
-								</tr>
-							{/each}
 						</tbody>
 					</Table>
 				</CardBody>
@@ -133,7 +113,7 @@
 				<CardBody>
 					<Alert color="primary">
 						<h3 class="text-light">Short Description of Results</h3>
-						<p class="text-light">{@html getResultsSummary(filteredData)}</p>
+						<p class="text-light"></p>
 					</Alert>
 				</CardBody>
 			</Card>

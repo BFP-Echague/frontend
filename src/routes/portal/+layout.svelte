@@ -25,6 +25,10 @@
             goto('/');
         }
     }
+
+	function gotoDashboard() {
+		goto("/portal/dashboard");
+	}
 </script>
 
 <Styles />
@@ -36,7 +40,7 @@
 			<!-- Left-aligned Dashboard link -->
 			<Nav navbar>
 				<NavItem>
-					<NavLink href="#" class="text-white fs-5 fw-bold">
+					<NavLink class="text-white fs-5 fw-bold" on:click={gotoDashboard}>
 						<i class="bi bi-house-door me-1"></i>Dashboard
 					</NavLink>
 				</NavItem>
