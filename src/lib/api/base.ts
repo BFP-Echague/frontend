@@ -1,5 +1,6 @@
 import type { PagedResult } from "@dbm/interfaces";
 import { getBackendURL } from "./url";
+import Decimal from "decimal.js";
 
 
 
@@ -11,25 +12,39 @@ export const headers = {
 
 // we don't talk about it.
 const dateRegex = /^([\\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24\\:?00)([\\.,]\d+(?!:))?)?(\17[0-5]\d([\\.,]\d+)?)?([zZ]|([\\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/;
-function parseDates<T>(obj: T): T {
-    if (Array.isArray(obj)) {
-        return obj.map(item => parseDates(item)) as unknown as T;
-    } else if (obj && typeof obj === 'object' && obj !== null) {
-        const newObj = {} as { [K in keyof T]: T[K] };
-        for (const key in obj) {
-            if (Object.hasOwnProperty.call(obj, key)) {
-                newObj[key] = parseDates(obj[key]);
-            }
+
+function parseEach<T>(obj: T) {
+    if (typeof obj === 'string') {
+        if (!isNaN(Date.parse(obj)) && obj.match(dateRegex)) {
+            return new Date(obj) as T;
         }
-        return newObj;
-    } else if (typeof obj === 'string' && !isNaN(Date.parse(obj)) && obj.match(dateRegex)) {
-        return new Date(obj) as unknown as T;
+
+        try {
+            return new Decimal(obj) as T;
+        } catch {
+            return obj as T;
+        } 
     }
-    return obj;
+
+    return obj as T;
 }
 
 function parseGet<T>(obj: T): T {
-    return parseDates(obj);
+    if (Array.isArray(obj)) {
+        return obj.map(item => parseGet(item)) as unknown as T;
+    }
+
+    if (obj && typeof obj === 'object' && obj !== null) {
+        const newObj = {} as { [K in keyof T]: T[K] };
+        for (const key in obj) {
+            if (Object.hasOwnProperty.call(obj, key)) {
+                newObj[key] = parseGet(obj[key]);
+            }
+        }
+        return newObj;
+    }
+
+    return parseEach(obj);
 }
 
 

@@ -76,7 +76,6 @@
     }
 
     export function setResult(input: IncidentUpsert) {
-        console.log(input.reportTime);
         result = {
             name: input.name,
             reportTime: input.reportTime ? formatFormDate(input.reportTime) : undefined,

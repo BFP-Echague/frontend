@@ -8,8 +8,6 @@
 
     function addResult() {
         result = [...result, undefined];
-
-        console.log(result);
     }
 
     function removeResult(idx: number) {
