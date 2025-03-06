@@ -7,14 +7,15 @@
 	import { z } from "zod";
 	import type { IncidentUpsert } from "@dbm/incident";
 	import { formatFormDate } from "$lib/formatters";
+	import type { DeepPartial } from "$lib";
 	
 	
     let result = {
         name: undefined as string | undefined,
         reportTime: undefined as string | undefined,
         location: {
-            longitude: undefined as string | undefined,
-            latitude: undefined as string | undefined
+            longitude: undefined as number | undefined,
+            latitude: undefined as number | undefined
         },
         barangayId: undefined as number | undefined,
         responseTime: undefined as string | undefined,
@@ -23,12 +24,12 @@
         categoryId: undefined as number | undefined
     };
 
-    const validateSchema = z.object({
+    const validateSchema: z.ZodType<IncidentUpsert> = z.object({
         name: z.string({description: "Name"}),
         reportTime: z.coerce.date().optional(),
         location: z.object({
-            longitude: z.string(),
-            latitude: z.string()
+            longitude: z.coerce.string(),
+            latitude: z.coerce.string()
         }),
         barangayId: z.number().int(),
         causes: z.string().array(),
@@ -65,13 +66,13 @@
 
 
     export function getResult() {
-        const final = {
+        const combinedResult = {
             ...result,
             structuresInvolved: structuresFP.getResult(),
             causes: causesFP.getResult()
         }
 
-        return validateSchema.parse(final);
+        return validateSchema.parse(combinedResult);
     }
 
     export function setResult(input: IncidentUpsert) {
@@ -80,8 +81,8 @@
             name: input.name,
             reportTime: input.reportTime ? formatFormDate(input.reportTime) : undefined,
             location: {
-                latitude: input.location.latitude,
-                longitude: input.location.longitude
+                latitude: parseFloat(input.location.latitude),
+                longitude: parseFloat(input.location.longitude)
             },
             barangayId: input.barangayId,
             responseTime: input.responseTime ? formatFormDate(input.responseTime) : undefined,
@@ -104,11 +105,11 @@
     <div class="d-flex flex-row">
         <FormGroup class="me-3">
             <Label for="latitude">Latitude</Label>
-            <Input type="text" id="latitude" placeholder="Latitude" bind:value={result.location.latitude} />
+            <Input type="number" id="latitude" placeholder="Latitude" bind:value={result.location.latitude} />
         </FormGroup>
         <FormGroup>
             <Label for="longitude">Longitude</Label>
-            <Input type="text" id="longitude" placeholder="Longitude" bind:value={result.location.longitude} />
+            <Input type="number" id="longitude" placeholder="Longitude" bind:value={result.location.longitude} />
         </FormGroup>
     </div>
     

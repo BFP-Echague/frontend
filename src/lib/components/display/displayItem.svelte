@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Badge } from "@sveltestrap/sveltestrap";
 	import DataDisplay from "./dataDisplay.svelte";
 
     let { name, description } : {
