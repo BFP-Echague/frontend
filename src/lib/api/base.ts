@@ -8,6 +8,31 @@ export const headers = {
 };
 
 
+
+// we don't talk about it.
+const dateRegex = /^([\\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24\\:?00)([\\.,]\d+(?!:))?)?(\17[0-5]\d([\\.,]\d+)?)?([zZ]|([\\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/;
+function parseDates<T>(obj: T): T {
+    if (Array.isArray(obj)) {
+        return obj.map(item => parseDates(item)) as unknown as T;
+    } else if (obj && typeof obj === 'object' && obj !== null) {
+        const newObj = {} as { [K in keyof T]: T[K] };
+        for (const key in obj) {
+            if (Object.hasOwnProperty.call(obj, key)) {
+                newObj[key] = parseDates(obj[key]);
+            }
+        }
+        return newObj;
+    } else if (typeof obj === 'string' && !isNaN(Date.parse(obj)) && obj.match(dateRegex)) {
+        return new Date(obj) as unknown as T;
+    }
+    return obj;
+}
+
+function parseGet<T>(obj: T): T {
+    return parseDates(obj);
+}
+
+
 export interface JSONResponse<GetPayload extends object> {
     message: string;
     moreInfo: GetPayload
@@ -17,18 +42,19 @@ export interface JSONResponse<GetPayload extends object> {
 export class FullResponse<GetPayload extends object> {
     public constructor(
         public response: Response,
-    ) {}
+    ) { }
 
     public async getJson() {
         return await this.response.json() as JSONResponse<GetPayload>;
     }
 
-    public async getMoreInfo() {
-        return (await this.getJson()).moreInfo;
+    public async getMoreInfoParsed() {
+        return parseGet((await this.getJson()).moreInfo);
     }
 
     public async isOK() { return this.response.ok; }
 }
+
 
 
 export abstract class APIRoute<Upsert extends object, GetPayload extends object, IsPaged extends boolean = false> {

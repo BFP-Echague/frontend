@@ -47,7 +47,7 @@
 
 		console.log("beans");
 
-		const moreInfo = await result.getMoreInfo();
+		const moreInfo = await result.getMoreInfoParsed();
 		incidents = moreInfo.data;
 
 		console.log(moreInfo);

@@ -18,7 +18,7 @@
 			error(404);
 		}
 
-		const moreInfo = await response.getMoreInfo();
+		const moreInfo = await response.getMoreInfoParsed();
 
 
         incidentForm.setResult({

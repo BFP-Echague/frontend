@@ -2,14 +2,11 @@
 	import { formatDate } from "$lib";
 	import { Badge, Button } from "@sveltestrap/sveltestrap";
 
-    let { data } : { 
-        data: undefined | null | string | number | boolean | Date
-    } = $props();
+    export let data: undefined | null | string | number | boolean | Date;
 </script>
 
 
 <div class="d-flex flex-column">
-    <Button on:click={() => console.log(data)} />
     {#if data === undefined || data === null}
         <Badge color="warning">Blank</Badge>
     {:else if data instanceof Date}

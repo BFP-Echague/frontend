@@ -35,7 +35,7 @@
         const result = await IncidentAPIRoute.instance.post(upsert);
         if (await result.isOK()) {
             if (confirm("Incident logged! Would you like to go to the report page?")) {
-				const moreInfo = await result.getMoreInfo();
+				const moreInfo = await result.getMoreInfoParsed();
 				goto(`./report/${moreInfo.id}/view`);
 			}
         }

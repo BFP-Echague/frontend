@@ -19,7 +19,7 @@
 			error(404);
 		}
 
-		incident = await response.getMoreInfo();
+		incident = await response.getMoreInfoParsed();
 	})
 
 	function edit() {

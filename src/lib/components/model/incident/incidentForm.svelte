@@ -52,7 +52,7 @@
             goto("/");
         }
 
-        barangays = await resultBarangay.getMoreInfo();
+        barangays = await resultBarangay.getMoreInfoParsed();
 
 
         const resultCategory = await CategoryAPIRoute.instance.getMany();
@@ -60,7 +60,7 @@
             goto("/");
         }
 
-        categories = await resultCategory.getMoreInfo();
+        categories = await resultCategory.getMoreInfoParsed();
     });
 
 
