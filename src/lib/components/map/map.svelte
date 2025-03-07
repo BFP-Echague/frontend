@@ -2,7 +2,6 @@
 	import { env } from "$lib/env";
 	import { defaultLocation, type Location } from "$lib";
 	import { Loader } from "@googlemaps/js-api-loader";
-	import Decimal from "decimal.js";
 	import { onMount } from "svelte";
 
 
@@ -11,10 +10,11 @@
         map = $bindable(null),
         centerLocation = defaultLocation
     }: {
-        mapsLoader: Loader | null,
-        map: google.maps.Map | null,
+        mapsLoader?: Loader | null,
+        map?: google.maps.Map | null,
         centerLocation: Location
     } = $props();
+
     let mapElement: HTMLDivElement | null = null;
 
     onMount(async () => {
@@ -23,7 +23,8 @@
             version: "weekly"
         })
 
-        const { Map } = await mapsLoader.importLibrary("maps");
+        const { Map  } = await mapsLoader.importLibrary("maps");
+        const { StreetViewPanorama } = await mapsLoader.importLibrary("streetView");
 
 
         if (mapElement === null) {
@@ -37,7 +38,6 @@
         });
     })
 </script>
-
 
 
 <div class="d-flex flex-row w-100 position-relative" style="height: 90vh">

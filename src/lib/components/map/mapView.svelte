@@ -14,22 +14,24 @@
     let mapsLoader: Loader | null = $state(null);
     let map: google.maps.Map | null = $state(null);
 
-    let AdvancedMarkerElement: typeof google.maps.marker.AdvancedMarkerElement | null = null;
+    let Marker: typeof google.maps.Marker | null = null;
     let InfoWindow: typeof google.maps.InfoWindow | null = null;
     let infoWindow: google.maps.InfoWindow | null = null;
 
     export async function addIncident(incident: IncidentGet) {
-        if (AdvancedMarkerElement === null) {
+        if (Marker === null) {
             throw new Error("AdvancedMarker is null");
         }
 
-        const marker = new AdvancedMarkerElement({
-            map,
+
+        const markerOptions: Omit<google.maps.MarkerOptions, "map"> = {
             position: { lat: incident.location.latitude.toNumber(), lng: incident.location.longitude.toNumber() },
             title: `Incident: ${incident.name}`
-        });
+        }
 
-        google.maps.event.addListener(marker, "click", () => {
+        const mapMarker = new Marker({map, ...markerOptions});
+
+        google.maps.event.addListener(mapMarker, "click", () => {
             if (InfoWindow === null) {
                 throw new Error("InfoWindow is null");
             }
@@ -48,7 +50,7 @@
                 minWidth: 300
             });
 
-            infoWindow.open({ map }, marker);
+            infoWindow.open({ map }, mapMarker);
         })
     }
 
@@ -61,7 +63,7 @@
         const markerLoad = await mapsLoader.importLibrary("marker");
 
         InfoWindow = mapsLoad.InfoWindow;
-        AdvancedMarkerElement = markerLoad.AdvancedMarkerElement;
+        Marker = markerLoad.Marker;
     })
 </script>
 
