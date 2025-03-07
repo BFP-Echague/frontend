@@ -18,18 +18,16 @@
     let mapElement: HTMLDivElement | null = null;
 
     onMount(async () => {
-        mapsLoader = new Loader({
-            apiKey: env.GOOGLEMAPS_API_KEY_PUBLIC,
-            version: "weekly"
-        })
-
-        const { Map  } = await mapsLoader.importLibrary("maps");
-        const { StreetViewPanorama } = await mapsLoader.importLibrary("streetView");
-
-
         if (mapElement === null) {
             throw new Error("mapElement is null");
         }
+
+        mapsLoader = new Loader({
+            apiKey: env.GOOGLEMAPS_API_KEY_PUBLIC,
+            version: "weekly"
+        });
+
+        const { Map  } = await mapsLoader.importLibrary("maps");
 
         map = new Map(mapElement, {
             zoom: 15,

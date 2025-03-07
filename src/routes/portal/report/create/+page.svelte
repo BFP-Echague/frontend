@@ -1,49 +1,54 @@
 <script lang="ts">
-	import { env } from "$lib";
-    import { Loader } from "@googlemaps/js-api-loader";
-	import { onMount } from "svelte";
+	import { goto } from "$app/navigation";
+	import { defaultLocation, getZodErrorMessage, IncidentAPIRoute, type IncidentUpsert } from "$lib";
+	import IncidentForm from "$lib/components/model/incident/incidentForm.svelte";
+	import { Card, CardBody, Icon, Button, Alert } from "@sveltestrap/sveltestrap";
+	import { z } from "zod";
+    const centerLocation = defaultLocation;
 
+    let form: IncidentForm;
 
-    let mapElement: HTMLDivElement;
-    let mapsLoader: Loader | null = null;
+    async function onSubmit() {
+        let upsert: IncidentUpsert;
+        try {
+            upsert = form.getResult();
+        }
+        catch (e) {
+            if (e instanceof z.ZodError) {
+                alert(getZodErrorMessage(e));
+            }
 
-    onMount(async () => {
-        mapsLoader = new Loader({
-            apiKey: env.GOOGLEMAPS_API_KEY_PUBLIC,
-            version: "weekly"
-        })
+            return;
+        }
 
-        const google = window.google;
-        const { Map, InfoWindow } = await mapsLoader.importLibrary("maps");
-        const { AdvancedMarkerElement } = await mapsLoader.importLibrary("marker");
-
-        const map = new Map(mapElement, {
-            zoom: 12,
-            center: { lat: 34.84555, lng: -111.8035 },
-            mapId: "4504f8b37365c3d0"
-        });
-
-        const marker = new AdvancedMarkerElement({
-            map,
-            position: { lat: 34.84555, lng: -111.8035 },
-            title: "Binluan"
-        });
-
-        const infoWindow = new InfoWindow({
-            content: "Hello World"
-        });
-
-        map.addListener("click", (event: google.maps.MapMouseEvent) => {
-            marker.position = event.latLng;
-        })
-
-        marker.addListener("click", () => {
-            infoWindow.open({ map }, marker);
-        })
-    })
+        const result = await IncidentAPIRoute.instance.post(upsert);
+        if (await result.isOK()) {
+            if (confirm("Incident logged! Would you like to go to the report page?")) {
+				const moreInfo = await result.getMoreInfoParsed();
+				goto(`./${moreInfo.id}/view`);
+			}
+        }
+    }
 </script>
 
 
-<div class="d-flex flex-row w-100" style="position: relative; height: 50vh">
-    <div class="w-100" bind:this={mapElement} style="height: 100%"></div>
+<div class="d-flex flex-column">
+    <Card class="shadow">
+        <CardBody>
+            <h3 class="text-primary">
+                <Icon name="exclamation-triangle" class="me-2" /> Incident Report
+            </h3>
+            <IncidentForm bind:this={form}/>
+
+            <Button color="primary" class="w-100" on:click={onSubmit}>
+                <Icon name="send" class="me-2" /> Submit Report
+            </Button>
+        </CardBody>
+    </Card>
+
+    <!-- Alert Section -->
+    <Alert color="danger" class="mt-4 shadow text-light">
+        <Icon name="exclamation-circle" class="me-2" /> Ensure all fields are filled accurately before
+        submitting.
+    </Alert>
 </div>
