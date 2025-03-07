@@ -44,7 +44,8 @@
 
             infoWindow = new InfoWindow({
                 content,
-                headerContent: `Incident: ${incident.name}`
+                headerContent: `Incident: ${incident.name}`,
+                minWidth: 300
             });
 
             infoWindow.open({ map }, marker);

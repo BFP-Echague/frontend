@@ -29,6 +29,10 @@
 	function gotoDashboard() {
 		goto("/portal/dashboard");
 	}
+
+	function gotoSearch() {
+		goto("/portal/search");
+	}
 </script>
 
 <Styles />
@@ -57,7 +61,7 @@
 			<!-- Right-aligned Search and Profile Icon -->
 			<Nav navbar class="d-flex align-items-center">
 				<NavItem>
-					<NavLink href="#" class="text-white fs-5 fw-bold me-3">
+					<NavLink class="text-white fs-5 fw-bold me-3" on:click={gotoSearch}>
 						<Icon name="search" class="me-1" />Search
 					</NavLink>
 				</NavItem>

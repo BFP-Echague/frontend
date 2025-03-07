@@ -40,6 +40,6 @@
 
 
 
-<div class="d-flex flex-row w-100 position-relative" style="height: 50vh">
+<div class="d-flex flex-row w-100 position-relative" style="height: 90vh">
     <div class="w-100 h-100" bind:this={mapElement}></div>
 </div>
