@@ -26,8 +26,8 @@
             categoryId: moreInfo.categoryId,
             causes: moreInfo.causes,
             location: {
-                latitude: moreInfo.location.latitude.toString(),
-                longitude: moreInfo.location.longitude.toString()
+                latitude: moreInfo.location.latitude,
+                longitude: moreInfo.location.longitude
             },
             name: moreInfo.name,
             structuresInvolved: moreInfo.structuresInvolved,

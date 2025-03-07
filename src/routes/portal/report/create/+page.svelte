@@ -45,10 +45,4 @@
             </Button>
         </CardBody>
     </Card>
-
-    <!-- Alert Section -->
-    <Alert color="danger" class="mt-4 shadow text-light">
-        <Icon name="exclamation-circle" class="me-2" /> Ensure all fields are filled accurately before
-        submitting.
-    </Alert>
 </div>

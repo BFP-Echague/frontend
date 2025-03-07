@@ -109,6 +109,18 @@
 
         load(mapsLoaderDerived, mapDerived).then();
     })
+
+
+    export function setCenterLocation(location: Location) {
+        if (map === null) {
+            throw new Error("Map is null");
+        }
+
+        map.setCenter({
+            lat: location.latitude.toNumber(),
+            lng: location.longitude.toNumber()
+        });
+    }
 </script>
 
 
