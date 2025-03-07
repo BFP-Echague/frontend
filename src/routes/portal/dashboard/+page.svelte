@@ -13,11 +13,19 @@
 		Icon
 	} from '@sveltestrap/sveltestrap';
 	import { z } from 'zod';
-	import { getZodErrorMessage } from "$lib";
+	import { defaultLocation, getZodErrorMessage } from "$lib";
 	import { IncidentAPIRoute } from '$lib/api/incident';
 	import { goto } from '$app/navigation';
+	import MapView from '$lib/components/map/mapView.svelte';
+	import { onMount } from 'svelte';
+
 
     let form: IncidentForm;
+
+	let mapView: MapView;
+	let centerLocation = defaultLocation;
+
+
 
     async function onSubmit() {
         let upsert: IncidentUpsert;
@@ -40,6 +48,20 @@
 			}
         }
     }
+
+
+	onMount(async () => {
+		const result = await IncidentAPIRoute.instance.getMany(new URLSearchParams({ pageSize: "100" }));
+		if (!result.isOK()) {
+			alert("Failed to load incidents");
+			return;
+		}
+
+		const moreInfo = await result.getMoreInfoParsed();
+		for (const incident of moreInfo.data) {
+			await mapView.addIncident(incident);
+		}
+	});
 </script>
 
 <!-- Main Content -->
@@ -54,12 +76,7 @@
 							<Icon name="map" class="me-2" /> Fire Incident Map
 						</h3>
 					</CardTitle>
-					<img
-						src="/placeholder-map.jpg"
-						alt="Map showing fire incidents in Echague"
-						class="img-fluid rounded"
-						style="height: 600px;"
-					/>
+					<MapView bind:this={mapView} { centerLocation }/>
 				</CardBody>
 			</Card>
 		</Col>

@@ -1,3 +1,5 @@
 export const env = {
-    BACKEND_API_URL: import.meta.env.VITE_BACKEND_API_URL
+    BACKEND_API_URL: import.meta.env.VITE_BACKEND_API_URL,
+    GOOGLEMAPS_API_KEY_PUBLIC: import.meta.env.VITE_GOOGLEMAPS_API_KEY_PUBLIC,
+    GOOGLEMAPS_MAPID: import.meta.env.VITE_GOOGLEMAPS_MAPID
 };
