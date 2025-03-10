@@ -53,6 +53,10 @@
 
 
     export async function deleteAllMarkers() {
+        markers.forEach(marker => {
+            marker.setMap(null);
+        });
+
         markers = [];
     }
 </script>
