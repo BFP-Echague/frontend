@@ -85,6 +85,11 @@
             mapView?.addIncident(incident);
         })
     })
+
+    $effect(() => {
+        const _ = selectedClusterCount;
+        selectedClusterNumber = null;
+    })
 </script>
 
 
