@@ -18,6 +18,9 @@
     let InfoWindow: typeof google.maps.InfoWindow | null = null;
     let infoWindow: google.maps.InfoWindow | null = null;
 
+
+    let markers: google.maps.Marker[] = [];
+
     export async function addIncident(incident: IncidentGet) {
         if (Marker === null) {
             throw new Error("AdvancedMarker is null");
@@ -51,7 +54,14 @@
             });
 
             infoWindow.open({ map }, mapMarker);
-        })
+        });
+
+        markers.push(mapMarker);
+    }
+
+
+    export async function deleteAllMarkers() {
+        markers = [];
     }
 
     onMount(async () => {

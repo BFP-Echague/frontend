@@ -5,5 +5,6 @@ export * from "./zodErrors";
 export * from "./routeParams";
 export * from "./formatters";
 export * from "./map";
+export * from "./optionHelper";
 
 export * from "../../prisma/dbm";
