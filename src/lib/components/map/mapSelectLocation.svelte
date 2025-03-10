@@ -124,4 +124,4 @@
 </script>
 
 
-<Map bind:mapsLoader bind:map { centerLocation }/>
+<Map bind:map { centerLocation }/>

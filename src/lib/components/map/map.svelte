@@ -1,16 +1,14 @@
 <script lang="ts">
 	import { env } from "$lib/env";
-	import { defaultLocation, type Location } from "$lib";
+	import { defaultLocation, importMapsLibrary, type Location } from "$lib";
 	import { Loader } from "@googlemaps/js-api-loader";
 	import { onMount } from "svelte";
 
 
     let {
-        mapsLoader = $bindable(null),
         map = $bindable(null),
         centerLocation = defaultLocation
     }: {
-        mapsLoader?: Loader | null,
         map?: google.maps.Map | null,
         centerLocation: Location
     } = $props();
@@ -22,14 +20,9 @@
             throw new Error("mapElement is null");
         }
 
-        mapsLoader = new Loader({
-            apiKey: env.GOOGLEMAPS_API_KEY_PUBLIC,
-            version: "weekly"
-        });
+        const mapsLibrary = await importMapsLibrary();
 
-        const { Map  } = await mapsLoader.importLibrary("maps");
-
-        map = new Map(mapElement, {
+        map = new mapsLibrary.Map(mapElement, {
             zoom: 15,
             center: { lat: centerLocation.latitude.toNumber(), lng: centerLocation.longitude.toNumber() },
             mapId: env.GOOGLEMAPS_MAPID
