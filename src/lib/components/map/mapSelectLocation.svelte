@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Loader } from "@googlemaps/js-api-loader";
     import Map from "./map.svelte";
-	import { defaultLocation, type DeepPartial, type Location } from "$lib";
+	import { defaultLocation, importMapsLibrary, importMarkerLibrary, type DeepPartial, type Location } from "$lib";
 	import { onMount } from "svelte";
 	import Decimal from "decimal.js";
 
@@ -16,12 +16,8 @@
         }
     } = $props();
 
-    let mapsLoader: Loader | null = $state(null);
     let map: google.maps.Map | null = $state(null);
 
-
-    let AdvancedMarkerElement: typeof google.maps.marker.AdvancedMarkerElement | null = null;
-    let PinElement: typeof google.maps.marker.PinElement | null = null;
     let marker: google.maps.marker.AdvancedMarkerElement | null = null;
 
 
@@ -47,18 +43,15 @@
     }
 
 
-    function changeMarkerPosition(location: Location) {
-        if (AdvancedMarkerElement === null || PinElement === null) {
-            throw new Error("AdvancedMarkerElement or PinElement is null");
-        }
-
-        const pinElement = new PinElement({
+    async function changeMarkerPosition(location: Location) {
+        const markerLibrary = await importMarkerLibrary();
+        const pinElement = new markerLibrary.PinElement({
             glyph: "+",
             glyphColor: "white"
         });
 
         if (marker === null) {
-            marker = new AdvancedMarkerElement({
+            marker = new markerLibrary.AdvancedMarkerElement({
                 map,
                 position: {
                     lat: location.latitude.toNumber(),
@@ -76,13 +69,24 @@
     }
 
 
-    async function load(mapsLoaderDerived: Loader, mapDerived: google.maps.Map) {
-        const markerLoad = await mapsLoaderDerived.importLibrary("marker");
+    export function setCenterLocation(location: Location) {
+        if (map === null) {
+            throw new Error("Map is null");
+        }
 
-        AdvancedMarkerElement = markerLoad.AdvancedMarkerElement;
-        PinElement = markerLoad.PinElement;
+        map.setCenter({
+            lat: location.latitude.toNumber(),
+            lng: location.longitude.toNumber()
+        });
+    }
 
-        mapDerived.addListener("click", (event: google.maps.MapMouseEvent) => {
+
+    $effect(() => {
+        if (map === null) {
+            return
+        }
+
+        map.addListener("click", (event: google.maps.MapMouseEvent) => {
             if (event.latLng === null) {
                 return;
             }
@@ -97,30 +101,7 @@
                 longitude: event.latLng.lng()
             };
         })
-    }
-
-    $effect(() => {
-        const mapsLoaderDerived = mapsLoader;
-        const mapDerived = map;
-
-        if (mapsLoaderDerived === null || mapDerived === null) {
-            return;
-        }
-
-        load(mapsLoaderDerived, mapDerived).then();
     })
-
-
-    export function setCenterLocation(location: Location) {
-        if (map === null) {
-            throw new Error("Map is null");
-        }
-
-        map.setCenter({
-            lat: location.latitude.toNumber(),
-            lng: location.longitude.toNumber()
-        });
-    }
 </script>
 
 
