@@ -37,24 +37,30 @@
 
 
 <Form>
-    <h5>Feature Selection Settings</h5>
+    <div class="d-flex flex-row w-100">
+        <div class="d-flex flex-column w-100">
+            <h5>Feature Selection Settings</h5>
 
-    <FormGroup>
-        <Label for="featureCount">Feature Count</Label>
-        <ResettableFormPart bind:this={featureCount} inputId="featureCount" placeholder="Feature Count" defaultValue={2}/>
-    </FormGroup>
+            <FormGroup>
+                <Label for="featureCount">Feature Count</Label>
+                <ResettableFormPart bind:this={featureCount} inputId="featureCount" placeholder="Feature Count" defaultValue={2}/>
+            </FormGroup>
+        </div>
 
-    <h5>Cluster Count</h5>
+        <div class="d-flex flex-column w-100 ms-5">
+            <h5>Cluster Count</h5>
 
-    <div class="d-flex flex-row">
-        <FormGroup class="w-100">
-            <Label for="clusterCountStart">Start</Label>
-            <ResettableFormPart bind:this={clusterCountStart} inputId="clusterCountStart" placeholder="Starting Cluster Count" defaultValue={2} />
-        </FormGroup>
+            <div class="d-flex flex-row">
+                <FormGroup class="w-100">
+                    <Label for="clusterCountStart">Start</Label>
+                    <ResettableFormPart bind:this={clusterCountStart} inputId="clusterCountStart" placeholder="Starting Cluster Count" defaultValue={2} />
+                </FormGroup>
 
-        <FormGroup class="w-100 ms-5">
-            <Label for="clusterName">End</Label>
-            <ResettableFormPart bind:this={clusterCountEnd} inputId="featureCount" placeholder="Feature Count" defaultValue={2} />
-        </FormGroup>
+                <FormGroup class="w-100 ms-5">
+                    <Label for="clusterName">End</Label>
+                    <ResettableFormPart bind:this={clusterCountEnd} inputId="featureCount" placeholder="Feature Count" defaultValue={2} />
+                </FormGroup>
+            </div>
+        </div>
     </div>
 </Form>

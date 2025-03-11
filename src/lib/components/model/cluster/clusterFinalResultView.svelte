@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { defaultLocation, OptionHelper, type FinalResult, type IncidentGet } from "$lib";
+	import { defaultLocation, OptionHelper, type ClusterResult, type FinalResult, type IncidentGet } from "$lib";
+	import DisplayItem from "$lib/components/display/displayItem.svelte";
 	import MapView from "$lib/components/map/mapView.svelte";
-	import { Input } from "@sveltestrap/sveltestrap";
+	import { Card, CardBody, CardHeader, CardTitle, Input } from "@sveltestrap/sveltestrap";
 
     let {
         finalClusteringResult = $bindable(null)
@@ -23,6 +24,19 @@
             )
         )
     ) ?? null);
+
+    let maxClusterNumber: number | null = $derived(
+        finalClusteringResult !== null
+        ? Math.max(...finalClusteringResult.clusterResults.map(clusterResult => clusterResult.clusterCount))
+        : null
+    );
+    let minClusterNumber: number | null = $derived(
+        finalClusteringResult !== null
+        ? Math.min(...finalClusteringResult.clusterResults.map(clusterResult => clusterResult.clusterCount))
+        : null
+    );
+
+
 
     let selectedClusterCount: number | null = $state(null);
 
@@ -46,14 +60,12 @@
 
         return clusterNumbers.map(clusterNumber => new OptionHelper(
             clusterNumber,
-            `Cluster #${clusterNumber + 1}`
+            `Cluster #${clusterNumber + 1} (${clusterResult.labels[clusterNumber].length})`
         ));
     })
 
-    let selectedClusterNumber: number | null = $state(null);
 
-
-    let selectedIncidents: IncidentGet[] | null = $derived.by(() => {
+    let selectedClusterCountResult: ClusterResult | null = $derived.by(() => {
         if (
             finalClusteringResult === null ||
             selectedClusterCount === null ||
@@ -62,17 +74,39 @@
             return null;
         }
 
-
-        const selectedIncidentIds = finalClusteringResult.clusterResults.find(
+        return finalClusteringResult.clusterResults.find(
             clusterResult => clusterResult.clusterCount === selectedClusterCount
-        )?.labels[selectedClusterNumber]
+        ) ?? null
+    })
 
-        if (selectedIncidentIds === undefined) return null;
+
+
+    let selectedClusterNumber: number | null = $state(null);
+
+    let selectedClusterNumberResult: number[] | null = $derived.by(() => {
+        if (
+            selectedClusterCountResult === null ||
+            selectedClusterNumber === null ||
+            finalClusteringResult === null
+        ) {
+            return null;
+        }
+
+        return selectedClusterCountResult.labels[selectedClusterNumber];
+    })
+
+
+
+    let selectedIncidents: IncidentGet[] | null = $derived.by(() => {
+        if (selectedClusterNumberResult === null || finalClusteringResult === null) {
+            return null;
+        }
 
         return finalClusteringResult.incidents.filter(
-            incident => selectedIncidentIds.includes(incident.id)
+            incident => selectedClusterNumberResult.includes(incident.id)
         )
     })
+
 
 
     $effect(() => {
@@ -90,11 +124,16 @@
         const _ = selectedClusterCount;
         selectedClusterNumber = null;
     })
+
+    $effect(() => {
+        const _ = finalClusteringResult;
+        mapView?.deleteAllMarkers();
+    })
 </script>
 
 
 {#if finalClusteringResult !== null && clusterCountOptions !== null}
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column w-100 h-100">
         <div class="d-flex flex-row">
             <div class="d-flex flex-column">
                 <h6>Amount of Clusters</h6>
@@ -109,7 +148,8 @@
             {#if selectedClusterCount !== null && clusterNumberOptions !== null}
                 <div class="d-flex flex-column ms-2">
                     <h6>Cluster Number</h6>
-                    <Input type="select" id="clusterCount" bind:value={selectedClusterNumber}>
+                    <Input type="select" id="clusterNumber" bind:value={selectedClusterNumber}>
+                        <option value={null} selected>Select cluster number...</option>
                         {#each clusterNumberOptions as clusterNumberOption}
                             <option value={clusterNumberOption.value}>{clusterNumberOption.label}</option>
                         {/each}
@@ -119,8 +159,36 @@
         </div>
 
         {#if selectedClusterNumber !== null}
-            <div class="d-flex flex-column">
-                <MapView bind:this={mapView} centerLocation={defaultLocation}/>
+            <div class="d-flex flex-row w-100 vh-100 mt-2">
+                <div class="d-flex w-100 h-100">
+                    <MapView bind:this={mapView} centerLocation={defaultLocation}/>
+                </div>
+
+                {#if selectedClusterCountResult !== null && selectedClusterNumberResult !== null}
+                    <div class="d-flex flex-column w-30 h-100 ms-2">
+                        <Card class="d-flex flex-column h-100 shadow border">
+                            <CardHeader>
+                                <CardTitle>Clustering Information</CardTitle>
+                            </CardHeader>
+
+                            <CardBody>
+                                <div class="d-flex flex-column">
+                                    <h3>{ `${selectedClusterCount} Clusters Statistics`}</h3>
+                                    <DisplayItem name="Silhouette Score (Clustering Score)" description={selectedClusterCountResult.score.toPrecision(6)} />
+                                    <DisplayItem 
+                                        name={`Is optimal (when checking clusters between ${minClusterNumber} and ${maxClusterNumber})`}
+                                        description={selectedClusterCountResult.clusterCount === finalClusteringResult.optimalClusterCount}
+                                    />
+                                </div>
+
+                                <div class="d-flex flex-column mt-2">
+                                    <h3>{ `Cluster #${selectedClusterNumber + 1} Statistics`}</h3>
+                                    <DisplayItem name="Incident Count" description={selectedClusterNumberResult.length} />
+                                </div>
+                            </CardBody>
+                        </Card>
+                    </div>
+                {/if}
             </div>
         {/if}
     </div>
