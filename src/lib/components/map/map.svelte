@@ -7,7 +7,7 @@
 
     let {
         map = $bindable(null),
-        centerLocation = defaultLocation
+        centerLocation = $bindable(defaultLocation)
     }: {
         map?: google.maps.Map | null,
         centerLocation: Location

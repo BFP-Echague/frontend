@@ -1,12 +1,10 @@
 <script lang="ts">
-	import { Loader } from "@googlemaps/js-api-loader";
-    import Map from "./map.svelte";
-	import { defaultLocation, importMapsLibrary, importMarkerLibrary, type DeepPartial, type Location } from "$lib";
-	import { onMount } from "svelte";
+	import Map from "./map.svelte";
+	import { defaultLocation, importMarkerLibrary, type Location } from "$lib";
 	import Decimal from "decimal.js";
 
     let {
-        centerLocation = defaultLocation,
+        centerLocation = $bindable(defaultLocation),
         pickedLocation = $bindable({ latitude: undefined, longitude: undefined })
     }: {
         centerLocation: Location,
@@ -70,14 +68,7 @@
 
 
     export function setCenterLocation(location: Location) {
-        if (map === null) {
-            throw new Error("Map is null");
-        }
-
-        map.setCenter({
-            lat: location.latitude.toNumber(),
-            lng: location.longitude.toNumber()
-        });
+        centerLocation = location;
     }
 
 
@@ -106,7 +97,7 @@
 
 
 <div class="d-flex flex-column w-100 h-100">
-    <Map bind:map { centerLocation }/>
+    <Map bind:map bind:centerLocation />
     <div class="d-flex p-2 justify-content-center align-items-center bg-secondary">
         <strong class="m-0 text-light">Click on the map to select a location. Make sure that you are not on street view before selecting a location.</strong>
     </div>
