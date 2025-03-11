@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Form, FormGroup, Label, Input, CardBody, Card, CardHeader, Alert, Icon } from "@sveltestrap/sveltestrap";
+	import { Form, FormGroup, Label, Input, CardBody, Card, CardHeader, Alert, Icon, CardTitle } from "@sveltestrap/sveltestrap";
 	import StringArrayFormPart from "../../formParts/stringArrayFormPart.svelte";
 	import { onMount } from "svelte";
 	import { BarangayAPIRoute, type BarangayGet, CategoryAPIRoute, type CategoryGet } from "$lib/api";
@@ -105,94 +105,96 @@
     }
 </script>
 
-<div class="d-flex flex-column mb-5">
-    <i>Click on the map to select a location.</i>
-
-    <div class="d-flex flex-row w-100 max-height-vh-70">
-        <div class="d-flex flex-column w-75">
+<div class="d-flex flex-column mb-5 w-100 h-100">
+    <div class="d-flex flex-row w-100 h-100">
+        <div class="d-flex flex-column w-100 h-100">
             <MapSelectLocation bind:this={mapSelectLocation} bind:pickedLocation={resultLocation} centerLocation={defaultLocation} />
         </div>
 
-        <div class="d-flex flex-column ms-2 w-25 overflow-y-scroll">
-            <Card>
-                <CardHeader>
-                    <h3>Incident Details</h3>
-                </CardHeader>
+        <div class="d-flex flex-column ms-2 mt-2 w-40 overflow-y-scroll">
+            <div class="d-flex">
+                <Alert color="danger" class="shadow text-light">
+                    <Icon name="exclamation-circle" class="me-2" /> Ensure all fields are filled accurately before
+                    submitting.
+                </Alert>
+            </div>
 
-                <CardBody>
-                    <Form>
-                        <FormGroup>
-                            <Label for="reportTime">Name of Incident:</Label>
-                            <Input type="text" id="reportTime" placeholder="Name of incident" bind:value={result.name} />
-                        </FormGroup>
-                        <div class="d-flex flex-row">
-                            <FormGroup class="me-3">
-                                <Label for="latitude">Latitude</Label>
-                                <Input type="number" id="latitude" placeholder="Latitude" bind:value={resultLocation.latitude} disabled />
+            <div class="d-flex mt-2">
+                <Card class="shadow border">
+                    <CardHeader>
+                        <CardTitle>Incident Details</CardTitle>
+                    </CardHeader>
+
+                    <CardBody>
+                        <Form>
+                            <FormGroup>
+                                <Label for="reportTime">Name of Incident:</Label>
+                                <Input type="text" id="reportTime" placeholder="Name of incident" bind:value={result.name} />
+                            </FormGroup>
+                            <div class="d-flex flex-row">
+                                <FormGroup class="me-3">
+                                    <Label for="latitude">Latitude</Label>
+                                    <Input type="number" id="latitude" placeholder="Latitude" bind:value={resultLocation.latitude} disabled />
+                                </FormGroup>
+                                <FormGroup>
+                                    <Label for="longitude">Longitude</Label>
+                                    <Input type="number" id="longitude" placeholder="Longitude" bind:value={resultLocation.longitude} disabled />
+                                </FormGroup>
+                            </div>
+    
+    
+                            <FormGroup>
+                                <Label for="reportTime">Report Time:</Label>
+                                <Input type="datetime-local" id="reportTime" bind:value={result.reportTime} />
                             </FormGroup>
                             <FormGroup>
-                                <Label for="longitude">Longitude</Label>
-                                <Input type="number" id="longitude" placeholder="Longitude" bind:value={resultLocation.longitude} disabled />
+                                <Label for="barangay">Barangay:</Label>
+                                <Input type="select" bind:value={result.barangayId}>
+                                    <option value={undefined} disabled selected>Select Barangay</option>
+                                    {#each barangays as barangay}
+                                        <option value={barangay.id}>{ barangay.name }</option>
+                                    {/each}
+                                </Input>
                             </FormGroup>
-                        </div>
-
-
-                        <FormGroup>
-                            <Label for="reportTime">Report Time:</Label>
-                            <Input type="datetime-local" id="reportTime" bind:value={result.reportTime} />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="barangay">Barangay:</Label>
-                            <Input type="select" bind:value={result.barangayId}>
-                                <option value={undefined} disabled selected>Select Barangay</option>
-                                {#each barangays as barangay}
-                                    <option value={barangay.id}>{ barangay.name }</option>
-                                {/each}
-                            </Input>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="category">Category of Incident:</Label>
-                            <Input type="select" id="category" bind:value={result.categoryId}>
-                                <option value={undefined} disabled selected>Select Category</option>
-                                {#each categories as category}
-                                    <option value={category.id}>{ category.name }</option>
-                                {/each}
-                            </Input>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="cause">Causes:</Label>
-                            <StringArrayFormPart bind:this={causesFP}/>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="responseTime">Time of Arrival:</Label>
-                            <Input type="datetime-local" bind:value={result.responseTime} />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="fireOutTime">Time Fire Out:</Label>
-                            <Input type="datetime-local" bind:value={result.fireOutTime} />
-                        </FormGroup>
-                        <div>
-                            <label for="structuresInvolved">Structures Involved:</label>
-                            <StringArrayFormPart bind:this={structuresFP}/>
-                        </div>
-                        <FormGroup>
-                            <Label for="notes">Notes:</Label>
-                            <Input
-                                type="textarea"
-                                id="notes"
-                                bind:value={result.notes}
-                                rows={5}
-                                placeholder="Enter notes"
-                            />
-                        </FormGroup>
-                    </Form>
-                </CardBody>
-            </Card>
+                            <FormGroup>
+                                <Label for="category">Category of Incident:</Label>
+                                <Input type="select" id="category" bind:value={result.categoryId}>
+                                    <option value={undefined} disabled selected>Select Category</option>
+                                    {#each categories as category}
+                                        <option value={category.id}>{ category.name }</option>
+                                    {/each}
+                                </Input>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="cause">Causes:</Label>
+                                <StringArrayFormPart bind:this={causesFP}/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="responseTime">Time of Arrival:</Label>
+                                <Input type="datetime-local" bind:value={result.responseTime} />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="fireOutTime">Time Fire Out:</Label>
+                                <Input type="datetime-local" bind:value={result.fireOutTime} />
+                            </FormGroup>
+                            <div>
+                                <label for="structuresInvolved">Structures Involved:</label>
+                                <StringArrayFormPart bind:this={structuresFP}/>
+                            </div>
+                            <FormGroup>
+                                <Label for="notes">Notes:</Label>
+                                <Input
+                                    type="textarea"
+                                    id="notes"
+                                    bind:value={result.notes}
+                                    rows={5}
+                                    placeholder="Enter notes"
+                                />
+                            </FormGroup>
+                        </Form>
+                    </CardBody>
+                </Card>
+            </div>
         </div>
     </div>
-
-    <Alert color="danger" class="mt-4 shadow text-light">
-        <Icon name="exclamation-circle" class="me-2" /> Ensure all fields are filled accurately before
-        submitting.
-    </Alert>
 </div>

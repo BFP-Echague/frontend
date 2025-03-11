@@ -48,7 +48,7 @@
 	<Loading />
 {:else}
 	<div class="d-flex flex-column w-100 h-100">
-		<div class="position-absolute d-flex flex-row w-100 mt-2 justify-content-center align-items-center" style="z-index: 1000">
+		<div class="position-absolute d-flex flex-row w-100 mt-2 justify-content-center align-items-center" style="z-index: 90">
 			<div>
 				<Card class="px-4 py-3 shadow-lg">
 					<h2 class="text-primary">VIEWING INCIDENT: { incident.name }</h2>

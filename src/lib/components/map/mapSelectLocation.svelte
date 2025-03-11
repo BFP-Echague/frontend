@@ -105,4 +105,9 @@
 </script>
 
 
-<Map bind:map { centerLocation }/>
+<div class="d-flex flex-column w-100 h-100">
+    <Map bind:map { centerLocation }/>
+    <div class="d-flex p-2 justify-content-center align-items-center bg-secondary">
+        <strong class="m-0 text-light">Click on the map to select a location. Make sure that you are not on street view before selecting a location.</strong>
+    </div>
+</div>

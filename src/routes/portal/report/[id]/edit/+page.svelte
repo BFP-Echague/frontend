@@ -1,15 +1,45 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
 	import { page } from "$app/state";
-	import { IncidentAPIRoute, parseIdParam } from "$lib";
+	import { getZodErrorMessage, IncidentAPIRoute, parseIdParam, type IncidentGet, type IncidentUpsert } from "$lib";
+	import Loading from "$lib/components/display/loading.svelte";
 	import IncidentForm from "$lib/components/model/incident/incidentForm.svelte";
 	import { error } from "@sveltejs/kit";
-	import { Button } from "@sveltestrap/sveltestrap";
+	import { Button, Card, Icon } from "@sveltestrap/sveltestrap";
 	import { onMount } from "svelte";
+	import { ZodError } from "zod";
 
     const id = parseIdParam(page.params.id);
 
-    let incidentForm: IncidentForm;
+    let incident: IncidentGet | null = $state(null);
+    let incidentForm: IncidentForm | null = $state(null);
+
+
+
+    $effect(() => {
+        const incidentDerived = incident;
+
+        if (incidentDerived === null) return;
+        if (incidentForm === null) return;
+
+        incidentForm.setResult({
+            barangayId: incidentDerived.barangayId,
+            categoryId: incidentDerived.categoryId,
+            causes: incidentDerived.causes,
+            location: {
+                latitude: incidentDerived.location.latitude,
+                longitude: incidentDerived.location.longitude
+            },
+            name: incidentDerived.name,
+            structuresInvolved: incidentDerived.structuresInvolved,
+            fireOutTime: incidentDerived.fireOutTime ? new Date(incidentDerived.fireOutTime) : undefined,
+            notes: incidentDerived.notes ?? undefined,
+            reportTime: incidentDerived.reportTime ? new Date(incidentDerived.reportTime) : undefined,
+            responseTime: incidentDerived.responseTime ? new Date(incidentDerived.responseTime) : undefined
+        });
+    })
+
+
 
     onMount(async () => {
         const response = await IncidentAPIRoute.instance.get(id);
@@ -20,27 +50,28 @@
 
 		const moreInfo = await response.getMoreInfoParsed();
 
-
-        incidentForm.setResult({
-            barangayId: moreInfo.barangayId,
-            categoryId: moreInfo.categoryId,
-            causes: moreInfo.causes,
-            location: {
-                latitude: moreInfo.location.latitude,
-                longitude: moreInfo.location.longitude
-            },
-            name: moreInfo.name,
-            structuresInvolved: moreInfo.structuresInvolved,
-            fireOutTime: moreInfo.fireOutTime ? new Date(moreInfo.fireOutTime) : undefined,
-            notes: moreInfo.notes ?? undefined,
-            reportTime: moreInfo.reportTime ? new Date(moreInfo.reportTime) : undefined,
-            responseTime: moreInfo.responseTime ? new Date(moreInfo.responseTime) : undefined
-        });
+        incident = moreInfo;
     })
 
 
     async function onSubmit() {
-        const result = await IncidentAPIRoute.instance.patch(id, incidentForm.getResult());
+        if (incidentForm === null) throw new Error("incidentForm is null.");
+
+        let formResult: IncidentUpsert;
+        try {
+            formResult = incidentForm.getResult();
+        }
+        catch (e) {
+            if (e instanceof ZodError) {
+                alert(getZodErrorMessage(e));
+                return;
+            }
+
+            throw e;
+        }
+
+
+        const result = await IncidentAPIRoute.instance.patch(id, formResult);
         if (!(await result.isOK())) {
             alert("An error occurred while processing your request.");
             return;
@@ -63,18 +94,48 @@
 
         goto("../../dashboard");
     }
+
+    async function onDiscard() {
+        if (!confirm("Are you sure you want to discard your changes?")) {
+            return;
+        }
+
+        goto("./view")
+    }
 </script>
 
-<div class="d-flex flex-column">
-    <div class="d-flex flex-row justify-content-center">
-        <h1>Editing Incident</h1>
-    </div>
 
-    <div class="d-flex flex-row justify-content-end">
-        <Button color="danger" on:click={onDelete}>Delete</Button>
-    </div>
+{#if incident === null}
+	<Loading />
+{:else}
+	<div class="d-flex flex-column w-100 h-100">
+		<div class="position-absolute d-flex flex-row w-100 mt-2 justify-content-center align-items-center" style="z-index: 90">
+            <div class="d-flex flex-column">
+				<Card class="px-4 py-3 shadow-lg">
+					<h2 class="text-primary">EDITING INCIDENT: { incident.name }</h2>
+				</Card>
 
-    <IncidentForm bind:this={incidentForm} />
+                <div class="d-flex flex-row mt-2 w-100">
+                    <Button color="secondary" class="m-0 w-100 shadow-lg" on:click={onDiscard}>
+                        <Icon name="x-octagon" />
+                        <span>Discard Changes</span>
+                    </Button>
 
-    <Button color="success" class="w-100" on:click={onSubmit}>Submit</Button>
-</div>
+                    <Button color="danger" class="m-0 ms-2 w-100 shadow-lg" on:click={onDelete}>
+                        <Icon name="trash" />
+                        <span>Delete Incident</span>
+                    </Button>
+
+                    <Button color="success" class="m-0 ms-2 w-100 shadow-lg" on:click={onSubmit}>
+                        <Icon name="check" />
+                        <span>Submit Edits</span>
+                    </Button>
+                </div>
+			</div>
+		</div>
+
+		<div class="d-flex flex-row w-100 h-100">
+			<IncidentForm bind:this={incidentForm} />
+		</div>
+	</div>
+{/if}
