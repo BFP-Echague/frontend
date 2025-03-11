@@ -1,86 +1,134 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { getCurrentUser, makeLogoutRequest } from '$lib';
-	import { Navbar, Container, Nav, NavItem, NavLink, Icon, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Styles } from '@sveltestrap/sveltestrap';
+	import NavHr from '$lib/components/nav/navHr.svelte';
+	import NavLinkCustom from '$lib/components/nav/navLinkCustom.svelte';
+	import {
+		Nav,
+		NavItem,
+		Button,
+
+		Icon
+
+	} from '@sveltestrap/sveltestrap';
 	import { onMount } from 'svelte';
+	import { cubicOut, expoOut } from 'svelte/easing';
+	import { fade, fly, slide, type TransitionConfig } from 'svelte/transition';
 
 	let { children } = $props();
 
-    onMount(() => {
-        if (getCurrentUser() === null) {
-            alert("You need to login first.");
-            goto('/');
-        }
-    })
 
+	let sidebarOpen: boolean = $state(true);
+	let sidebarButtonColor: string = $derived(sidebarOpen ? "primary" : "light");
 
-    function onLogout() {
-        if (confirm("Are you sure you want to logout?")) {
-            const result = makeLogoutRequest();
-            if (!result) {
-                alert("Failed to logout.");
-                return;
-            }
-
-            goto('/');
-        }
-    }
-
-	function gotoDashboard() {
-		goto("/portal/dashboard");
+	function toggleSidebar() {
+		sidebarOpen = !sidebarOpen;
 	}
 
-	function gotoSearch() {
-		goto("/portal/search");
+	function onLogout() {
+		if (confirm('Are you sure you want to logout?')) {
+			const result = makeLogoutRequest();
+			if (!result) {
+				alert('Failed to logout.');
+				return;
+			}
+
+			goto('/');
+		}
 	}
+
+	onMount(() => {
+		if (getCurrentUser() === null) {
+			alert('You need to login first.');
+			goto('/');
+			return;
+		}
+
+		sidebarOpen = false;
+	});
 </script>
 
-<Styles />
 
-<div class="d-flex flex-column">
-	<!-- Navbar -->
-	<Navbar dark color="danger" expand="md" class="mb-4 shadow justify-content-between">
-		<Container class="d-flex align-items-center justify-content-between">
-			<!-- Left-aligned Dashboard link -->
-			<Nav navbar>
-				<NavItem>
-					<NavLink class="text-white fs-5 fw-bold" on:click={gotoDashboard}>
-						<i class="bi bi-house-door me-1"></i>Dashboard
-					</NavLink>
-				</NavItem>
-			</Nav>
+<style>
+	.sidebar {
+		width: 350px;
+	}
 
-			<!-- Center-aligned Title with Larger and Bolder Font -->
-			<span
-				class="navbar-brand text-white text-center"
-				style="font-size: 1.8rem; font-weight: 700;"
-			>
-				<i class="bi bi-fire me-2"></i>BFP Fire Map System - Echague
-			</span>
 
-			<!-- Right-aligned Search and Profile Icon -->
-			<Nav navbar class="d-flex align-items-center">
-				<NavItem>
-					<NavLink class="text-white fs-5 fw-bold me-3" on:click={gotoSearch}>
-						<Icon name="search" class="me-1" />Search
-					</NavLink>
-				</NavItem>
-				<NavItem>
-					<Dropdown>
-						<DropdownToggle caret>
-                            <Icon name="person-circle" class="me-1" />
-                        </DropdownToggle>
-						<DropdownMenu end>
-							<DropdownItem header>User Actions</DropdownItem>
-							<DropdownItem on:click={onLogout}>Logout</DropdownItem>
-						</DropdownMenu>
-					</Dropdown>
-				</NavItem>
-			</Nav>
-		</Container>
-	</Navbar>
+	.z-100 {
+		z-index: 100;
+	}
+	.z-99 {
+		z-index: 99;
+	}
 
-	<div class="mx-5 mb-5 p-0 d-flex flex-column">
-		{@render children()}
+	.overlay {
+		background-color: #00000047;
+	}
+</style>
+
+
+
+<div class="d-flex flex-row w-100 h-100">
+	<div class="position-absolute z-100 h-100 d-flex flex-row">
+		{#if sidebarOpen}
+			<div class="z-3 overflow-hidden bg-light" transition:slide={{ axis: "x", duration: 500, easing: expoOut }}>
+				<div class="h-100 sidebar overflow-hidden" transition:fly={{ x: "-150%", duration: 500, easing: expoOut }}>
+					<Nav vertical class="d-flex flex-column w-100 overflow-auto p-3">
+						<div class="d-flex w-100 justify-content-center">
+							<h1>BFP Fire Map</h1>
+						</div>
+
+						<NavHr />
+
+						<NavItem>
+							<NavLinkCustom route="/portal/dashboard" iconName="grid-1x2-fill" label="Dashboard" />
+						</NavItem>
+						<NavItem>
+							<NavLinkCustom route="/portal/cluster" iconName="circle-square" label="Clustering" />
+						</NavItem>
+						<NavItem>
+							<NavLinkCustom route="/portal/summary" iconName="file-earmark-bar-graph" label="Summary" />
+						</NavItem>
+
+						<NavHr />
+
+						<NavItem>
+							<NavLinkCustom route="/portal/report/create" iconName="pencil" label="Create Report" />
+						</NavItem>
+						<NavItem>
+							<NavLinkCustom route="/portal/search" iconName="search" label="Search Report" />
+						</NavItem>
+					</Nav>
+				</div>
+			</div>
+		{/if}
+
+		<div class="d-flex flex-row">
+			<div class="position-absolute">
+				<Button color={sidebarButtonColor} class="m-0 mt-3 ms-3" on:click={toggleSidebar}>
+					<h5 
+						class="m-0"
+						class:text-light={sidebarOpen}
+						class:text-dark={!sidebarOpen}
+					>
+						<Icon name="list" />
+					</h5>
+				</Button>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="d-flex w-100">
+		{#if sidebarOpen}
+			<div class="position-absolute d-flex flex-row w-100 h-100 z-99" transition:fade={{ duration: 500, easing: expoOut }}>
+				<div class="overlay w-100 h-100" onclick={toggleSidebar} onkeyup={toggleSidebar} role="button" tabindex="0"></div>
+			</div>
+		{/if}
+
+		<div class="d-flex flex-column w-100 h-100 overflow-auto">
+			{@render children()}
+		</div>
 	</div>
 </div>
