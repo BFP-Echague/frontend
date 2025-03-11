@@ -28,6 +28,13 @@
             mapId: env.GOOGLEMAPS_MAPID
         });
     })
+
+    $effect(() => {
+        const centerLocationDerived = centerLocation;
+        map?.panTo({
+            lat: centerLocationDerived.latitude.toNumber(), lng: centerLocationDerived.longitude.toNumber()
+        })
+    })
 </script>
 
 

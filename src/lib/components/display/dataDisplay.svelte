@@ -10,15 +10,15 @@
     {#if data === undefined || data === null}
         <Badge color="warning">Blank</Badge>
     {:else if data instanceof Date}
-        <dd>{ formatDate(data) }</dd>
+        <dd class="m-0">{ formatDate(data) }</dd>
     {:else if typeof data === "string"}
         {#if data.length === 0}
             <Badge color="warning">Blank data</Badge>
         {:else}
-            <dd>{ data }</dd>
+            <dd class="m-0">{ data }</dd>
         {/if}
     {:else if typeof data === "number"}
-        <dd>{ data.toString() }</dd>
+        <dd class="m-0">{ data.toString() }</dd>
     {:else if typeof data === "boolean"}
         {#if data}
             <Badge color="success">YES</Badge>

@@ -8,9 +8,9 @@
 </script>
 
 
-<div class="d-flex flex-column">
-    <dl>
-        <dt>{ name }</dt>
+<div class="d-flex flex-column mb-2">
+    <dl class="m-0">
+        <dt class="m-0">{ name }</dt>
         <DataDisplay data={description} />
     </dl>
 </div>
