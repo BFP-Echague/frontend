@@ -28,7 +28,7 @@
 <div class="d-flex flex-column">
     <div class="d-flex flex-column">
         {#each result as item, idx}
-            <InputGroup class="d-flex flex-row">
+            <div class="d-flex flex-row align-items-center mb-2">
                 <Input
                     class="h-100"
                     type="text"
@@ -37,14 +37,14 @@
                 />
 
                 <Button
-                    type="button"
+                    class="d-flex m-0 ms-2 h-100"
                     color="secondary"
                     on:click={() => removeResult(idx)}
                     aria-label="Remove value"
                 >
                     <Icon name="trash" />
                 </Button>
-            </InputGroup>
+            </div>
         {/each}
     </div>
 

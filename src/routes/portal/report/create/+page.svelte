@@ -4,7 +4,7 @@
 	import IncidentForm from "$lib/components/model/incident/incidentForm.svelte";
 	import { Card, CardBody, Icon, Button, Alert } from "@sveltestrap/sveltestrap";
 	import { z } from "zod";
-    const centerLocation = defaultLocation;
+
 
     let form: IncidentForm;
 
@@ -32,17 +32,23 @@
 </script>
 
 
-<div class="d-flex flex-column">
-    <Card class="shadow">
-        <CardBody>
-            <h3 class="text-primary">
-                <Icon name="exclamation-triangle" class="me-2" /> Incident Report
-            </h3>
-            <IncidentForm bind:this={form}/>
+<div class="d-flex flex-column w-100 h-100">
+    <div class="position-absolute d-flex flex-row w-100 mt-2 justify-content-center align-items-center" style="z-index: 90">
+        <div class="d-flex flex-column">
+            <Card class="px-4 py-3 shadow-lg">
+                <h2 class="text-primary">CREATING NEW INCIDENT</h2>
+            </Card>
 
-            <Button color="primary" class="w-100" on:click={onSubmit}>
-                <Icon name="send" class="me-2" /> Submit Report
-            </Button>
-        </CardBody>
-    </Card>
+            <div class="d-flex flex-row mt-2 w-100">
+                <Button color="success" class="m-0 ms-2 w-100 shadow-lg" on:click={onSubmit}>
+                    <Icon name="check" />
+                    <span>Submit New Report</span>
+                </Button>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-row w-100 h-100">
+        <IncidentForm bind:this={form} />
+    </div>
 </div>
