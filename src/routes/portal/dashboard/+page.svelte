@@ -29,16 +29,8 @@
 </script>
 
 <!-- Main Content -->
-<div class="d-flex flex-column">
-	<!-- Left Section: Map and Results -->
-	<Card class="mb-4 shadow">
-		<CardBody>
-			<CardTitle class="text-primary fs-3">
-				<h3 class="d-inline">
-					<Icon name="map" class="me-2" /> Fire Incident Map
-				</h3>
-			</CardTitle>
-			<MapView bind:this={mapView} { centerLocation }/>
-		</CardBody>
-	</Card>
+<div class="d-flex flex-column w-100 h-100">
+	<div class="d-flex flex-column w-100 h-100">
+		<MapView bind:this={mapView} { centerLocation }/>
+	</div>
 </div>

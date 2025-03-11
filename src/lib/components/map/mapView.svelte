@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { Loader } from "@googlemaps/js-api-loader";
 	import Map from "./map.svelte";
 	import { mount, onMount } from "svelte";
 	import { defaultLocation, importMapsLibrary, importMarkerLibrary, type IncidentGet, type Location } from "$lib";
@@ -61,4 +60,6 @@
     }
 </script>
 
-<Map bind:map { centerLocation }/>
+<div class="w-100 h-100">
+    <Map bind:map { centerLocation }/>
+</div>

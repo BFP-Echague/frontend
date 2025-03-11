@@ -3,17 +3,11 @@
 	import { getCurrentUser, makeLogoutRequest } from '$lib';
 	import NavHr from '$lib/components/nav/navHr.svelte';
 	import NavLinkCustom from '$lib/components/nav/navLinkCustom.svelte';
-	import {
-		Nav,
-		NavItem,
-		Button,
-
-		Icon
-
-	} from '@sveltestrap/sveltestrap';
+	import { Nav, NavItem, Button, Icon } from '@sveltestrap/sveltestrap';
 	import { onMount } from 'svelte';
-	import { cubicOut, expoOut } from 'svelte/easing';
-	import { fade, fly, slide, type TransitionConfig } from 'svelte/transition';
+	import { expoOut } from 'svelte/easing';
+	import { fade, fly, slide } from 'svelte/transition';
+	import { page } from '$app/state';
 
 	let { children } = $props();
 
@@ -50,16 +44,16 @@
 
 
 <style>
-	.sidebar {
-		width: 350px;
-	}
-
-
 	.z-100 {
 		z-index: 100;
 	}
 	.z-99 {
 		z-index: 99;
+	}
+
+
+	.sidebar {
+		width: 350px;
 	}
 
 	.overlay {
@@ -120,7 +114,7 @@
 	</div>
 
 
-	<div class="d-flex w-100">
+	<div class="d-flex w-100 h-100">
 		{#if sidebarOpen}
 			<div class="position-absolute d-flex flex-row w-100 h-100 z-99" transition:fade={{ duration: 500, easing: expoOut }}>
 				<div class="overlay w-100 h-100" onclick={toggleSidebar} onkeyup={toggleSidebar} role="button" tabindex="0"></div>
@@ -128,7 +122,22 @@
 		{/if}
 
 		<div class="d-flex flex-column w-100 h-100 overflow-auto">
-			{@render children()}
+			<div class="d-flex flex-row w-100 z-99 px-5 py-4 justify-content-center align-items-center shadow-lg">
+				<div></div>
+				<div>
+					<h3 class="m-0 text-primary">
+						<Icon name="fire" />
+						BFP Echague Fire Mapping System
+					</h3>
+				</div>
+				<div class="position-absolute end-0 me-5">
+					<h5 class="m-0">{ page.url.pathname.replaceAll("/", " / ") }</h5>
+				</div>
+			</div>
+
+			<div class="d-flex flex-column w-100 h-100 overflow-auto">
+				{@render children()}
+			</div>
 		</div>
 	</div>
 </div>
