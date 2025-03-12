@@ -48,6 +48,11 @@
 		const result = await makeLoginRequest(loginResult);
 		loggingIn = false;
 
+		if (result === null) {
+			alert("Too many requests. Please try again later.");
+			return;
+		}
+
 		if (!result) {
 			alert("The username or password is incorrect.");
 			return;

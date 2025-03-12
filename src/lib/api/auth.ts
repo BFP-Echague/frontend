@@ -33,6 +33,8 @@ export async function makeLoginRequest(loginData: LoginData) {
         body: JSON.stringify(loginData)
     });
 
+    if (result.status === 429) return null;
+
     if (!result.ok) return false;
 
 
