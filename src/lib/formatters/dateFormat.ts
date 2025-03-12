@@ -9,3 +9,7 @@ export function formatFormDate(date: Date) {
     dateClone.setMinutes(dateClone.getMinutes() - dateClone.getTimezoneOffset());
     return dateClone.toISOString().slice(0, 16);
 }
+
+export function formatGraphMonthDate(date: Date) {
+    return formatDateFns(date, "MMM yyyy");
+}

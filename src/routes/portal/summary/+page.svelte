@@ -1,133 +1,253 @@
 <script lang="ts">
-    import { Container, Row, Col, Card, CardBody, CardHeader } from "@sveltestrap/sveltestrap";
+	import { CategoryAPIRoute, formatGraphMonthDate, IncidentAPIRoute, type CategoryGet, type IncidentGet } from "$lib";
+	import DisplayItem from "$lib/components/display/displayItem.svelte";
+	import { generateRandomHexColor } from "$lib/randomColor";
+    import { Container, Row, Col, Card, CardBody, CardHeader, CardTitle } from "@sveltestrap/sveltestrap";
     import Chart, { type ChartOptions } from "chart.js/auto";
     import { onMount } from "svelte";
 
-    let barChart, pieChart, heatmapChart;
-    let barCanvas: HTMLCanvasElement | null = null;
-    let pieCanvas: HTMLCanvasElement | null = null;
+
+    let incidents: IncidentGet[] | null = $state(null);
+    let categories: CategoryGet[] | null = $state(null);
+
+
+    let monthlyIncidentsCanvas: HTMLCanvasElement | null = null;
+    let noMonthIncidentCount: number | null = $state(null);
+
+    let causesCanvas: HTMLCanvasElement | null = null;
     let heatmapCanvas: HTMLCanvasElement | null = null;
+
 
     let chartOptions: ChartOptions = {
         responsive: true,
         maintainAspectRatio: false,
     }
 
-    onMount(() => {
-        if (barCanvas == null) throw new Error("barCanvas not mounted");
-        barChart = new Chart(barCanvas, {
+
+    $effect(() => {
+        const incidentsDerived = incidents;
+        if (incidentsDerived === null) return;
+
+        const categoriesDerived = categories;
+        if (categoriesDerived === null) return;
+
+
+
+        if (monthlyIncidentsCanvas == null) return;
+
+        const noMonthIncidents: IncidentGet[] = [];
+        const monthlyIncidents: { month: number; year: number; incidentCount: number }[] = [];
+        for (const incident of incidentsDerived) {
+            if (incident.reportTime === null) {
+                noMonthIncidents.push(incident);
+                continue;
+            }
+
+            const reportTime = incident.reportTime;
+
+            const monthlyIncidentReport = monthlyIncidents.find(
+                monthlyIncident => 
+                    monthlyIncident.month === reportTime.getMonth() &&
+                    monthlyIncident.year === reportTime.getFullYear()
+            );
+            if (monthlyIncidentReport !== undefined) {
+                monthlyIncidentReport.incidentCount++;
+            } else {
+                monthlyIncidents.push({
+                    month: reportTime.getMonth(),
+                    year: reportTime.getFullYear(),
+                    incidentCount: 1
+                })
+            }
+        }
+        monthlyIncidents.sort((a, b) => {
+            if (a.year !== b.year) return a.year - b.year;
+            else return a.month - b.month;
+        })
+
+        noMonthIncidentCount = noMonthIncidents.length
+        new Chart(monthlyIncidentsCanvas, {
             type: "bar",
             data: {
-                labels: ["2019", "2020", "2021", "2022", "2023"],
+                labels: monthlyIncidents.map(x => formatGraphMonthDate(new Date(x.year, x.month))),
                 datasets: [{
-                    label: "Yearly Fire Incidents",
-                    data: [25, 30, 45, 50, 60],
+                    label: "Monthly Fire Incidents",
+                    data: monthlyIncidents.map(x => x.incidentCount),
                     backgroundColor: "rgba(183, 28, 28, 0.7)"
                 }]
             },
             options: chartOptions
         });
 
-        if (pieCanvas == null) throw new Error("pieCanvas not mounted");
-        pieChart = new Chart(pieCanvas, {
+
+
+        if (causesCanvas == null) return;
+
+        const unknownCause = "unknown";
+        const causeCounts: { cause: string; count: number; }[] = [{ cause: unknownCause, count: 0 }]
+        for (const incident of incidentsDerived) {
+            if (incident.causes.length === 0) {
+                const causeCount = causeCounts.find(x => x.cause === unknownCause)
+                if (causeCount === undefined) throw new Error("unknown cause not found. this should be impossible...");
+                causeCount.count++;
+            }
+
+            for (const cause of incident.causes) {
+                const causeCount = causeCounts.find(x => x.cause === cause);
+                if (causeCount === undefined) {
+                    causeCounts.push({
+                        cause,
+                        count: 1
+                    });
+                } else {
+                    causeCount.count++;
+                }
+            }
+        }
+        causeCounts.sort((a, b) => {
+            if (a.cause === unknownCause) return -1;
+            if (b.cause === unknownCause) return 1;
+            return a.cause.localeCompare(b.cause);
+        })
+
+        new Chart(causesCanvas, {
             type: "pie",
             data: {
-                labels: ["Electrical", "Cooking", "Arson", "Accidents"],
+                labels: causeCounts.map(x => x.cause),
                 datasets: [{
-                    data: [40, 30, 20, 10],
-                    backgroundColor: ["#D32F2F", "#F57C00", "#1976D2", "#388E3C"]
+                    data: causeCounts.map(x => x.count),
+                    backgroundColor: causeCounts.map(x => {
+                        if (x.cause === unknownCause) return "#999999";
+                        return generateRandomHexColor();
+                    })
                 }]
             },
             options: chartOptions
         });
 
-        if (heatmapCanvas == null) throw new Error("heatmapCanvas not mounted");
-        heatmapChart = new Chart(heatmapCanvas, {
+
+
+        if (heatmapCanvas == null) return;
+
+
+        const locationInfos: { categoryId: number; categoryName: string; color: string; locations: { x: number; y: number; }[] }[] = []
+        for (const incident of incidentsDerived) {
+            let locationInfo = locationInfos.find(x => x.categoryId === incident.category.id);
+            if (locationInfo === undefined) {
+                locationInfos.push({
+                    categoryId: incident.category.id,
+                    categoryName: incident.category.name,
+                    color: generateRandomHexColor(),
+                    locations: [{
+                        x: incident.location.latitude.toNumber(),
+                        y: incident.location.longitude.toNumber()
+                    }]
+                });
+            } else {
+                locationInfo.locations.push({
+                    x: incident.location.latitude.toNumber(),
+                    y: incident.location.longitude.toNumber()
+                });
+            }
+        }
+
+        console.log(locationInfos)
+
+        new Chart(heatmapCanvas, {
             type: "scatter",
             data: {
-                datasets: [{
-                    label: "Fire Locations",
-                    data: [
-                        { x: 1, y: 5 }, { x: 2, y: 10 }, { x: 3, y: 6 }, 
-                        { x: 4, y: 15 }, { x: 5, y: 12 }, { x: 6, y: 20 }
-                    ],
-                    backgroundColor: "#B71C1C"
-                }]
+                datasets: locationInfos.map(x => ({
+                    label: x.categoryName,
+                    data: x.locations,
+                    backgroundColor: x.color
+                }))
             },
-            options: chartOptions
+            options: {
+                ...chartOptions,
+                scales: {
+                    x: {
+                        type: "linear",
+                        position: "bottom"
+                    }
+                }
+            }
         });
+    })
+
+
+
+    onMount(async () => {
+        const incidentResult = await IncidentAPIRoute.instance.getMany(new URLSearchParams({ pageSize: "100" }));
+		if (!incidentResult.isOK()) {
+			alert("Failed to load incidents");
+			return;
+		}
+
+		const moreInfoIncident = await incidentResult.getMoreInfoParsed();
+        incidents = moreInfoIncident.data;
+
+
+        const categoryResult = await CategoryAPIRoute.instance.getMany();
+		if (!categoryResult.isOK()) {
+			alert("Failed to load categories");
+			return;
+		}
+
+		const moreInfoCategory = await categoryResult.getMoreInfoParsed();
+        categories = moreInfoCategory;
     });
 </script>
 
 <style>
     .chart-container {
         position: relative;
-        height: 40vh;
+        height: 50vh;
         width: 100%;
     }
 </style>
 
 
-<!-- Title -->
-<div class="d-flex flex-column">
-    <h1 class="text-primary text-center">Summary Statistics</h1>
-</div>
+<div class="d-flex flex-column mt-3 p-5 w-100 h-100">
+    <div class="d-flex flex-column">
+        <h1 class="text-primary text-center">Summary Statistics</h1>
+    </div>
 
+    <div class="d-flex flex-column w-100">
+        <div class="d-flex w-100">
+            <Card class="w-100 shadow border">
+                <CardBody>
+                    <h5>Heatmap of Fire Incidents</h5>
+                    <div class="chart-container">
+                        <canvas bind:this={heatmapCanvas}></canvas>
+                    </div>
+                </CardBody>
+            </Card>
+        </div>
 
-<!-- Paragraphs -->
-<div class="d-flex flex-column">
-    <Card class="shadow-card">
-        <CardHeader class="text-center">
-            <h2 class="text-secondary">Fire Reports in Echague, Isabela</h2>
-        </CardHeader>
-        <CardBody>
-            <p>
-                Fire reports in Echague, Isabela, show a concerning rise in incidents, particularly in densely populated 
-                residential areas. Many cases have been linked to faulty electrical systems and unattended cooking fires. 
-                In response, local authorities have intensified fire safety campaigns and implemented stricter regulations 
-                on building fire codes.
-            </p>
-        </CardBody>
-    </Card>
-</div>
+        <div class="d-flex w-100 mt-5">
+            <Card class="w-100 shadow border">
+                <CardBody>
+                    <h5>Fire Causes Distribution</h5>
+                    <div class="chart-container">
+                        <canvas bind:this={causesCanvas}></canvas>
+                    </div>
+                </CardBody>
+            </Card>
+        </div>
 
+        <div class="d-flex w-100 mt-5">
+            <Card class="w-100 shadow border">
+                <CardHeader>
+                    <CardTitle>Monthly Fire Incidents</CardTitle>
+                </CardHeader>
+                <CardBody>
+                    <div class="chart-container">
+                        <canvas bind:this={monthlyIncidentsCanvas}></canvas>
+                    </div>
 
-<!-- Graphs Section -->
-<div class="d-flex flex-column m-4">
-    <Container fluid>
-        <Row>
-            <Col>
-                <Card class="shadow h-100">
-                    <CardBody>
-                        <h5>Heatmap of Fire Incidents</h5>
-                        <div class="chart-container">
-                            <canvas bind:this={heatmapCanvas}></canvas>
-                        </div>
-                    </CardBody>
-                </Card>
-            </Col>
-
-            <Col>
-                <Card class="shadow">
-                    <CardBody>
-                        <h5>Fire Causes Distribution</h5>
-                        <div class="chart-container">
-                            <canvas bind:this={pieCanvas}></canvas>
-                        </div>
-                    </CardBody>
-                </Card>
-            </Col>
-
-            <Col>
-                <Card class="shadow">
-                    <CardBody>
-                        <h5>Yearly Fire Incidents</h5>
-                        <div class="chart-container">
-                            <canvas bind:this={barCanvas}></canvas>
-                        </div>
-                    </CardBody>
-                </Card>
-            </Col>
-        </Row>
-    </Container>
+                    <DisplayItem name="Incidents without report time" description={noMonthIncidentCount} />
+                </CardBody>
+            </Card>
+        </div>
+    </div>
 </div>

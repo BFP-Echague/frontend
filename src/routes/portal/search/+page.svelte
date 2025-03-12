@@ -90,29 +90,6 @@
 		loadingNextPage = false;
 	}
 
-	function getResultsSummary(data: Data[]) {
-		if (data.length === 0) {
-			return 'No results found. Please refine your search.';
-		}
-
-		const totalIncidents = data.length;
-		const barangays = [...new Set(data.map((item) => item.barangay))];
-		const mostCommonBarangay = barangays.reduce(
-			(acc, barangay) => {
-				const count = data.filter((item) => item.barangay === barangay).length;
-				return count > acc.count ? { barangay, count } : acc;
-			},
-			{ barangay: '', count: 0 }
-		);
-
-		return `
-        A total of <strong>${totalIncidents} fire incidents</strong> were found matching your search criteria. 
-        The incidents occurred across <strong>${barangays.length} different barangays</strong>, with the majority 
-        concentrated in <strong>${mostCommonBarangay.barangay}</strong> (${mostCommonBarangay.count} incidents). 
-        <br><br>
-        `;
-	}
-
 
 
 	function gotoIncidentView(id: number) {
