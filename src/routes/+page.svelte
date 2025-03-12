@@ -162,10 +162,5 @@
 				</div>
 			</Button>
 		</Form>
-
-		<Container class="text-center mt-2">
-			<Button color="link">Forgot password?</Button>
-		</Container>
-
 	</ModalBody>
 </Modal>
