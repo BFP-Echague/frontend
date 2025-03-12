@@ -21,8 +21,7 @@
 
 	function togglePassword() {
 		showPassword = !showPassword;
-	};
-
+	}
 
 	async function login() {
 		const result = await makeLoginRequest({
@@ -31,7 +30,7 @@
 		});
 
 		if (result) {
-			goto("./portal/dashboard");
+			goto('./portal/dashboard');
 		}
 	}
 </script>
@@ -42,9 +41,9 @@
 	class="d-flex justify-content-between align-items-center px-3 position-fixed top-0 w-100 shadow"
 	style="z-index: 1050;"
 >
-	<NavbarBrand href="https://bfpechague.com.ph" class="text-warning fw-bold"
-		>https://bfpechague.com.ph</NavbarBrand
-	>
+	<NavbarBrand href="https://bfpechague.com.ph" class="text-warning fw-bold">
+		https://bfpechague.com.ph
+	</NavbarBrand>
 	<Button color="warning" class="m-0" on:click={() => (showModal = true)}>LOG IN</Button>
 </Navbar>
 
