@@ -1,39 +1,51 @@
 <script lang="ts">
-	import {
-		Navbar,
-		NavbarBrand,
-		Button,
-		Form,
-		FormGroup,
-		Input,
-		Modal,
-		ModalBody,
-		Container,
-		Icon,
-
-		Spinner
-
-	} from '@sveltestrap/sveltestrap';
-	import { makeLoginRequest } from '$lib';
+	import { Navbar, NavbarBrand, Button, Form, FormGroup, Input, Modal, ModalBody, Container, Icon, Spinner } from '@sveltestrap/sveltestrap';
+	import { handlePossibleZodError, makeLoginRequest } from '$lib';
 	import { goto } from '$app/navigation';
+	import { z } from 'zod';
 
-	let showModal = $state(false);
+
 	let username = $state("");
 	let password = $state("");
+
+	let showModal = $state(false);
 	let showPassword = $state(false);
 
 	let loggingIn = $state(false);
+
+
+	const loginSchema = z.object({
+		username: z.string(),
+		password: z.string()
+			.min(8, { message: "Must be 8 or more characters" })
+			.refine(x => /^.*[a-z].*$/g.test(x), { message: "Must have a lowercase letter" })
+			.refine(x => /^.*[A-Z].*$/g.test(x), { message: "Must have a capital letter" })
+			.refine(x => /^.*\d.*$/g.test(x), { message: "Must have a digit" })
+			.refine(x => /^.*[^A-Za-z0-9].*$/g.test(x), { message: "Must have a symbol" })
+	})
+
+
+
 
 	function togglePassword() {
 		showPassword = !showPassword;
 	}
 
 	async function login() {
+		let loginResult: { username: string; password: string; };
+		try {
+			loginResult = await loginSchema.parseAsync({
+				username: username,
+				password: password
+			})
+		}
+		catch (e: unknown) {
+			if (handlePossibleZodError(e)) return;
+			throw e;
+		}
+
 		loggingIn = true;
-		const result = await makeLoginRequest({
-			username: username,
-			password: password
-		});
+		const result = await makeLoginRequest(loginResult);
 		loggingIn = false;
 
 		if (!result) {
