@@ -36,15 +36,6 @@
 	}
 </script>
 
-<svelte:head>
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
-    </style>
-</svelte:head>
-
 <!-- Fixed Navbar -->
 <Navbar
 	color="dark"
