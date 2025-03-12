@@ -105,11 +105,19 @@
 </script>
 
 
+<style>
+    .top-card {
+        left: 20%;
+        z-index: 90;
+    }
+</style>
+
+
 {#if incident === null}
 	<Loading />
 {:else}
 	<div class="d-flex flex-column w-100 h-100">
-		<div class="position-absolute d-flex flex-row w-100 mt-2 justify-content-center align-items-center" style="z-index: 90">
+		<div class="position-absolute d-flex flex-row flex-shrink top-card mt-2 justify-content-center align-items-center">
             <div class="d-flex flex-column">
 				<Card class="px-4 py-3 shadow-lg">
 					<h2 class="text-primary">EDITING INCIDENT: { incident.name }</h2>
