@@ -3,6 +3,9 @@
 	import { handlePossibleZodError, makeLoginRequest } from '$lib';
 	import { goto } from '$app/navigation';
 	import { z } from 'zod';
+	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
+	import { page } from '$app/state';
 
 
 	let username = $state("");
@@ -60,6 +63,12 @@
 
 		goto('./portal/dashboard');
 	}
+
+	onMount(() => {
+        if (page.url.searchParams.get('openLogin') === 'true') {
+			showModal = true;
+        }
+	});
 </script>
 
 <!-- Fixed Navbar -->

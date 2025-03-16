@@ -10,15 +10,15 @@ const loginRoute = getBackendURL("/login");
 const lsUserKey = "currentUser";
 
 function setLsCurrentUser(user: UserGet) {
-    localStorage.setItem(lsUserKey, JSON.stringify(user));
+    sessionStorage.setItem(lsUserKey, JSON.stringify(user));
 }
 
 function deleteLsCurrentUser() {
-    localStorage.removeItem(lsUserKey);
+    sessionStorage.removeItem(lsUserKey);
 }
 
 export function getCurrentUser() {
-    const result = localStorage.getItem(lsUserKey);
+    const result = sessionStorage.getItem(lsUserKey);
     if (result === null) return null;
     return JSON.parse(result) as UserGet;
 }
