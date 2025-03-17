@@ -6,7 +6,7 @@
 	import { error } from '@sveltejs/kit';
 	import Loading from '$lib/components/display/loading.svelte';
 	import { goto } from '$app/navigation';
-	import MapView from '$lib/components/map/mapView.svelte';
+	import MapViewMultiple from '$lib/components/map/mapViewMultiple.svelte';
 	import IncidentView from "$lib/components/model/incident/incidentView.svelte";
 	import { Card, CardHeader, CardTitle, CardBody, Button, Icon } from "@sveltestrap/sveltestrap";
 
@@ -15,7 +15,7 @@
 
 	let incident: IncidentGet | null = $state(null);
 
-	let mapView: MapView | null = $state(null);
+	let mapViewMultiple: MapViewMultiple | null = $state(null);
 
 
 	function edit() {
@@ -36,10 +36,10 @@
 		const incidentDerived = incident;
 		if (incidentDerived === null) return;
 
-		if (mapView === null) return;
+		if (mapViewMultiple === null) return;
 
-		mapView.deleteAllMarkers();
-		mapView.addIncident(incidentDerived);
+		mapViewMultiple.deleteAllMarkers();
+		mapViewMultiple.addIncident(incidentDerived);
 	})
 </script>
 
@@ -65,7 +65,7 @@
 
 		<div class="d-flex flex-row w-100 h-100">
 			<div class="d-flex w-100 h-100">
-				<MapView bind:this={mapView} centerLocation={incident?.location ?? defaultLocation}/>
+				<MapViewMultiple bind:this={mapViewMultiple} centerLocation={incident?.location ?? defaultLocation}/>
 			</div>
 
 			<div class="d-flex w-20 h-100 ms-2 overflow-auto">

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { defaultLocation, OptionHelper, type ClusterResult, type FinalResult, type IncidentGet } from "$lib";
 	import DisplayItem from "$lib/components/display/displayItem.svelte";
-	import MapView from "$lib/components/map/mapView.svelte";
+	import MapViewMultiple from "$lib/components/map/mapViewMultiple.svelte";
 	import { Card, CardBody, CardHeader, CardTitle, Input } from "@sveltestrap/sveltestrap";
 
     let {
@@ -11,7 +11,7 @@
     } = $props();
 
 
-    let mapView: MapView | undefined = $state();
+    let mapViewMultiple: MapViewMultiple | undefined = $state();
 
 
     let clusterCountOptions = $derived(finalClusteringResult?.clusterResults.map(
@@ -111,12 +111,12 @@
 
     $effect(() => {
         const selectedIncidentsEffect = selectedIncidents
-        mapView?.deleteAllMarkers();
+        mapViewMultiple?.deleteAllMarkers();
 
         if (selectedIncidentsEffect === null) return;
 
         selectedIncidentsEffect.forEach(incident => {
-            mapView?.addIncident(incident);
+            mapViewMultiple?.addIncident(incident);
         })
     })
 
@@ -127,7 +127,7 @@
 
     $effect(() => {
         const _ = finalClusteringResult;
-        mapView?.deleteAllMarkers();
+        mapViewMultiple?.deleteAllMarkers();
     })
 </script>
 
@@ -161,7 +161,7 @@
         {#if selectedClusterNumber !== null}
             <div class="d-flex flex-row w-100 vh-100 mt-2">
                 <div class="d-flex w-100 h-100">
-                    <MapView bind:this={mapView} centerLocation={defaultLocation}/>
+                    <MapViewMultiple bind:this={mapViewMultiple} centerLocation={defaultLocation}/>
                 </div>
 
                 {#if selectedClusterCountResult !== null && selectedClusterNumberResult !== null}
