@@ -158,7 +158,7 @@
 			{/if}
 
 			<div class="d-flex flex-column w-100 h-100 overflow-auto">
-				<div class="d-flex flex-row w-100 z-99 px-5 py-4 justify-content-center align-items-center shadow-lg">
+				<!-- <div class="d-flex flex-row w-100 z-99 px-5 py-4 justify-content-center align-items-center shadow-lg">
 					<div></div>
 					<div>
 						<h3 class="m-0 text-primary">
@@ -169,7 +169,7 @@
 					<div class="position-absolute end-0 me-5">
 						<h5 class="m-0">{ page.url.pathname.replaceAll("/", " / ") }</h5>
 					</div>
-				</div>
+				</div> -->
 
 				<div class="d-flex flex-column w-100 h-100 overflow-auto">
 					{@render children()}

@@ -7,7 +7,7 @@
 </script>
 
 <div class="d-flex flex-column">
-    <DisplayItem name="Archived" description={incident.archived} />
+    <DisplayItem name="Archived" description={incident.archived} boolFlipColors={true} />
 
     <DisplayItem name="Name" description={incident.name} />
 

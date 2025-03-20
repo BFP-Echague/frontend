@@ -19,7 +19,7 @@
         timeRange = 2 * 31 * 24 * 60 * 60 * 1000,
         onReady = async () => {}
     }: {
-        centerLocation: Location;
+        centerLocation?: Location;
         referenceDate?: Date;
         timeRange?: number;
         onReady?: () => Promise<void>;

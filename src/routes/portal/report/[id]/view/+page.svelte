@@ -46,41 +46,31 @@
 {#if incident === null}
 	<Loading />
 {:else}
-	<div class="d-flex flex-column w-100 h-100">
-		<div class="position-absolute d-flex flex-row w-100 mt-2 justify-content-center align-items-center" style="z-index: 90">
-			<div>
-				<Card class="px-4 py-3 shadow-lg">
-					<h2 class="text-primary">VIEWING INCIDENT: { incident.name }</h2>
-				</Card>
-			</div>
-
-			<div class="ms-2 h-100">
-				<Button color="secondary" class="m-0 h-100 shadow-lg" size="lg" on:click={edit}>
-					<Icon name="pencil" />
-					<span> Edit</span>
-				</Button>
+	<div class="d-flex flex-column w-100 vh-100">
+		<div class="d-flex flex-row w-100 px-4 py-3 justify-content-center align-items-center shadow-lg" style="height: 15vh">
+			<h2 class="m-0 text-primary">VIEWING INCIDENT: { incident.name }</h2>
+			<Button color="secondary" class="m-0 ms-5 shadow-lg" size="lg" on:click={edit}>
+				<Icon name="pencil" />
+				<span> Edit</span>
+			</Button>
+		</div>
+		<div class="d-flex flex-row w-100" style="height: 85vh">
+			<div class="d-flex flex-row w-100 h-100">
+				<div class="d-flex w-100 h-100">
+					<MapViewMultiple bind:this={mapViewMultiple} />
+				</div>
+				
+	
+				<div class="w-30 h-100 ms-2 p-2 overflow-auto">
+						<IncidentView { incident } />
+				</div>
 			</div>
 		</div>
+		<!-- <div class="d-flex w-100 h-100">
 
-		<div class="d-flex flex-row w-100 h-100">
-			<div class="d-flex w-100 h-100">
-				<MapViewMultiple bind:this={mapViewMultiple} centerLocation={incident?.location ?? defaultLocation}/>
-			</div>
-
-			<div class="d-flex w-20 h-100 ms-2 overflow-auto">
-				<Card class="mt-3">
-					<CardHeader>
-						<CardTitle>Incident Report</CardTitle>
-					</CardHeader>
-					<CardBody>
-						{#if incident === null}
-							<Loading />
-						{:else}
-							<IncidentView { incident } />
-						{/if}
-					</CardBody>
-				</Card>
-			</div>
+			
 		</div>
+
+		 -->
 	</div>
 {/if}
