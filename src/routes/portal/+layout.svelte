@@ -117,7 +117,7 @@
 										<NavLinkCustom route="/portal/report/create" iconName="pencil" label="Create Report" />
 									</NavItem>
 									<NavItem>
-										<NavLinkCustom route="/portal/search" iconName="search" label="Search Report" />
+										<NavLinkCustom route="/portal/search" iconName="search" label="Incident Database" />
 									</NavItem>
 								</div>
 

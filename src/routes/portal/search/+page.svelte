@@ -3,44 +3,40 @@
 	import { IncidentAPIRoute, type IncidentGet } from '$lib';
 	import DataDisplay from '$lib/components/display/dataDisplay.svelte';
 	import Loading from '$lib/components/display/loading.svelte';
-	import {
-		Button,
-		Input,
-		Table,
-		Card,
-		CardBody,
-		CardHeader,
-		CardTitle,
-		CardSubtitle,
-		Form,
-		InputGroup,
-		Icon
-	} from '@sveltestrap/sveltestrap';
+	import { Button, Input, Table, Card, CardBody, CardHeader, CardTitle, CardSubtitle, Form, InputGroup, Icon } from '@sveltestrap/sveltestrap';
 	import { onMount } from 'svelte';
 
 
-	interface Data {
-		date: string;
-		purok: string;
-		barangay: string;
-		year: number;
-	}
-
-
-	let incidents: IncidentGet[] | null = null;
+	let incidents: IncidentGet[] | null = $state(null);
 
 	let pageSize: number = 5;
-	let cursorNext: number | null = null;
-	let loadingNextPage: boolean = false;
+	let cursorNext: number | null = $state(null);
+	let loadingNextPage: boolean = $state(false);
 
-	let boundSearch: string = "";
-	let currentSearch: string | null = null;
+	let search: string = $state("");
+	let includeArchived: boolean = $state(false);
+
+	let params = $derived.by(() => {
+		const searchDerived = search;
+		const includeArchivedDerived = includeArchived;
+
+		const paramsInitial = new URLSearchParams();
+
+		if (searchDerived.length !== 0) paramsInitial.set("search", searchDerived);
+		if (includeArchivedDerived) paramsInitial.set("includeArchived", "true");
+
+		return paramsInitial;
+	})
+
+
+
+	$effect(() => {
+		const __ = includeArchived;
+		loadRecords();
+	})
+
 	async function loadRecords() {
-		currentSearch = boundSearch.length !== 0 ? boundSearch : null;
-
-		const params = new URLSearchParams();
-		if (currentSearch !== null) params.set("search", currentSearch);
-		params.set("pageSize", pageSize.toString());
+		incidents = null;
 
 		const result = await IncidentAPIRoute.instance.getMany(params);
 		if (!await result.isOK()) {
@@ -64,10 +60,9 @@
 
 		loadingNextPage = true;
 
-		const params = new URLSearchParams();
-		if (currentSearch !== null) params.set("search", currentSearch);
-		params.set("pageSize", pageSize.toString());
-		params.set("cursorId", cursorNext.toString());
+		const paramsInitial = params;
+		paramsInitial.set("pageSize", pageSize.toString());
+		paramsInitial.set("cursorId", cursorNext.toString());
 
 		const result = await IncidentAPIRoute.instance.getMany(params);
 		if (!await result.isOK()) {
@@ -98,32 +93,38 @@
 </script>
 
 
-<div class="d-flex flex-column mt-3">
-	<Card class="shadow border">
+<div class="d-flex flex-column mt-3 p-5">
+	<div class="d-flex w-100 justify-content-center">
+		<h1 class="text-primary">FIRE INCIDENT DATABASE</h1>
+	</div>
+
+	<Card class="mt-3 shadow border">
 		<CardHeader>
-			<CardTitle>Search Fire Incident</CardTitle>
-			<CardSubtitle>Enter your search criteria below</CardSubtitle>
+			<CardTitle>Filter Incidents</CardTitle>
 		</CardHeader>
 		<CardBody>
-			<Form on:submit={loadRecords}>
-				<InputGroup>
-					<Input
-						type="text"
-						bind:value={boundSearch}
-						placeholder="Enter search term..."
-						class="h-100"
-					/>
-					<Button color="primary" type="submit">
-						<Icon name="search" />
-						Search
-					</Button>
-				</InputGroup>
-			</Form>
+			<div class="d-flex flex-row w-100">
+				<Form class="w-100" on:submit={loadRecords}>
+					<InputGroup>
+						<Input
+							type="text"
+							bind:value={search}
+							placeholder="Enter search term..."
+							class="h-100"
+						/>
+					</InputGroup>
+				</Form>
+	
+				<div class="d-flex flex-row align-items-center w-25 ms-3">
+					<Input type="checkbox" bind:checked={includeArchived} />
+					<span class="m-0">Include Archived</span>
+				</div>
+			</div>
 		</CardBody>
 	</Card>
 
 
-	<Card class="shadow border">
+	<Card class="mt-3 shadow border">
 		<CardHeader>
 			<CardTitle>Search Results</CardTitle>
 		</CardHeader>
@@ -137,6 +138,9 @@
 					<Table bordered striped hover responsive>
 						<thead>
 							<tr class="table-primary">
+								{#if includeArchived}
+									<th>Archived</th>
+								{/if}
 								<th>Name</th>
 								<th>Report Time</th>
 								<th>Barangay</th>
@@ -147,6 +151,9 @@
 						<tbody>
 							{#each incidents as incident}
 								<tr>
+									{#if includeArchived}
+										<td><DataDisplay data={incident.archived} boolFlipColors/></td>
+									{/if}
 									<td><DataDisplay data={incident.name} /></td>
 									<td><DataDisplay data={incident.reportTime} /></td>
 									<td><DataDisplay data={incident.barangay.name} /></td>
