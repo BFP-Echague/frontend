@@ -123,89 +123,82 @@
                 </Alert>
             </div>
 
-            <div class="d-flex mt-2">
-                <Card class="shadow border">
-                    <CardHeader>
-                        <CardTitle>Incident Details</CardTitle>
-                    </CardHeader>
+            <div class="d-flex flex-column mt-2 p-2">
+                <h2>Incident Details</h2>
+                <Form>
+                    <FormGroup>
+                        <Label for="reportTime">Name of Incident:</Label>
+                        <Input type="text" id="reportTime" placeholder="Name of incident" bind:value={result.name} />
+                    </FormGroup>
+                    <div class="d-flex flex-row">
+                        <FormGroup class="me-3">
+                            <Label for="latitude">Latitude</Label>
+                            <Input type="number" id="latitude" placeholder="Latitude" bind:value={resultLocation.latitude} disabled />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="longitude">Longitude</Label>
+                            <Input type="number" id="longitude" placeholder="Longitude" bind:value={resultLocation.longitude} disabled />
+                        </FormGroup>
+                    </div>
 
-                    <CardBody>
-                        <Form>
-                            <FormGroup>
-                                <Label for="reportTime">Name of Incident:</Label>
-                                <Input type="text" id="reportTime" placeholder="Name of incident" bind:value={result.name} />
-                            </FormGroup>
-                            <div class="d-flex flex-row">
-                                <FormGroup class="me-3">
-                                    <Label for="latitude">Latitude</Label>
-                                    <Input type="number" id="latitude" placeholder="Latitude" bind:value={resultLocation.latitude} disabled />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label for="longitude">Longitude</Label>
-                                    <Input type="number" id="longitude" placeholder="Longitude" bind:value={resultLocation.longitude} disabled />
-                                </FormGroup>
-                            </div>
-    
-    
-                            <FormGroup>
-                                <Label for="reportTime">Report Time:</Label>
-                                <Input type="datetime-local" id="reportTime" bind:value={result.reportTime} />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="barangay">Barangay:</Label>
-                                {#if barangays === null}
-                                    <Loading />
-                                {:else}
-                                    <Input type="select" bind:value={result.barangayId}>
-                                        <option value={undefined} disabled selected>Select Barangay</option>
-                                        {#each barangays as barangay}
-                                            <option value={barangay.id}>{ barangay.name }</option>
-                                        {/each}
-                                    </Input>
-                                {/if}
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="category">Category of Incident:</Label>
-                                {#if categories === null}
-                                    <Loading />
-                                {:else}
-                                    <Input type="select" id="category" bind:value={result.categoryId}>
-                                        <option value={undefined} disabled selected>Select Category</option>
-                                        {#each categories as category}
-                                            <option value={category.id}>{ category.name }</option>
-                                        {/each}
-                                    </Input>
-                                {/if}
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="cause">Causes:</Label>
-                                <StringArrayFormPart bind:this={causesFP}/>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="responseTime">Time of Arrival:</Label>
-                                <Input type="datetime-local" bind:value={result.responseTime} />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="fireOutTime">Time Fire Out:</Label>
-                                <Input type="datetime-local" bind:value={result.fireOutTime} />
-                            </FormGroup>
-                            <div>
-                                <label for="structuresInvolved">Structures Involved:</label>
-                                <StringArrayFormPart bind:this={structuresFP}/>
-                            </div>
-                            <FormGroup>
-                                <Label for="notes">Notes:</Label>
-                                <Input
-                                    type="textarea"
-                                    id="notes"
-                                    bind:value={result.notes}
-                                    rows={5}
-                                    placeholder="Enter notes"
-                                />
-                            </FormGroup>
-                        </Form>
-                    </CardBody>
-                </Card>
+
+                    <FormGroup>
+                        <Label for="reportTime">Report Time:</Label>
+                        <Input type="datetime-local" id="reportTime" bind:value={result.reportTime} />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="barangay">Barangay:</Label>
+                        {#if barangays === null}
+                            <Loading />
+                        {:else}
+                            <Input type="select" bind:value={result.barangayId}>
+                                <option value={undefined} disabled selected>Select Barangay</option>
+                                {#each barangays as barangay}
+                                    <option value={barangay.id}>{ barangay.name }</option>
+                                {/each}
+                            </Input>
+                        {/if}
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="category">Category of Incident:</Label>
+                        {#if categories === null}
+                            <Loading />
+                        {:else}
+                            <Input type="select" id="category" bind:value={result.categoryId}>
+                                <option value={undefined} disabled selected>Select Category</option>
+                                {#each categories as category}
+                                    <option value={category.id}>{ category.name }</option>
+                                {/each}
+                            </Input>
+                        {/if}
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="cause">Causes:</Label>
+                        <StringArrayFormPart bind:this={causesFP}/>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="responseTime">Time of Arrival:</Label>
+                        <Input type="datetime-local" bind:value={result.responseTime} />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="fireOutTime">Time Fire Out:</Label>
+                        <Input type="datetime-local" bind:value={result.fireOutTime} />
+                    </FormGroup>
+                    <div>
+                        <label for="structuresInvolved">Structures Involved:</label>
+                        <StringArrayFormPart bind:this={structuresFP}/>
+                    </div>
+                    <FormGroup>
+                        <Label for="notes">Notes:</Label>
+                        <Input
+                            type="textarea"
+                            id="notes"
+                            bind:value={result.notes}
+                            rows={5}
+                            placeholder="Enter notes"
+                        />
+                    </FormGroup>
+                </Form>
             </div>
         </div>
     </div>

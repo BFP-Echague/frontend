@@ -32,31 +32,20 @@
 </script>
 
 
-<style>
-    .top-card {
-        left: 20%;
-        z-index: 90;
-    }
-</style>
-
-
 <div class="d-flex flex-column w-100 h-100">
-    <div class="position-absolute d-flex flex-row flex-shrink top-card mt-2 justify-content-center align-items-center">
-        <div class="d-flex flex-column">
-            <Card class="px-4 py-3 shadow-lg">
-                <h2 class="text-primary">CREATING NEW INCIDENT</h2>
-            </Card>
-
-            <div class="d-flex flex-row mt-2 w-100">
-                <Button color="success" class="m-0 w-100 shadow-lg" on:click={onSubmit}>
-                    <Icon name="check" />
-                    <span>Submit New Report</span>
-                </Button>
-            </div>
+    <div class="d-flex flex-row w-100 px-4 py-3 justify-content-between align-items-center shadow-lg" style="height: 15%">
+        <div class="d-flex w-100 justify-content-center">
+            <h2 class="m-0 text-primary">CREATING NEW INCIDENT</h2>
         </div>
-    </div>
 
-    <div class="d-flex flex-row w-100 h-100">
-        <IncidentForm bind:this={form} />
+        <Button color="success" class="m-0 shadow-lg" on:click={onSubmit}>
+            <Icon name="check" />
+            <span>Submit New Report</span>
+        </Button>
+    </div>
+    <div class="d-flex flex-row w-100" style="height: 85%">
+        <div class="d-flex flex-row w-100 h-100">
+            <IncidentForm bind:this={form} />
+        </div>
     </div>
 </div>
