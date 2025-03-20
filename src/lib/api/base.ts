@@ -1,4 +1,4 @@
-import type { PagedResult } from "@dbm/interfaces";
+import type { PagedResult } from "@dbm";
 import { getBackendURL } from "./url";
 import Decimal from "decimal.js";
 

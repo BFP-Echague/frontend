@@ -1,7 +1,6 @@
-import type { LoginData } from "@dbm/auth";
+import type { LoginData, UserGet } from "@dbm";
 import { getBackendURL } from "./url";
 import { headers } from "./base";
-import type { UserGet } from "./user";
 
 
 const loginRoute = getBackendURL("/login");

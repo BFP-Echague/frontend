@@ -1,4 +1,4 @@
-import { type ClusteringSettings, type FinalResult } from "@dbm/index";
+import { type ClusteringSettings, type FinalResult } from "@dbm";
 import { FullResponse, headers } from "./base";
 import { getBackendURL } from "./url";
 

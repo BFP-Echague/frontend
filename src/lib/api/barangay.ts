@@ -1,4 +1,4 @@
-import { type BarangayGet, type BarangayUpsert } from "@dbm/barangay";
+import { type BarangayGet, type BarangayUpsert } from "@dbm";
 import { APIRoute } from "./base";
 
 

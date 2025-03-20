@@ -5,7 +5,7 @@
 	import { BarangayAPIRoute, type BarangayGet, CategoryAPIRoute, type CategoryGet } from "$lib";
 	import { goto } from "$app/navigation";
 	import { z } from "zod";
-	import type { IncidentUpsert } from "@dbm/incident";
+	import type { IncidentUpsert } from "@dbm";
 	import { formatFormDate } from "$lib/formatters";
 	import { defaultLocation, zodDate, zodDecimal, type RawJSON } from "$lib";
 	import MapSelectLocation from "$lib/components/map/mapSelectLocation.svelte";
