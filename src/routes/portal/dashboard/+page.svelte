@@ -2,8 +2,7 @@
 	import { defaultLocation } from "$lib";
 	import { IncidentAPIRoute } from '$lib/api/incident';
 	import MapViewMultiple from '$lib/components/map/mapViewMultiple.svelte';
-	import { onMount } from 'svelte';
-
+	
 	let mapViewMultiple: MapViewMultiple;
 	let centerLocation = defaultLocation;
 

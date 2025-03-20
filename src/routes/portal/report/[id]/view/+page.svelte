@@ -1,5 +1,4 @@
 <script lang="ts">
-	// Sveltestrap Components
 	import { page } from "$app/state";
 	import { defaultLocation, IncidentAPIRoute, parseIdParam, type IncidentGet } from '$lib';
 	import { onMount } from 'svelte';

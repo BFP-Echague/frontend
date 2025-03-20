@@ -2,15 +2,16 @@
 	import { Form, FormGroup, Label, Input, CardBody, Card, CardHeader, Alert, Icon, CardTitle } from "@sveltestrap/sveltestrap";
 	import StringArrayFormPart from "../../formParts/stringArrayFormPart.svelte";
 	import { onMount } from "svelte";
-	import { BarangayAPIRoute, type BarangayGet, CategoryAPIRoute, type CategoryGet } from "$lib/api";
+	import { BarangayAPIRoute, type BarangayGet, CategoryAPIRoute, type CategoryGet } from "$lib";
 	import { goto } from "$app/navigation";
 	import { z } from "zod";
 	import type { IncidentUpsert } from "@dbm/incident";
 	import { formatFormDate } from "$lib/formatters";
 	import { defaultLocation, zodDate, zodDecimal, type RawJSON } from "$lib";
 	import MapSelectLocation from "$lib/components/map/mapSelectLocation.svelte";
+	import Loading from "$lib/components/display/loading.svelte";
 
-    
+
     let mapSelectLocation: MapSelectLocation;
 	
     let result = $state({
@@ -20,7 +21,8 @@
         responseTime: undefined as string | undefined,
         fireOutTime: undefined as string | undefined,
         notes: undefined as string | undefined,
-        categoryId: undefined as number | undefined
+        categoryId: undefined as number | undefined,
+        archived: false
     });
 
     let resultLocation = $state({
@@ -41,14 +43,15 @@
         fireOutTime: zodDate.optional(),
         structuresInvolved: z.string().array(),
         notes: z.string().optional(),
-        categoryId: z.number().int()
+        categoryId: z.number().int(),
+        archived: z.boolean()
     });
 
     let structuresFP: StringArrayFormPart;
     let causesFP: StringArrayFormPart;
 
-    let barangays: BarangayGet[] = $state([]);
-    let categories: CategoryGet[] = $state([]);
+    let barangays: BarangayGet[] | null = $state(null);
+    let categories: CategoryGet[] | null = $state(null);
 
 
     onMount(async () => {
@@ -91,7 +94,8 @@
             responseTime: input.responseTime ? formatFormDate(input.responseTime) : undefined,
             fireOutTime: input.fireOutTime ? formatFormDate(input.fireOutTime) : undefined,
             notes: input.notes,
-            categoryId: input.categoryId
+            categoryId: input.categoryId,
+            archived: input.archived ?? false
         };
 
         resultLocation = {
@@ -149,21 +153,29 @@
                             </FormGroup>
                             <FormGroup>
                                 <Label for="barangay">Barangay:</Label>
-                                <Input type="select" bind:value={result.barangayId}>
-                                    <option value={undefined} disabled selected>Select Barangay</option>
-                                    {#each barangays as barangay}
-                                        <option value={barangay.id}>{ barangay.name }</option>
-                                    {/each}
-                                </Input>
+                                {#if barangays === null}
+                                    <Loading />
+                                {:else}
+                                    <Input type="select" bind:value={result.barangayId}>
+                                        <option value={undefined} disabled selected>Select Barangay</option>
+                                        {#each barangays as barangay}
+                                            <option value={barangay.id}>{ barangay.name }</option>
+                                        {/each}
+                                    </Input>
+                                {/if}
                             </FormGroup>
                             <FormGroup>
                                 <Label for="category">Category of Incident:</Label>
-                                <Input type="select" id="category" bind:value={result.categoryId}>
-                                    <option value={undefined} disabled selected>Select Category</option>
-                                    {#each categories as category}
-                                        <option value={category.id}>{ category.name }</option>
-                                    {/each}
-                                </Input>
+                                {#if categories === null}
+                                    <Loading />
+                                {:else}
+                                    <Input type="select" id="category" bind:value={result.categoryId}>
+                                        <option value={undefined} disabled selected>Select Category</option>
+                                        {#each categories as category}
+                                            <option value={category.id}>{ category.name }</option>
+                                        {/each}
+                                    </Input>
+                                {/if}
                             </FormGroup>
                             <FormGroup>
                                 <Label for="cause">Causes:</Label>

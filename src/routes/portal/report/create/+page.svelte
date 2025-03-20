@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
-	import { defaultLocation, getZodErrorMessage, IncidentAPIRoute, type IncidentUpsert } from "$lib";
+	import { getZodErrorMessage, IncidentAPIRoute, type IncidentUpsert } from "$lib";
 	import IncidentForm from "$lib/components/model/incident/incidentForm.svelte";
-	import { Card, CardBody, Icon, Button, Alert } from "@sveltestrap/sveltestrap";
+	import { Card, Icon, Button } from "@sveltestrap/sveltestrap";
 	import { z } from "zod";
 
 

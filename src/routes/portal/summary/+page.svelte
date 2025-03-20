@@ -2,7 +2,7 @@
 	import { CategoryAPIRoute, formatGraphMonthDate, IncidentAPIRoute, type CategoryGet, type IncidentGet } from "$lib";
 	import DisplayItem from "$lib/components/display/displayItem.svelte";
 	import { generateRandomHexColor } from "$lib/randomColor";
-    import { Container, Row, Col, Card, CardBody, CardHeader, CardTitle } from "@sveltestrap/sveltestrap";
+    import { Card, CardBody, CardHeader, CardTitle } from "@sveltestrap/sveltestrap";
     import Chart, { type ChartOptions } from "chart.js/auto";
     import { onMount } from "svelte";
 

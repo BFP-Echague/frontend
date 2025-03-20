@@ -7,18 +7,12 @@
 		Button,
 		Input,
 		Table,
-		Alert,
-		Row,
-		Col,
-		Container,
 		Card,
 		CardBody,
 		CardHeader,
 		CardTitle,
 		CardSubtitle,
-		FormGroup,
 		Form,
-		Styles,
 		InputGroup,
 		Icon
 	} from '@sveltestrap/sveltestrap';

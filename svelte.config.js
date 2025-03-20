@@ -15,6 +15,7 @@ const config = {
 
 		alias: {
 			"@dbm/*": "./prisma/dbm/*",
+			"@dbm": "./prisma/dbm",
 			"@prismaTypes": "./prisma/prismaTypes"
 		}
 	}

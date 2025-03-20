@@ -4,7 +4,6 @@
 	import { goto } from '$app/navigation';
 	import { z } from 'zod';
 	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
 	import { page } from '$app/state';
 
 
