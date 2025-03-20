@@ -35,7 +35,8 @@
             fireOutTime: incidentDerived.fireOutTime ? new Date(incidentDerived.fireOutTime) : undefined,
             notes: incidentDerived.notes ?? undefined,
             reportTime: incidentDerived.reportTime ? new Date(incidentDerived.reportTime) : undefined,
-            responseTime: incidentDerived.responseTime ? new Date(incidentDerived.responseTime) : undefined
+            responseTime: incidentDerived.responseTime ? new Date(incidentDerived.responseTime) : undefined,
+            archived: incidentDerived.archived
         });
     })
 
@@ -105,45 +106,31 @@
 </script>
 
 
-<style>
-    .top-card {
-        left: 20%;
-        z-index: 90;
-    }
-</style>
-
-
 {#if incident === null}
 	<Loading />
 {:else}
-	<div class="d-flex flex-column w-100 h-100">
-		<div class="position-absolute d-flex flex-row flex-shrink top-card mt-2 justify-content-center align-items-center">
-            <div class="d-flex flex-column">
-				<Card class="px-4 py-3 shadow-lg">
-					<h2 class="text-primary">EDITING INCIDENT: { incident.name }</h2>
-				</Card>
+    <div class="d-flex flex-column w-100 h-100">
+        <div class="d-flex flex-row w-100 px-4 py-3 justify-content-between align-items-center shadow-lg" style="height: 15%">
+            <div class="d-flex w-100 justify-content-center">
+                <h2 class="m-0 text-primary">EDITING INCIDENT: { incident.name }</h2>
+            </div>
 
-                <div class="d-flex flex-row mt-2 w-100">
-                    <Button color="secondary" class="m-0 w-100 shadow-lg" on:click={onDiscard}>
-                        <Icon name="x-octagon" />
-                        <span>Discard Changes</span>
-                    </Button>
+            <div class="d-flex flex-row w-25">
+                <Button color="secondary" class="m-0 w-100 shadow-lg" on:click={onDiscard}>
+                    <Icon name="x-octagon" />
+                    <span>Discard Changes</span>
+                </Button>
 
-                    <Button color="danger" class="m-0 ms-2 w-100 shadow-lg" on:click={onDelete}>
-                        <Icon name="trash" />
-                        <span>Delete Incident</span>
-                    </Button>
-
-                    <Button color="success" class="m-0 ms-2 w-100 shadow-lg" on:click={onSubmit}>
-                        <Icon name="check" />
-                        <span>Submit Edits</span>
-                    </Button>
-                </div>
-			</div>
-		</div>
-
-		<div class="d-flex flex-row w-100 h-100">
-			<IncidentForm bind:this={incidentForm} />
-		</div>
-	</div>
+                <Button color="success" class="m-0 ms-2 w-100 shadow-lg" on:click={onSubmit}>
+                    <Icon name="check" />
+                    <span>Submit Edits</span>
+                </Button>
+            </div>
+        </div>
+        <div class="d-flex flex-row w-100" style="height: 85%">
+            <div class="d-flex flex-row w-100 h-100">
+                <IncidentForm bind:this={incidentForm} />
+            </div>
+        </div>
+    </div>
 {/if}

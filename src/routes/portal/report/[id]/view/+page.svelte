@@ -47,13 +47,19 @@
 	<Loading />
 {:else}
 	<div class="d-flex flex-column w-100 h-100">
-		<div class="d-flex flex-row w-100 px-4 py-3 justify-content-center align-items-center shadow-lg" style="height: 15%">
-			<h2 class="m-0 text-primary">VIEWING INCIDENT: { incident.name }</h2>
-			<Button color="secondary" class="m-0 ms-5 shadow-lg" size="lg" on:click={edit}>
-				<Icon name="pencil" />
-				<span> Edit</span>
-			</Button>
+		<div class="d-flex flex-row w-100 px-4 py-3 justify-content-between align-items-center shadow-lg" style="height: 15%">
+			<div class="d-flex w-100 justify-content-center">
+				<h2 class="m-0 text-primary">VIEWING INCIDENT: { incident.name }</h2>
+			</div>
+	
+			<div class="d-flex flex-row w-25">
+				<Button color="secondary" class="m-0 w-100 shadow-lg" on:click={edit}>
+					<Icon name="pencil" />
+					<span class="ms-2"> Edit</span>
+				</Button>
+			</div>
 		</div>
+
 		<div class="d-flex flex-row w-100" style="height: 85%">
 			<div class="d-flex flex-row w-100 h-100">
 				<div class="d-flex w-100 h-100">

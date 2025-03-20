@@ -38,9 +38,9 @@
             <h2 class="m-0 text-primary">CREATING NEW INCIDENT</h2>
         </div>
 
-        <Button color="success" class="m-0 shadow-lg" on:click={onSubmit}>
+        <Button color="success" class="d-flex flex-row align-items-center m-0 ms-5" size="lg" on:click={onSubmit}>
             <Icon name="check" />
-            <span>Submit New Report</span>
+            <span class="ms-2">Submit New Report</span>
         </Button>
     </div>
     <div class="d-flex flex-row w-100" style="height: 85%">

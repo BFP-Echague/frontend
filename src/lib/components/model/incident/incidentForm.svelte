@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Form, FormGroup, Label, Input, CardBody, Card, CardHeader, Alert, Icon, CardTitle } from "@sveltestrap/sveltestrap";
+	import { Form, FormGroup, Label, Input, Alert, Icon } from "@sveltestrap/sveltestrap";
 	import StringArrayFormPart from "../../formParts/stringArrayFormPart.svelte";
 	import { onMount } from "svelte";
 	import { BarangayAPIRoute, type BarangayGet, CategoryAPIRoute, type CategoryGet } from "$lib";
@@ -29,6 +29,10 @@
         latitude: undefined as number | undefined,
         longitude: undefined as number | undefined
     });
+
+    let archivedInitial = $state(false);
+
+
 
     const validateSchema: z.ZodType<IncidentUpsert, z.ZodTypeDef, RawJSON<IncidentUpsert>> = z.object({
         name: z.string({description: "Name"}),
@@ -87,6 +91,10 @@
     }
 
     export function setResult(input: IncidentUpsert) {
+        const archived = input.archived ?? false;
+
+        archivedInitial = archived;
+
         result = {
             name: input.name,
             reportTime: input.reportTime ? formatFormDate(input.reportTime) : undefined,
@@ -95,7 +103,7 @@
             fireOutTime: input.fireOutTime ? formatFormDate(input.fireOutTime) : undefined,
             notes: input.notes,
             categoryId: input.categoryId,
-            archived: input.archived ?? false
+            archived: archived
         };
 
         resultLocation = {
@@ -126,6 +134,12 @@
             <div class="d-flex flex-column mt-2 p-2">
                 <h2>Incident Details</h2>
                 <Form>
+                    <FormGroup>
+                        <div class="d-flex flex-row p-2 align-items-center rounded" class:bg-danger={result.archived}>
+                            <Input type="checkbox" id="archived" bind:checked={result.archived} />
+                            <span class:text-light={result.archived}>Archive incident (excluded in search results)</span>
+                        </div>
+                    </FormGroup>
                     <FormGroup>
                         <Label for="reportTime">Name of Incident:</Label>
                         <Input type="text" id="reportTime" placeholder="Name of incident" bind:value={result.name} />
