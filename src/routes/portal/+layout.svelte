@@ -17,7 +17,7 @@
 
 
 	let sidebarOpen: boolean = $state(false);
-	let sidebarButtonColor: string = $derived(sidebarOpen ? "primary" : "light");
+	let sidebarButtonColor: string = $derived(sidebarOpen ? "secondary" : "primary");
 
 	let completedLoginCheck: boolean = $state(false);
 
@@ -71,8 +71,21 @@
 </style>
 
 
+{#snippet sidebarButton(showText: boolean = false)}
+	<Button color={sidebarButtonColor} class="m-0" on:click={toggleSidebar}>
+		<h5 class="m-0 text-light">
+			<Icon name="list" />
+
+			{#if showText}
+				<span class="ms-2">Menu</span>
+			{/if}
+		</h5>
+	</Button>
+{/snippet}
+
+
 {#if completedLoginCheck}
-	<div class="d-flex flex-row w-100 h-100">
+	<div class="d-flex flex-row vw-100 vh-100">
 		<div class="position-absolute z-100 h-100 d-flex flex-row">
 			{#if sidebarOpen}
 				<div class="z-3 overflow-hidden bg-light" transition:slide={{ axis: "x", duration: 500, easing: expoOut }}>
@@ -134,17 +147,9 @@
 				</div>
 			{/if}
 
-			<div class="d-flex flex-row">
-				<div class="position-absolute">
-					<Button color={sidebarButtonColor} class="m-0 mt-3 ms-3" on:click={toggleSidebar}>
-						<h5 
-							class="m-0"
-							class:text-light={sidebarOpen}
-							class:text-dark={!sidebarOpen}
-						>
-							<Icon name="list" />
-						</h5>
-					</Button>
+			<div class="d-none d-lg-flex flex-row">
+				<div class="position-absolute mt-3 ms-3">
+					{@render sidebarButton()}
 				</div>
 			</div>
 		</div>
@@ -171,7 +176,18 @@
 					</div>
 				</div> -->
 
-				<div class="d-flex flex-column w-100 h-100 overflow-auto">
+				<div class="d-flex d-lg-none p-3 justify-content-between align-items-center bg-dark" style="height: 8vh">
+					{@render sidebarButton(true)}
+
+					<h3 class="m-0 text-light font-italic">BFP Fire Map</h3>
+				</div>
+
+
+				<div class="d-none d-lg-flex flex-column w-100 overflow-auto" style="height: 100vh">
+					{@render children()}
+				</div>
+
+				<div class="d-flex d-lg-none flex-column w-100 overflow-auto" style="height: 92vh">
 					{@render children()}
 				</div>
 			</div>

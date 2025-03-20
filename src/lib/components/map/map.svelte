@@ -25,7 +25,13 @@
         map = new mapsLibrary.Map(mapElement, {
             zoom: 15,
             center: { lat: centerLocation.latitude.toNumber(), lng: centerLocation.longitude.toNumber() },
-            mapId: env.GOOGLEMAPS_MAPID
+            mapId: env.GOOGLEMAPS_MAPID,
+
+            mapTypeControl: true,
+            mapTypeControlOptions: {
+                style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                position: google.maps.ControlPosition.TOP_RIGHT
+            },
         });
     })
 

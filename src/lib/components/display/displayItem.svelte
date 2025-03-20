@@ -13,6 +13,6 @@
 <div class="d-flex flex-column mb-2">
     <dl class="m-0">
         <dt class="m-0">{ name }</dt>
-        <DataDisplay data={description} boolFlipColors />
+        <DataDisplay data={description} { boolFlipColors } />
     </dl>
 </div>

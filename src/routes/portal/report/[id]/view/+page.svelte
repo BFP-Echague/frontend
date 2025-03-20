@@ -46,31 +46,24 @@
 {#if incident === null}
 	<Loading />
 {:else}
-	<div class="d-flex flex-column w-100 vh-100">
-		<div class="d-flex flex-row w-100 px-4 py-3 justify-content-center align-items-center shadow-lg" style="height: 15vh">
+	<div class="d-flex flex-column w-100 h-100">
+		<div class="d-flex flex-row w-100 px-4 py-3 justify-content-center align-items-center shadow-lg" style="height: 15%">
 			<h2 class="m-0 text-primary">VIEWING INCIDENT: { incident.name }</h2>
 			<Button color="secondary" class="m-0 ms-5 shadow-lg" size="lg" on:click={edit}>
 				<Icon name="pencil" />
 				<span> Edit</span>
 			</Button>
 		</div>
-		<div class="d-flex flex-row w-100" style="height: 85vh">
+		<div class="d-flex flex-row w-100" style="height: 85%">
 			<div class="d-flex flex-row w-100 h-100">
 				<div class="d-flex w-100 h-100">
 					<MapViewMultiple bind:this={mapViewMultiple} />
 				</div>
-				
-	
+
 				<div class="w-30 h-100 ms-2 p-2 overflow-auto">
 						<IncidentView { incident } />
 				</div>
 			</div>
 		</div>
-		<!-- <div class="d-flex w-100 h-100">
-
-			
-		</div>
-
-		 -->
 	</div>
 {/if}
