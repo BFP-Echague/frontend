@@ -30,10 +30,13 @@
 
 
 
-	$effect(() => {
-		const __ = includeArchived;
-		loadRecords();
-	})
+	let searchDebounceTimer: NodeJS.Timeout;
+	function debouncedSearchUpdate() {
+		clearTimeout(searchDebounceTimer);
+		searchDebounceTimer = setTimeout(() => {
+			loadRecords();
+		}, 500);
+	}
 
 	async function loadRecords() {
 		incidents = null;
@@ -104,19 +107,18 @@
 		</CardHeader>
 		<CardBody>
 			<div class="d-flex flex-row w-100">
-				<Form class="w-100" on:submit={loadRecords}>
-					<InputGroup>
-						<Input
-							type="text"
-							bind:value={search}
-							placeholder="Enter search term..."
-							class="h-100"
-						/>
-					</InputGroup>
-				</Form>
+				<div class="d-flex flex-row w-100">
+					<Input
+						type="text"
+						bind:value={search}
+						on:input={debouncedSearchUpdate}
+						placeholder="Enter search term..."
+						class="h-100"
+					/>
+				</div>
 	
 				<div class="d-flex flex-row align-items-center w-25 ms-3">
-					<Input type="checkbox" bind:checked={includeArchived} />
+					<Input type="checkbox" bind:checked={includeArchived} on:change={loadRecords} />
 					<span class="m-0">Include Archived</span>
 				</div>
 			</div>
@@ -150,7 +152,7 @@
 						</thead>
 						<tbody>
 							{#each incidents as incident}
-								<tr>
+								<tr class:table-danger={incident.archived}>
 									{#if includeArchived}
 										<td><DataDisplay data={incident.archived} boolFlipColors/></td>
 									{/if}
