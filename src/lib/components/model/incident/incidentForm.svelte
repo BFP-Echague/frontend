@@ -57,6 +57,8 @@
     let barangays: BarangayGet[] | null = $state(null);
     let categories: CategoryGet[] | null = $state(null);
 
+    let attemptedSubmit: boolean = $state(false);
+
 
     onMount(async () => {
         const resultBarangay = await BarangayAPIRoute.instance.getMany();
@@ -77,6 +79,8 @@
 
 
     export function getResult() {
+        attemptedSubmit = true;
+
         const combinedResult = {
             ...result,
             location: {
@@ -133,7 +137,7 @@
 
             <div class="d-flex flex-column mt-2 p-2">
                 <h2>Incident Details</h2>
-                <Form>
+                <Form validated={attemptedSubmit}>
                     <FormGroup>
                         <div class="d-flex flex-row p-2 align-items-center rounded" class:bg-danger={result.archived}>
                             <Input type="checkbox" id="archived" bind:checked={result.archived} />
@@ -142,30 +146,30 @@
                     </FormGroup>
                     <FormGroup>
                         <Label for="reportTime">Name of Incident:</Label>
-                        <Input type="text" id="reportTime" placeholder="Name of incident" bind:value={result.name} />
+                        <Input type="text" id="reportTime" placeholder="Name of incident" required bind:value={result.name} />
                     </FormGroup>
                     <div class="d-flex flex-row">
                         <FormGroup class="me-3">
                             <Label for="latitude">Latitude</Label>
-                            <Input type="number" id="latitude" placeholder="Latitude" bind:value={resultLocation.latitude} disabled />
+                            <Input type="number" id="latitude" placeholder="Latitude" required bind:value={resultLocation.latitude} disabled />
                         </FormGroup>
                         <FormGroup>
                             <Label for="longitude">Longitude</Label>
-                            <Input type="number" id="longitude" placeholder="Longitude" bind:value={resultLocation.longitude} disabled />
+                            <Input type="number" id="longitude" placeholder="Longitude" required bind:value={resultLocation.longitude} disabled />
                         </FormGroup>
                     </div>
 
 
                     <FormGroup>
                         <Label for="reportTime">Report Time:</Label>
-                        <Input type="datetime-local" id="reportTime" bind:value={result.reportTime} />
+                        <Input type="datetime-local" id="reportTime" required bind:value={result.reportTime} />
                     </FormGroup>
                     <FormGroup>
                         <Label for="barangay">Barangay:</Label>
                         {#if barangays === null}
                             <Loading />
                         {:else}
-                            <Input type="select" bind:value={result.barangayId}>
+                            <Input type="select" required invalid={result.barangayId === undefined} bind:value={result.barangayId}>
                                 <option value={undefined} disabled selected>Select Barangay</option>
                                 {#each barangays as barangay}
                                     <option value={barangay.id}>{ barangay.name }</option>

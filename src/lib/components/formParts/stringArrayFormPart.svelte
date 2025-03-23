@@ -2,12 +2,12 @@
 	import { InputGroup, Button, Icon, Input } from "@sveltestrap/sveltestrap";
     import { z } from "zod";
 
-    export let result: (string | undefined)[] = [];
+    let result: string[] = $state([]);
 
-    const validateSchema = z.string().array();
+    const validateSchema = z.string().nonempty({ message: "Required" }).array();
 
     function addResult() {
-        result = [...result, undefined];
+        result = [...result, ""];
     }
 
     function removeResult(idx: number) {
@@ -32,6 +32,7 @@
                 <Input
                     class="h-100"
                     type="text"
+                    required
                     bind:value={result[idx]}
                     placeholder="Enter value"
                 />
