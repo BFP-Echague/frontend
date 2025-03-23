@@ -140,26 +140,27 @@
 					<Table bordered striped hover responsive>
 						<thead>
 							<tr class="table-primary">
+								<th>Action</th>
+
 								{#if includeArchived}
 									<th>Archived</th>
 								{/if}
 								<th>Name</th>
-								<th>Report Time</th>
-								<th>Barangay</th>
 								<th>Category</th>
-								<th>Action</th>
+								<th>Barangay</th>
+								<th>Report Time</th>
+								<th>Response Time</th>
+								<th>Fire Out Time</th>
+								<th>Causes</th>
+								<th>Structures Involved</th>
+								<th>Notes</th>
+								<th>Created By</th>
+								<th>Updated By</th>
 							</tr>
 						</thead>
 						<tbody>
 							{#each incidents as incident}
 								<tr class:table-danger={incident.archived}>
-									{#if includeArchived}
-										<td><DataDisplay data={incident.archived} boolFlipColors/></td>
-									{/if}
-									<td><DataDisplay data={incident.name} /></td>
-									<td><DataDisplay data={incident.reportTime} /></td>
-									<td><DataDisplay data={incident.barangay.name} /></td>
-									<td><DataDisplay data={incident.category.name} /></td>
 									<td class="text-center">
 										<Button
 											color="primary"
@@ -169,6 +170,21 @@
 											<Icon name="arrow-up-right-square" />
 										</Button>
 									</td>
+
+									{#if includeArchived}
+										<td><DataDisplay data={incident.archived} boolFlipColors/></td>
+									{/if}
+									<td><DataDisplay data={incident.name} /></td>
+									<td><DataDisplay data={`${incident.category.name} (${incident.category.severity})`} /></td>
+									<td><DataDisplay data={incident.barangay.name} /></td>
+									<td><DataDisplay data={incident.reportTime} /></td>
+									<td><DataDisplay data={incident.responseTime} /></td>
+									<td><DataDisplay data={incident.fireOutTime} /></td>
+									<td><DataDisplay data={incident.causes.join(", ")} /></td>
+									<td><DataDisplay data={incident.structuresInvolved.join(", ")} /></td>
+									<td><DataDisplay data={incident.notes} /></td>
+									<td><DataDisplay data={incident.createdBy.username} /></td>
+									<td><DataDisplay data={incident.updatedBy.username} /></td>
 								</tr>
 							{/each}
 						</tbody>

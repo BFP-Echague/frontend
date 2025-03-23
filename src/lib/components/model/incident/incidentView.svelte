@@ -10,6 +10,7 @@
     <DisplayItem name="Archived" description={incident.archived} boolFlipColors={true} />
 
     <DisplayItem name="Name" description={incident.name} />
+    <DisplayItem name="Category" description={`${incident.category.name} (${incident.category.severity})`} />
 
     <GeneralHr />
 
@@ -21,25 +22,23 @@
         </div>
     </div>
 
-    <GeneralHr />
-
-    <DisplayItem name="Report Time" description={incident.reportTime} />
     <DisplayItem name="Barangay" description={incident.barangay.name} />
 
     <GeneralHr />
 
-    <DisplayItem name="Causes of Fire" description={incident.causes.join(", ")} />
-
-    <GeneralHr />
-
+    <DisplayItem name="Report Time" description={incident.reportTime} />
     <DisplayItem name="Response Time" description={incident.responseTime} />
     <DisplayItem name="Fire Out Time" description={incident.fireOutTime} />
 
     <GeneralHr />
 
+    <DisplayItem name="Causes of Fire" description={incident.causes.join(", ")} />
     <DisplayItem name="Structures Involved" description={incident.structuresInvolved.join(", ")} />
 
     <GeneralHr />
+
+    <DisplayItem name="Created By" description={incident.createdBy.username} />
+    <DisplayItem name="Updated By" description={incident.updatedBy.username} />
 
     <DisplayItem name="Notes" description={incident.notes} />
 </div>
