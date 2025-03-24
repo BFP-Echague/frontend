@@ -260,26 +260,28 @@
 		<h1 class="text-primary">FIRE INCIDENT DATABASE</h1>
 	</div>
 
-	<div class="d-flex flex-row w-100 mt-3">
-		<Card class="w-100 shadow border">
+	<div class="d-flex flex-row justify-content-center w-100 mt-3">
+		<Card class="w-75 shadow border">
 			<CardHeader>
-				<CardTitle>Search Settings</CardTitle>
+				<CardTitle>Filter Settings</CardTitle>
 			</CardHeader>
 			<CardBody>
 				<div class="d-flex flex-column w-100">
 					<div class="d-flex flex-column w-100">
 						<div class="d-flex flex-row w-100">
 							<div class="d-flex flex-row w-100">
-								<Input
-									type="text"
-									bind:value={search}
-									on:input={debouncedSearchUpdate}
-									placeholder="Enter search term..."
-									class="h-100"
-								/>
+								<FormGroup class="w-100">
+									<Label for="search">Search</Label>
+									<Input
+										type="text"
+										bind:value={search}
+										on:input={debouncedSearchUpdate}
+										placeholder="Enter search term..."
+									/>
+								</FormGroup>
 							</div>
 			
-							<div class="d-flex flex-row align-items-center w-25 ms-3">
+							<div class="d-flex flex-row justify-content-center align-items-center w-25 ms-3">
 								<Input type="checkbox" bind:checked={includeArchived} on:change={loadRecords} />
 								<span class="m-0">Include Archived</span>
 							</div>
@@ -458,7 +460,7 @@
 			<CardHeader>
 				<CardTitle>Export</CardTitle>
 				<CardSubtitle>
-					<i>Export the current list of reports. Use the settings to filter your results.</i>
+					<i>Use the filters to filter the results and click on column headers to set the sorting order.</i>
 				</CardSubtitle>
 			</CardHeader>
 			<CardBody>
