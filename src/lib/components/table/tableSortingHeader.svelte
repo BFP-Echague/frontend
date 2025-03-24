@@ -32,7 +32,7 @@
 </script>
 
 
-<th class="p-1 m-0">
+<th class="p-1 m-0" scope="col">
     <Button color={selected ? "primary" : "secondary"} class="d-flex w-100 h-100 m-0" on:click={onClickEvent}>
         <div class="d-flex w-100 h-100 flex-row justify-content-between align-items-center">
             <h6 class="m-0 text-light text-bolder">{displayName}</h6>

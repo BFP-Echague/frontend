@@ -148,9 +148,10 @@
 			</CardSubtitle>
 		</CardHeader>
 		<CardBody>
-			<Table bordered striped hover responsive>
+			<Table bordered striped size="sm" responsive>
 				<thead>
 					<tr class="table-primary align-items-center">
+						<th class="p-0"></th>
 						<th>Action</th>
 
 						{#if includeArchived}
@@ -236,8 +237,10 @@
 					<h5>No results.</h5>
 				{:else}
 					<tbody transition:fly={{ y: 100, duration: 1000, easing: cubicOut }}>
-						{#each incidents as incident}
+						{#each incidents as incident, idx}
 							<tr class:table-danger={incident.archived}>
+								<td>{idx + 1}</td>
+
 								<td class="text-center">
 									<Button
 										color="primary"
@@ -251,7 +254,7 @@
 								{#if includeArchived}
 									<td><DataDisplay data={incident.archived} boolFlipColors /></td>
 								{/if}
-								<td><DataDisplay data={incident.name} /></td>
+								<td class="text-bold"><DataDisplay data={incident.name} /></td>
 								<td
 									><DataDisplay
 										data={`${incident.category.name} (${incident.category.severity})`}
@@ -286,3 +289,9 @@
 		</CardBody>
 	</Card>
 </div>
+
+<style>
+	td {
+		word-break: break-word;
+	}
+</style>
