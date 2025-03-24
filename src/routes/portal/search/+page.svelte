@@ -1,34 +1,18 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { handlePossibleZodError, IncidentAPIRoute, type IncidentGet } from '$lib';
+	import { formatDate, handlePossibleZodError, IncidentAPIRoute, type IncidentGet } from '$lib';
 	import DataDisplay from '$lib/components/display/dataDisplay.svelte';
 	import Loading from '$lib/components/display/loading.svelte';
 	import GeneralHr from '$lib/components/generalHr.svelte';
 	import TableSortingHeader from '$lib/components/table/tableSortingHeader.svelte';
 	import Vr from '$lib/components/vr.svelte';
-	import {
-		Button,
-		Input,
-		Table,
-		Card,
-		CardBody,
-		CardHeader,
-		CardTitle,
-		CardSubtitle,
-		Form,
-		InputGroup,
-		Icon,
-
-		Label,
-
-		FormGroup
-
-
-	} from '@sveltestrap/sveltestrap';
+	import { Button, Input, Table, Card, CardBody, CardHeader, CardTitle, CardSubtitle, Icon, Label, FormGroup } from '@sveltestrap/sveltestrap';
 	import { onMount } from 'svelte';
 	import { cubicOut } from 'svelte/easing';
-	import { fly, slide } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	import { z } from 'zod';
+	import { jsPDF } from 'jspdf';
+	import { autoTable } from 'jspdf-autotable';
 
 	let incidents: IncidentGet[] | null = $state(null);
 
@@ -144,15 +128,18 @@
 		return (await result.getMoreInfoParsed()).data;
 	}
 
-	async function exportToCSV() {
+
+	async function getFormattedIncidentsExport() {
 		const incidents = await getIncidentsExport();
 
-		const headers = [
+		const headerCamel = [
 			'no',
 			'archived',
 			'name',
 			'category_name',
 			'category_severity',
+			"loc_latitude",
+			"loc_longitude",
 			'barangay_name',
 			'report_time',
 			'response_time',
@@ -163,31 +150,103 @@
 			'created_by_username',
 			'updated_by_username'
 		];
-		const rows = [
-			headers,
-			...incidents.map((x, idx) => {
-				return [
-					idx + 1,
-					x.archived,
-					x.name,
-					x.category.name,
-					x.category.severity,
-					x.barangay.name,
-					x.reportTime,
-					x.responseTime,
-					x.fireOutTime,
-					x.causes.join(', '),
-					x.structuresInvolved.join(', '),
-					x.notes,
-					x.createdBy.username,
-					x.updatedBy.username
-				];
-			})
-		];
 
-		const content = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+		const headerProper = [
+			"No",
+			"Archived",
+			"Name",
+			"Category Name",
+			"Category Severity",
+			"Latitude",
+			"Longitude",
+			"Barangay",
+			"Report Time",
+			"Response Time",
+			"Fire Out Time",
+			"Causes",
+			"Structures Involved",
+			"Notes",
+			"Created By",
+			"Updated By"
+		]
+
+		const none = "<No Value>";
+		const rows = incidents.map((x, idx) => {
+			return [
+				idx + 1,
+				x.archived,
+				x.name,
+				x.category.name,
+				x.category.severity,
+				x.location.latitude.toString(),
+				x.location.longitude.toString(),
+				x.barangay.name,
+				x.reportTime ? formatDate(x.reportTime) : none,
+				x.responseTime ? formatDate(x.responseTime) : none,
+				x.fireOutTime ? formatDate(x.fireOutTime) : none,
+				x.causes.length !== 0 ? x.causes.join(', ') : none,
+				x.structuresInvolved.length !== 0 ? x.structuresInvolved.join(', ') : none,
+				x.notes ?? none,
+				x.createdBy.username,
+				x.updatedBy.username
+			];
+		});
+
+		return { headerCamel, headerProper, rows };
+	}
+
+	async function exportToCSV() {
+		const incidentsExport = await getFormattedIncidentsExport();
+
+		const rows = [
+			incidentsExport.headerCamel,
+			...incidentsExport.rows
+		]
+
+		const content = "data:text/csv;charset=utf-8," + rows.map(x => x.join(",")).join("\n");
 		const encodedUri = encodeURI(content);
 		window.open(encodedUri);
+	}
+
+
+	async function exportToPDF() {
+		const incidentsExport = await getFormattedIncidentsExport();
+
+		const docWidth = 297;
+		const docHeight = 210;
+
+		const doc = new jsPDF('landscape', 'mm', [docHeight, docWidth]);
+		autoTable(doc, {
+			styles: {
+				fontSize: 7,
+				cellWidth: "auto"
+			},
+			head: [incidentsExport.headerProper],
+			body: incidentsExport.rows,
+
+			didDrawPage: (data) => {
+				const pageCount = doc.getNumberOfPages();
+				const x = 10;
+				const y = docHeight - 10;
+				doc.setFontSize(5);
+				for (let i = 1; i <= pageCount; i++) {
+					doc.setPage(i);
+					doc.text(
+						(
+							`Page ${i} of ${pageCount}\n` +
+							`Sorted by: ${currentSortValue} | Ascending: ${sortOrderAsc}\n` +
+							`Search Term: ${search.length !== 0 ? `"${search}"` : "<None>"} | Include Archived: ${includeArchived}\n` +
+							`Requested Incidents: ${exportAmountOfIncidents} | Received incidents: ${incidentsExport.rows.length} | Date Generated: ${formatDate(new Date())}`
+						),
+						x, y
+					);
+				}
+			}
+		});
+
+		
+
+		doc.save('incidents.pdf');
 	}
 
 
@@ -204,7 +263,7 @@
 	<div class="d-flex flex-row w-100 mt-3">
 		<Card class="w-100 shadow border">
 			<CardHeader>
-				<CardTitle>Settings</CardTitle>
+				<CardTitle>Search Settings</CardTitle>
 			</CardHeader>
 			<CardBody>
 				<div class="d-flex flex-column w-100">
@@ -238,36 +297,6 @@
 								{/each}
 							</Input>
 						</FormGroup>
-					</div>
-				</div>
-			</CardBody>
-		</Card>
-
-		<Vr />
-
-		<Card class="w-50 shadow border">
-			<CardHeader>
-				<CardTitle>Export</CardTitle>
-				<CardSubtitle>
-					<i>Export the current list of reports. Use the settings to filter your results.</i>
-				</CardSubtitle>
-			</CardHeader>
-			<CardBody>
-				<div class="d-flex flex-column w-100">
-					<FormGroup>
-						<Label for="reportAmount">Amount of Reports</Label>
-						<Input type="number" id="reportAmount" bind:value={exportAmountOfIncidents}/>
-					</FormGroup>
-
-					<div class="d-flex flex-row w-100">
-						<Button color="success" class="w-100" on:click={exportToCSV}>
-							<Icon name="file-code" />
-							Export to CSV
-						</Button>
-						<Button color="primary" class="w-100 ms-2">
-							<Icon name="file-bar-graph" />
-							Export to PDF
-						</Button>
 					</div>
 				</div>
 			</CardBody>
@@ -423,6 +452,36 @@
 			{/if}
 		</CardBody>
 	</Card>
+
+	<div class="d-flex flex-row justify-content-center">
+		<Card class="mt-3 w-50 shadow border">
+			<CardHeader>
+				<CardTitle>Export</CardTitle>
+				<CardSubtitle>
+					<i>Export the current list of reports. Use the settings to filter your results.</i>
+				</CardSubtitle>
+			</CardHeader>
+			<CardBody>
+				<div class="d-flex flex-column w-100">
+					<FormGroup>
+						<Label for="reportAmount">Amount of Reports</Label>
+						<Input type="number" id="reportAmount" placeholder="Input amount of reports to export..." bind:value={exportAmountOfIncidents}/>
+					</FormGroup>
+	
+					<div class="d-flex flex-row w-100">
+						<Button color="success" class="w-100" on:click={exportToCSV}>
+							<Icon name="file-code" />
+							Export to CSV
+						</Button>
+						<Button color="primary" class="w-100 ms-2" on:click={exportToPDF}>
+							<Icon name="file-bar-graph" />
+							Export to PDF
+						</Button>
+					</div>
+				</div>
+			</CardBody>
+		</Card>
+	</div>
 </div>
 
 <style>
