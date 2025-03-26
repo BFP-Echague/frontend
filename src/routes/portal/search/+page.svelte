@@ -6,7 +6,19 @@
 	import GeneralHr from '$lib/components/generalHr.svelte';
 	import TableSortingHeader from '$lib/components/table/tableSortingHeader.svelte';
 	import Vr from '$lib/components/vr.svelte';
-	import { Button, Input, Table, Card, CardBody, CardHeader, CardTitle, CardSubtitle, Icon, Label, FormGroup } from '@sveltestrap/sveltestrap';
+	import {
+		Button,
+		Input,
+		Table,
+		Card,
+		CardBody,
+		CardHeader,
+		CardTitle,
+		CardSubtitle,
+		Icon,
+		Label,
+		FormGroup
+	} from '@sveltestrap/sveltestrap';
 	import { onMount } from 'svelte';
 	import { cubicOut } from 'svelte/easing';
 	import { fly } from 'svelte/transition';
@@ -47,10 +59,8 @@
 		return paramsInitial;
 	});
 
-
 	let exportAmountOfIncidents: string | undefined = $state('');
 	let exportValidateSchema = z.coerce.number().int().positive().min(1).max(500);
-
 
 	function debouncedSearchUpdate() {
 		clearTimeout(searchDebounceTimer);
@@ -105,14 +115,12 @@
 		goto(`./report/${id}/view`);
 	}
 
-
-
 	async function getIncidentsExport() {
 		let pageSize: number;
 		try {
 			pageSize = exportValidateSchema.parse(exportAmountOfIncidents);
 		} catch (e) {
-			if (handlePossibleZodError(e)) throw new Error("Invalid amount of incidents.");
+			if (handlePossibleZodError(e)) throw new Error('Invalid amount of incidents.');
 			throw e;
 		}
 
@@ -122,12 +130,11 @@
 		const result = await IncidentAPIRoute.instance.getMany(paramsDerived);
 		if (!(await result.isOK())) {
 			alert('Finding records failed.');
-			throw new Error("Finding records failed.");
+			throw new Error('Finding records failed.');
 		}
 
 		return (await result.getMoreInfoParsed()).data;
 	}
-
 
 	async function getFormattedIncidentsExport() {
 		const incidents = await getIncidentsExport();
@@ -138,8 +145,8 @@
 			'name',
 			'category_name',
 			'category_severity',
-			"loc_latitude",
-			"loc_longitude",
+			'loc_latitude',
+			'loc_longitude',
 			'barangay_name',
 			'report_time',
 			'response_time',
@@ -152,25 +159,25 @@
 		];
 
 		const headerProper = [
-			"No",
-			"Archived",
-			"Name",
-			"Category Name",
-			"Category Severity",
-			"Latitude",
-			"Longitude",
-			"Barangay",
-			"Report Time",
-			"Response Time",
-			"Fire Out Time",
-			"Causes",
-			"Structures Involved",
-			"Notes",
-			"Created By",
-			"Updated By"
-		]
+			'No',
+			'Archived',
+			'Name',
+			'Category Name',
+			'Category Severity',
+			'Latitude',
+			'Longitude',
+			'Barangay',
+			'Report Time',
+			'Response Time',
+			'Fire Out Time',
+			'Causes',
+			'Structures Involved',
+			'Notes',
+			'Created By',
+			'Updated By'
+		];
 
-		const none = "<No Value>";
+		const none = '<No Value>';
 		const rows = incidents.map((x, idx) => {
 			return [
 				idx + 1,
@@ -198,16 +205,12 @@
 	async function exportToCSV() {
 		const incidentsExport = await getFormattedIncidentsExport();
 
-		const rows = [
-			incidentsExport.headerCamel,
-			...incidentsExport.rows
-		]
+		const rows = [incidentsExport.headerCamel, ...incidentsExport.rows];
 
-		const content = "data:text/csv;charset=utf-8," + rows.map(x => x.join(",")).join("\n");
+		const content = 'data:text/csv;charset=utf-8,' + rows.map((x) => x.join(',')).join('\n');
 		const encodedUri = encodeURI(content);
 		window.open(encodedUri);
 	}
-
 
 	async function exportToPDF() {
 		const incidentsExport = await getFormattedIncidentsExport();
@@ -219,7 +222,7 @@
 		autoTable(doc, {
 			styles: {
 				fontSize: 7,
-				cellWidth: "auto"
+				cellWidth: 'auto'
 			},
 			head: [incidentsExport.headerProper],
 			body: incidentsExport.rows,
@@ -232,23 +235,19 @@
 				for (let i = 1; i <= pageCount; i++) {
 					doc.setPage(i);
 					doc.text(
-						(
-							`Page ${i} of ${pageCount}\n` +
+						`Page ${i} of ${pageCount}\n` +
 							`Sorted by: ${currentSortValue} | Ascending: ${sortOrderAsc}\n` +
-							`Search Term: ${search.length !== 0 ? `"${search}"` : "<None>"} | Include Archived: ${includeArchived}\n` +
-							`Requested Incidents: ${exportAmountOfIncidents} | Received incidents: ${incidentsExport.rows.length} | Date Generated: ${formatDate(new Date())}`
-						),
-						x, y
+							`Search Term: ${search.length !== 0 ? `"${search}"` : '<None>'} | Include Archived: ${includeArchived}\n` +
+							`Requested Incidents: ${exportAmountOfIncidents} | Received incidents: ${incidentsExport.rows.length} | Date Generated: ${formatDate(new Date())}`,
+						x,
+						y
 					);
 				}
 			}
 		});
 
-		
-
 		doc.save('incidents.pdf');
 	}
-
 
 	onMount(() => {
 		loadRecords();
@@ -280,16 +279,16 @@
 									/>
 								</FormGroup>
 							</div>
-			
+
 							<div class="d-flex flex-row justify-content-center align-items-center w-25 ms-3">
 								<Input type="checkbox" bind:checked={includeArchived} on:change={loadRecords} />
 								<span class="m-0">Include Archived</span>
 							</div>
 						</div>
 					</div>
-	
+
 					<GeneralHr />
-	
+
 					<div class="d-flex flex-column w-30">
 						<FormGroup>
 							<Label for="pageSize">Page Size</Label>
@@ -304,7 +303,6 @@
 			</CardBody>
 		</Card>
 	</div>
-	
 
 	<Card class="mt-3 shadow border">
 		<CardHeader>
@@ -460,16 +458,24 @@
 			<CardHeader>
 				<CardTitle>Export</CardTitle>
 				<CardSubtitle>
-					<i>Use the filters to filter the results and click on column headers to set the sorting order.</i>
+					<i
+						>Use the filters to filter the results and click on column headers to set the sorting
+						order.</i
+					>
 				</CardSubtitle>
 			</CardHeader>
 			<CardBody>
 				<div class="d-flex flex-column w-100">
 					<FormGroup>
 						<Label for="reportAmount">Amount of Reports</Label>
-						<Input type="number" id="reportAmount" placeholder="Input amount of reports to export..." bind:value={exportAmountOfIncidents}/>
+						<Input
+							type="number"
+							id="reportAmount"
+							placeholder="Input amount of reports to export..."
+							bind:value={exportAmountOfIncidents}
+						/>
 					</FormGroup>
-	
+
 					<div class="d-flex flex-row w-100">
 						<Button color="success" class="w-100" on:click={exportToCSV}>
 							<Icon name="file-code" />
