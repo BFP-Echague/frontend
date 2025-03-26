@@ -36,7 +36,7 @@
 	} from '@sveltestrap/sveltestrap';
 	import { onMount } from 'svelte';
 	import { cubicOut } from 'svelte/easing';
-	import { fly } from 'svelte/transition';
+	import { fly, slide } from 'svelte/transition';
 	import { z } from 'zod';
 	import { jsPDF } from 'jspdf';
 	import { autoTable } from 'jspdf-autotable';
@@ -127,7 +127,7 @@
 	}
 
 	async function loadRecords() {
-		incidents = null;
+		// incidents = null;
 
 		const result = await IncidentAPIRoute.instance.getMany(params);
 		if (!(await result.isOK())) {
@@ -478,133 +478,139 @@
 					</div>
 
 					<div class="d-flex flex-column w-100 mt-3">
-						{#if incidents !== null}
-							<Table bordered striped size="sm" responsive>
-								<thead>
-									<tr class="table-primary align-items-center">
-										<th class="p-0"></th>
-										<th>Action</th>
-	
-										{#if includeArchived}
-											<TableSortingHeader
-												displayName="Archived"
-												sortValue="archived"
-												bind:currentSortValue
-												bind:sortOrderAsc
-												onClick={loadRecords}
-											/>
-										{/if}
+						<Table bordered striped size="sm" responsive>
+							<thead>
+								<tr class="table-primary align-items-center">
+									<th class="p-0"></th>
+									<th>Action</th>
+
+									{#if includeArchived}
 										<TableSortingHeader
-											displayName="Name"
-											sortValue="name"
+											displayName="Archived"
+											sortValue="archived"
 											bind:currentSortValue
 											bind:sortOrderAsc
 											onClick={loadRecords}
 										/>
-										<TableSortingHeader
-											displayName="Category"
-											sortValue="category"
-											bind:currentSortValue
-											bind:sortOrderAsc
-											onClick={loadRecords}
-										/>
-										<TableSortingHeader
-											displayName="Barangay"
-											sortValue="barangay"
-											bind:currentSortValue
-											bind:sortOrderAsc
-											onClick={loadRecords}
-										/>
-										<TableSortingHeader
-											displayName="Report Time"
-											sortValue="reportTime"
-											bind:currentSortValue
-											bind:sortOrderAsc
-											onClick={loadRecords}
-										/>
-										<TableSortingHeader
-											displayName="Response Time"
-											sortValue="responseTime"
-											bind:currentSortValue
-											bind:sortOrderAsc
-											onClick={loadRecords}
-										/>
-										<TableSortingHeader
-											displayName="Fire Out Time"
-											sortValue="fireOutTime"
-											bind:currentSortValue
-											bind:sortOrderAsc
-											onClick={loadRecords}
-										/>
-										<th>Causes</th>
-										<th>Structures Involved</th>
-										<TableSortingHeader
-											displayName="Notes"
-											sortValue="notes"
-											bind:currentSortValue
-											bind:sortOrderAsc
-											onClick={loadRecords}
-										/>
-										<TableSortingHeader
-											displayName="Created By"
-											sortValue="createdBy"
-											bind:currentSortValue
-											bind:sortOrderAsc
-											onClick={loadRecords}
-										/>
-										<TableSortingHeader
-											displayName="Updated By"
-											sortValue="updatedBy"
-											bind:currentSortValue
-											bind:sortOrderAsc
-											onClick={loadRecords}
-										/>
-									</tr>
-								</thead>
-									<tbody>
-										{#each incidents as incident, idx}
-											<tr class:table-danger={incident.archived}>
-												<td>{idx + 1}</td>
-	
-												<td class="text-center">
-													<Button
-														color="primary"
-														class="m-0"
-														on:click={() => gotoIncidentView(incident.id)}
-													>
-														<Icon name="arrow-up-right-square" />
-													</Button>
-												</td>
-	
-												{#if includeArchived}
-													<td><DataDisplay data={incident.archived} boolFlipColors /></td>
-												{/if}
-												<td class="text-bold"><DataDisplay data={incident.name} /></td>
-												<td
-													><DataDisplay
-														data={`${incident.category.name} (${incident.category.severity})`}
-													/></td
+									{/if}
+									<TableSortingHeader
+										displayName="Name"
+										sortValue="name"
+										bind:currentSortValue
+										bind:sortOrderAsc
+										onClick={loadRecords}
+									/>
+									<TableSortingHeader
+										displayName="Category"
+										sortValue="category"
+										bind:currentSortValue
+										bind:sortOrderAsc
+										onClick={loadRecords}
+									/>
+									<TableSortingHeader
+										displayName="Barangay"
+										sortValue="barangay"
+										bind:currentSortValue
+										bind:sortOrderAsc
+										onClick={loadRecords}
+									/>
+									<TableSortingHeader
+										displayName="Report Time"
+										sortValue="reportTime"
+										bind:currentSortValue
+										bind:sortOrderAsc
+										onClick={loadRecords}
+									/>
+									<TableSortingHeader
+										displayName="Response Time"
+										sortValue="responseTime"
+										bind:currentSortValue
+										bind:sortOrderAsc
+										onClick={loadRecords}
+									/>
+									<TableSortingHeader
+										displayName="Fire Out Time"
+										sortValue="fireOutTime"
+										bind:currentSortValue
+										bind:sortOrderAsc
+										onClick={loadRecords}
+									/>
+									<th>Causes</th>
+									<th>Structures Involved</th>
+									<TableSortingHeader
+										displayName="Notes"
+										sortValue="notes"
+										bind:currentSortValue
+										bind:sortOrderAsc
+										onClick={loadRecords}
+									/>
+									<TableSortingHeader
+										displayName="Created By"
+										sortValue="createdBy"
+										bind:currentSortValue
+										bind:sortOrderAsc
+										onClick={loadRecords}
+									/>
+									<TableSortingHeader
+										displayName="Updated By"
+										sortValue="updatedBy"
+										bind:currentSortValue
+										bind:sortOrderAsc
+										onClick={loadRecords}
+									/>
+								</tr>
+							</thead>
+							<tbody>
+								{#if incidents !== null}
+									{#each incidents as incident, idx (incident.id)}
+									{#key incident.id}
+										<tr class:table-danger={incident.archived}>
+											<td>{idx + 1}</td>
+
+											<td class="text-center">
+												<Button
+													color="primary"
+													class="m-0"
+													on:click={() => gotoIncidentView(incident.id)}
 												>
-												<td><DataDisplay data={incident.barangay.name} /></td>
-												<td><DataDisplay data={incident.reportTime} /></td>
-												<td><DataDisplay data={incident.responseTime} /></td>
-												<td><DataDisplay data={incident.fireOutTime} /></td>
-												<td><DataDisplay data={incident.causes.join(', ')} /></td>
-												<td><DataDisplay data={incident.structuresInvolved.join(', ')} /></td>
-												<td><DataDisplay data={incident.notes} /></td>
-												<td><DataDisplay data={incident.createdBy.username} /></td>
-												<td><DataDisplay data={incident.updatedBy.username} /></td>
-											</tr>
-										{/each}
-									</tbody>
-							</Table>
-						{/if}
+													<Icon name="arrow-up-right-square" />
+												</Button>
+											</td>
+
+											{#if includeArchived}
+												<td><DataDisplay data={incident.archived} boolFlipColors /></td>
+											{/if}
+											<td class="text-bold"><DataDisplay data={incident.name} /></td>
+											<td
+												><DataDisplay
+													data={`${incident.category.name} (${incident.category.severity})`}
+												/></td
+											>
+											<td><DataDisplay data={incident.barangay.name} /></td>
+											<td><DataDisplay data={incident.reportTime} /></td>
+											<td><DataDisplay data={incident.responseTime} /></td>
+											<td><DataDisplay data={incident.fireOutTime} /></td>
+											<td><DataDisplay data={incident.causes.join(', ')} /></td>
+											<td><DataDisplay data={incident.structuresInvolved.join(', ')} /></td>
+											<td><DataDisplay data={incident.notes} /></td>
+											<td><DataDisplay data={incident.createdBy.username} /></td>
+											<td><DataDisplay data={incident.updatedBy.username} /></td>
+										</tr>
+									{/key}
+									{/each}
+								{/if}
+							</tbody>
+						</Table>
 	
 						<div class="d-flex flex-column w-100 my-3 justify-content-center">
 							{#if incidents === null}
-								<Loading />
+								<div class="d-flex flex-column w-100" transition:slide={{ axis: "y", duration: 500 }}>
+									<Loading />
+								</div>
 							{:else if incidents.length === 0}
-								<h5>No results.</h5>
+								<div class="d-flex flex-column w-100" transition:slide={{ axis: "y", duration: 500 }}>
+									<h5>No results.</h5>
+								</div>
 							{/if}
 						</div>
 	
