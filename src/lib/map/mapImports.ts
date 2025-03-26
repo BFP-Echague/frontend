@@ -19,3 +19,9 @@ export async function importMarkerLibrary() {
     if (markerLibrary === null) markerLibrary = await mapsLoader.importLibrary("marker");
     return markerLibrary;
 }
+
+let placesLibrary: google.maps.PlacesLibrary | null = null;
+export async function importPlacesLibrary() {
+    if (placesLibrary === null) placesLibrary = await mapsLoader.importLibrary("places");
+    return placesLibrary;
+}
