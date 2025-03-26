@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { formatDate, handlePossibleZodError, IncidentAPIRoute, type IncidentGet } from '$lib';
+	import { formatDate, handlePossibleZodError, IncidentAPIRoute, zodDate, type CategoryGet, type IncidentGet } from '$lib';
 	import DataDisplay from '$lib/components/display/dataDisplay.svelte';
 	import Loading from '$lib/components/display/loading.svelte';
 	import GeneralHr from '$lib/components/generalHr.svelte';
@@ -37,6 +37,16 @@
 
 	let includeArchived: boolean = $state(false);
 
+	let dateRangeValidateSchema = zodDate.optional();
+	let dateMinRaw: string = $state("");
+	let dateMin = $derived(dateMinRaw !== "" ? dateRangeValidateSchema.safeParse(dateMinRaw).data ?? null : null)
+	let dateMaxRaw: string = $state("");
+	let dateMax = $derived(dateMaxRaw !== "" ? dateRangeValidateSchema.safeParse(dateMaxRaw).data ?? null : null)
+
+	let categoryChoices: CategoryGet[] | null = $state(null);
+	let categoryChoice: CategoryGet | null = $state(null);
+
+
 	let currentSortValue: string = $state('reportTime');
 	let sortOrderAsc: boolean = $state(true);
 
@@ -50,6 +60,11 @@
 
 		const includeArchivedDerived = includeArchived;
 		if (includeArchivedDerived) paramsInitial.set('includeArchived', 'true');
+
+		const dateMinDerived = dateMin;
+		if (dateMinDerived !== null) paramsInitial.set('dateMin', dateMinDerived.toISOString());
+		const dateMaxDerived = dateMax;
+		if (dateMaxDerived !== null) paramsInitial.set('dateMax', dateMaxDerived.toISOString());
 
 		const currentSortValueDerived = currentSortValue;
 		paramsInitial.set('sortBy', currentSortValueDerived);
@@ -289,6 +304,30 @@
 
 					<GeneralHr />
 
+					<div class="d-flex flex-row w-100">
+						<div class="d-flex flex-column w-100">
+							<h3>Date Filter</h3>
+							<div class="d-flex flex-row">
+								<FormGroup>
+									<Label for="dateMin">From</Label>
+									<Input type="datetime-local" bind:value={dateMinRaw} on:change={loadRecords} />
+								</FormGroup>
+
+								<FormGroup class="ms-2">
+									<Label for="dateMax">To</Label>
+									<Input type="datetime-local" bind:value={dateMaxRaw} on:change={loadRecords} />
+								</FormGroup>
+							</div>
+						</div>
+						
+						<div class="d-flex w-100">
+							<FormGroup>
+								<Label for="category">Category</Label>
+								<Input type="datetime-local" bind:value={dateMinRaw} on:change={loadRecords} />
+							</FormGroup>
+						</div>
+					</div>
+					
 					<div class="d-flex flex-column w-30">
 						<FormGroup>
 							<Label for="pageSize">Page Size</Label>
