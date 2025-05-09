@@ -52,14 +52,16 @@
         if (categoryMappings === null) throw new Error("please put stuff in the onReady function when using mapViewMultiple.");
 
 
-        const reportTimeCloseness = incident.reportTime !== null 
-            ? 1 - (
-                Math.min(
-                    Math.abs(incident.reportTime.getTime() - referenceDate.getTime()),
-                    timeRange
-                ) / timeRange
+        const reportTimeCloseness = incident.reportTime === null ? 1 : (
+            incident.reportTime.getTime() > referenceDate.getTime() ? 1 : (
+                1 - (
+                    Math.min(
+                        Math.abs(incident.reportTime.getTime() - referenceDate.getTime()),
+                        timeRange
+                    ) / timeRange
+                )
             )
-            : 1;
+        );
 
         const categoryColorChroma = chroma(categoryMappings.find(x => x.id === incident.categoryId)?.color ?? "blue");
         const categoryColorDarken = categoryColorChroma.set("hsl.l", categoryColorChroma.get("hsl.l") - 0.15)
