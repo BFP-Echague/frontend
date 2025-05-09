@@ -68,7 +68,7 @@
             background: categoryColorChroma.hex(),
             glyphColor: categoryColorDarken.hex(),
             borderColor: "black",
-            scale: cubicIn(reportTimeCloseness) * 2 + 0.25
+            scale: cubicIn(reportTimeCloseness) * 2 + 1
         });
 
 
