@@ -32,7 +32,13 @@ export async function makeLoginRequest(loginData: LoginData) {
         body: JSON.stringify(loginData)
     });
 
-    if (result.status === 429) return null;
+    if (result.status === 429) {
+        const retryAfter = result.headers.get("Retry-After");
+
+        return {
+            retryAfter: retryAfter !== null ? parseInt(retryAfter) : null
+        };
+    }
 
     if (!result.ok) return false;
 

@@ -1,45 +1,36 @@
 <script lang="ts">
-	import { Navbar, NavbarBrand, Button, Form, FormGroup, Input, Modal, ModalBody, Container, Icon, Spinner } from '@sveltestrap/sveltestrap';
+	import { Navbar, NavbarBrand, Button, Form, FormGroup, Input, Modal, ModalBody, Container, Icon, Spinner, Label } from '@sveltestrap/sveltestrap';
 	import { handlePossibleZodError, makeLoginRequest } from '$lib';
 	import { goto } from '$app/navigation';
 	import { z } from 'zod';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
+	import PasswordFormPart from '$lib/components/formParts/passwordFormPart.svelte';
 
 
 	let username = $state("");
-	let password = $state("");
+	let passwordFp: PasswordFormPart;
 
 	let showModal = $state(false);
-	let showPassword = $state(false);
 
 	let loggingIn = $state(false);
 
 
 	const loginSchema = z.object({
-		username: z.string(),
-		password: z.string()
-			.min(8, { message: "Must be 8 or more characters" })
-			.refine(x => /^.*[a-z].*$/g.test(x), { message: "Must have a lowercase letter" })
-			.refine(x => /^.*[A-Z].*$/g.test(x), { message: "Must have a capital letter" })
-			.refine(x => /^.*\d.*$/g.test(x), { message: "Must have a digit" })
-			.refine(x => /^.*[^A-Za-z0-9].*$/g.test(x), { message: "Must have a symbol" })
+		username: z.string().nonempty()
 	})
-
-
-
-
-	function togglePassword() {
-		showPassword = !showPassword;
-	}
 
 	async function login() {
 		let loginResult: { username: string; password: string; };
 		try {
-			loginResult = await loginSchema.parseAsync({
-				username: username,
-				password: password
+			const usernameParsed = await loginSchema.parseAsync({
+				username: username
 			})
+
+			loginResult = {
+				...usernameParsed,
+				password: passwordFp.getResult()
+			}
 		}
 		catch (e: unknown) {
 			if (handlePossibleZodError(e)) return;
@@ -50,8 +41,8 @@
 		const result = await makeLoginRequest(loginResult);
 		loggingIn = false;
 
-		if (result === null) {
-			alert("Too many requests. Please try again later.");
+		if (typeof result !== "boolean") {
+			alert(`Too many requests. Please try again later in ${result.retryAfter !== null ? `${result.retryAfter}s` : "a few moments"}.`);
 			return;
 		}
 
@@ -133,29 +124,11 @@
 
 		<Form on:submit={login}>
 			<FormGroup>
+				<Label for="username">Username</Label>
 				<Input type="text" id="username" bind:value={username} required placeholder="Username" />
 			</FormGroup>
 
-			<FormGroup>
-				<div class="d-flex align-items-center position-relative">
-					<Input
-						type={showPassword ? 'text' : 'password'}
-						id="password"
-						bind:value={password}
-						required
-						placeholder="Password"
-						class="w-100"
-					/>
-					<Button
-						color="white"
-						on:click={togglePassword}
-						type="button"
-						class="position-absolute end-0 me-2 top-50 translate-middle-y p-1"
-					>
-						<Icon name={showPassword ? 'eye-slash' : 'eye'} class="fs-5" />
-					</Button>
-				</div>
-			</FormGroup>
+			<PasswordFormPart toFor="password" performValidation={false} bind:this={passwordFp} />
 
 			<Button color="dark" class="w-50 mt-3" type="submit">
 				<div class="d-flex justify-content-center w-100">
