@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { defaultLocation } from "$lib";
+	import { defaultLocation, type IncidentGet } from "$lib";
 	import { IncidentAPIRoute } from '$lib/api/incident';
 	import MapViewMultiple from '$lib/components/map/mapViewMultiple.svelte';
 	
@@ -14,10 +14,29 @@
 			return;
 		}
 
+		let latestIncident: IncidentGet | null = null;
+
 		const moreInfo = await result.getMoreInfoParsed();
 		for (const incident of moreInfo.data) {
 			await mapViewMultiple.addIncident(incident);
+
+			if (incident.reportTime === null) continue;
+
+			if (latestIncident === null || latestIncident.reportTime === null) {
+				latestIncident = incident;
+				continue;
+			};
+
+			if (incident.reportTime.getTime() > latestIncident.reportTime.getTime()) {
+				latestIncident = incident;
+			}
 		}
+
+		if (latestIncident === null) return;
+		centerLocation = {
+			latitude: latestIncident.location.latitude,
+			longitude: latestIncident.location.longitude
+		};
 	}
 </script>
 
