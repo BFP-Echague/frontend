@@ -28,6 +28,10 @@
     }
 
 
+    export function getResultRaw() {
+        return result;
+    }
+
     export function getResult() {
         if (!performValidation) return result;
         return validateSchema.parse(result);

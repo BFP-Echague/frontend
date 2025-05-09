@@ -1,4 +1,4 @@
-import type { PagedResult } from "@dbm";
+import type { DeepPartial, PagedResult } from "@dbm";
 import { getBackendURL } from "./url";
 import Decimal from "decimal.js";
 
@@ -123,7 +123,7 @@ export abstract class APIRoute<Upsert extends object, GetPayload extends object,
     }
 
 
-    public async patch(id: number, body: Upsert) {
+    public async patch(id: number, body: DeepPartial<Upsert>) {
         const result = await fetch(this.getFullURLWithId(id), {
             method: "PATCH",
             headers: headers,

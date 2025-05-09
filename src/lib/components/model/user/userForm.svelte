@@ -5,6 +5,13 @@
     import { Form, FormGroup, Input, Label } from "@sveltestrap/sveltestrap";
 	import { z } from "zod";
 
+
+    let {
+        disablePrivilege = false
+    }: {
+        disablePrivilege?: boolean
+    } = $props();
+
     let result = $state({
         username: "",
         email: "",
@@ -22,6 +29,15 @@
     });
 
     export function getResult() {
+        const parsedResult: { username: string, email: string, privilege: PrivilegeLevel } = validateSchema.parse(result);
+
+        if (passwordForm.getResultRaw() === "") {
+            return {
+                ...parsedResult,
+                password: undefined
+            };
+        }
+
         const password = passwordForm.getResult();
         const confirmPassword = confirmPasswordFormPart.getResult();
 
@@ -31,21 +47,21 @@
             message: "Password and Confirmation doesn't match."
         }]);
 
-        const parsedResult: { username: string, email: string, privilege: PrivilegeLevel } = validateSchema.parse(result);
+        
         return {
             ...parsedResult,
             password: password
         };
     }
 
-    export function setResult(input: UserUpsert) {
+    export function setResult(input: Omit<UserUpsert, "password">) {
         result = {
             username: input.username,
             email: input.email,
             privilege: input.privilege
         }
 
-        passwordForm.setResult(input.password);
+        passwordForm.setResult("");
         confirmPasswordFormPart.setResult("");
     }
 </script>
@@ -63,13 +79,16 @@
 
     <FormGroup>
         <Label for="privilege">Privilege</Label>
-        <Input type="select" id="privilege" bind:value={result.privilege}>
+        <Input type="select" id="privilege" disabled={disablePrivilege} bind:value={result.privilege}>
             {#each Object.values(PrivilegeLevel) as privilegeLevel}
                 <option value={privilegeLevel}>{privilegeLevel}</option>
             {/each}
         </Input>
     </FormGroup>
 
+    <div class="d-flex w-100 justify-content-center">
+        <i>Fill out these fields to change the password. Leave blank to not change the password.</i>
+    </div>
     <PasswordFormPart toFor="passwordForm" label="Password" bind:this={passwordForm}/>
     <PasswordFormPart toFor="confirmPassword" label="Confirm Password" bind:this={confirmPasswordFormPart} />
 </Form>

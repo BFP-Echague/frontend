@@ -1,14 +1,18 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { getCurrentUser, makeLogoutRequest } from '$lib';
+	import { getCurrentUser, getZodErrorMessage, makeLogoutRequest, UserAPIRoute } from '$lib';
 	import NavHr from '$lib/components/nav/navHr.svelte';
 	import NavLinkCustom from '$lib/components/nav/navLinkCustom.svelte';
-	import { Nav, NavItem, Button, Icon, Card, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from '@sveltestrap/sveltestrap';
-	import { onMount } from 'svelte';
+	import UserForm from '$lib/components/model/user/userForm.svelte';
+	import { Nav, NavItem, Button, Icon, Card, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Modal, ModalBody } from '@sveltestrap/sveltestrap';
+	import { onMount, tick } from 'svelte';
 	import { expoOut } from 'svelte/easing';
 	import { fade, fly, slide } from 'svelte/transition';
 	import { page } from '$app/state';
-	import type { UserGet } from '$lib';
+	import type { DeepPartial, UserGet, UserUpsert } from '$lib';
+	import { PrivilegeLevel } from '@prisma/client';
+	import GeneralHr from '$lib/components/generalHr.svelte';
+	import { ZodError } from 'zod';
 
 	let { children } = $props();
 
@@ -24,6 +28,56 @@
 	function toggleSidebar() {
 		sidebarOpen = !sidebarOpen;
 	}
+
+
+
+	let showUserEditModal: boolean = $state(false);
+    let userEditForm: UserForm;
+
+	function openEditUser() {
+		const userDerived = user;
+		if (userDerived === null) throw new Error("user is null");
+
+        showUserEditModal = true;
+
+        tick().then(() => {
+            userEditForm.setResult({
+                username: userDerived.username,
+                email: userDerived.email,
+                privilege: userDerived.privilege
+            })
+        })
+    }
+    function closeEditUser() {
+        showUserEditModal = false;
+    }
+    async function submitEdits() {
+        let formResult: DeepPartial<UserUpsert>;
+        try {
+            formResult = userEditForm.getResult();
+        }
+        catch (e) {
+            if (e instanceof ZodError) {
+                alert(getZodErrorMessage(e));
+                return;
+            }
+
+            throw e;
+        }
+
+        if (user === null) throw new Error("No ID.");
+
+
+        const result = await UserAPIRoute.instance.patch(user.id, formResult);
+        if (!(await result.isOK())) {
+            alert("An error occurred while processing your request.");
+            return;
+        }
+
+        closeEditUser();
+        alert("User edited. Please login again.")
+		goto("/");
+    }
 
 
 
@@ -119,6 +173,14 @@
 									<NavItem>
 										<NavLinkCustom route="/portal/search" iconName="search" label="Incident Database" />
 									</NavItem>
+
+									{#if user?.privilege === PrivilegeLevel.ADMIN}
+										<NavHr />
+
+										<NavItem>
+											<NavLinkCustom route="/portal/user" iconName="person-bounding-box" label="Users" />
+										</NavItem>
+									{/if}
 								</div>
 
 								<div class="d-flex flex-column">
@@ -136,6 +198,7 @@
 											</DropdownToggle>
 											<DropdownMenu end>
 												<DropdownItem header>User Actions</DropdownItem>
+												<DropdownItem on:click={openEditUser}>Edit user</DropdownItem>
 												<DropdownItem on:click={onLogout}>Logout</DropdownItem>
 											</DropdownMenu>
 										</Dropdown>
@@ -163,19 +226,6 @@
 			{/if}
 
 			<div class="d-flex flex-column w-100 h-100 overflow-auto">
-				<!-- <div class="d-flex flex-row w-100 z-99 px-5 py-4 justify-content-center align-items-center shadow-lg">
-					<div></div>
-					<div>
-						<h3 class="m-0 text-primary">
-							<Icon name="fire" />
-							BFP Echague Fire Mapping System
-						</h3>
-					</div>
-					<div class="position-absolute end-0 me-5">
-						<h5 class="m-0">{ page.url.pathname.replaceAll("/", " / ") }</h5>
-					</div>
-				</div> -->
-
 				<div class="d-flex d-lg-none p-3 justify-content-between align-items-center bg-dark" style="height: 8vh">
 					{@render sidebarButton(true)}
 
@@ -194,3 +244,28 @@
 		</div>
 	</div>
 {/if}
+
+
+
+<Modal bind:isOpen={showUserEditModal}>
+    <div class="d-flex w-100 p-2 justify-content-between align-items-center">
+        <div class="d-flex w-100 justify-content-center">
+            <h2 class="m-0 text-primary">EDITING USER</h2>
+        </div>
+        <Button
+            color="white"
+            class="p-0 m-0"
+            on:click={closeEditUser}
+        >
+            <Icon name="x" class="h1" />
+        </Button>
+    </div>
+
+	<ModalBody class="text-center position-relative">
+		<UserForm disablePrivilege={true} bind:this={userEditForm}/>
+
+        <GeneralHr />
+
+        <Button color="primary" class="w-100" on:click={submitEdits}>Submit Edits</Button>
+	</ModalBody>
+</Modal>
