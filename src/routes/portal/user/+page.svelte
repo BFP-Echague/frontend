@@ -87,6 +87,13 @@
 		<h1 class="text-primary">USERS</h1>
 	</div>
 
+    <div class="d-flex w-100 justify-content-center">
+        <p class="text-center"><i>
+            All users are shown here.<br>
+            Users cannot be deleted to maintain data integrity.
+        </i></p>
+    </div>
+
 	<Card class="w-75 shadow border w-100 mt-3">
 		<CardBody>
             <div class="d-flex flex-column w-100 justify-content-center">

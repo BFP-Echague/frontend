@@ -155,6 +155,7 @@
 								</div>
 		
 								<div class="d-flex flex-column h-100 overflow-auto">
+									<h6>Basic Actions</h6>
 									<NavItem>
 										<NavLinkCustom route="/portal/dashboard" iconName="grid-1x2-fill" label="Dashboard" />
 									</NavItem>
@@ -167,6 +168,7 @@
 
 									<NavHr />
 
+									<h6>Manage Reports</h6>
 									<NavItem>
 										<NavLinkCustom route="/portal/report/create" iconName="pencil" label="Create Report" />
 									</NavItem>
@@ -177,6 +179,7 @@
 									{#if user?.privilege === PrivilegeLevel.ADMIN}
 										<NavHr />
 
+										<h6>Admin Tools</h6>
 										<NavItem>
 											<NavLinkCustom route="/portal/user" iconName="person-bounding-box" label="Users" />
 										</NavItem>
@@ -197,8 +200,9 @@
 												<Icon name="gear-fill" /> Settings
 											</DropdownToggle>
 											<DropdownMenu end>
+												<DropdownItem header>{ user?.privilege } ACCOUNT</DropdownItem>
 												<DropdownItem header>User Actions</DropdownItem>
-												<DropdownItem on:click={openEditUser}>Edit user</DropdownItem>
+												<DropdownItem on:click={openEditUser}>Edit Account</DropdownItem>
 												<DropdownItem on:click={onLogout}>Logout</DropdownItem>
 											</DropdownMenu>
 										</Dropdown>
